@@ -73,11 +73,10 @@ nmap <Space> <Plug>RDSendLine
 noremap ; :
 noremap : ;
 
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
-
+nnoremap <M-J> <C-W><C-J>
+nnoremap <M-K> <C-W><C-K>
+nnoremap <M-L> <C-W><C-L>
+nnoremap <M-H> <C-W><C-H>
 
 """ vimux
 map <LocalLeader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
