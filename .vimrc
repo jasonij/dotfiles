@@ -40,6 +40,7 @@ NeoBundleCheck
 
 
 let g:NERDTreeWinSize = 50
+let g:SuperTabDefaultCompletionType = 'context'
 let g:VimuxHeight = "25"
 let g:haddock_browser = "firefox"
 let g:scala_sort_across_groups=1
@@ -79,14 +80,13 @@ nnoremap <M-L> <C-W><C-L>
 nnoremap <M-H> <C-W><C-H>
 
 """ vimux
-map <LocalLeader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
+map <Leader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
 map <Leader>vp :VimuxPromptCommand<CR>
 map <Leader>vl :VimuxRunLastCommand<CR>
 map <Leader>vi :VimuxInspectRunner<CR>
 map <Leader>vq :VimuxCloseRunner<CR>
 map <Leader>vx :VimuxInterruptRunner<CR>
 map <Leader>vz :call VimuxZoomRunner()<CR>
-
 
 set background=dark
 set backupdir=~/.vim/backup
@@ -115,9 +115,6 @@ augroup filetypedetect
   au! BufRead,BufNewFile *.m,*.oct set filetype=octave
 augroup END
 
-" NERDTree
-autocmd vimenter * if !argc() | NERDTree | endif
-
 " Try saving!
 "autocmd BufLeave,FocusLost * silent! wall
 
@@ -126,5 +123,5 @@ let g:netrw_keepdir      = 0
 let g:netrw_liststyle    = 3 " or 3
 let g:netrw_sort_options = 'i'
 
-colorscheme solarized
+colorscheme darkspectrum
 
