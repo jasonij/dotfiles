@@ -16,6 +16,7 @@ NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'derekwyatt/vim-sbt'
 NeoBundle 'derekwyatt/vim-scala'
 NeoBundle 'elzr/vim-json'
+NeoBundle 'ervandew/supertab'
 NeoBundle 'flazz/vim-colorschemes'
 NeoBundle 'git://git.wincent.com/command-t'
 NeoBundle 'godlygeek/csapprox'
@@ -39,20 +40,19 @@ filetype plugin indent on     " required
 NeoBundleCheck
 
 
+let g:vim_json_syntax_conceal = 0
+let g:EclimCompletionMethod = 'omnifunc'
 let g:NERDTreeWinSize = 50
 let g:SuperTabDefaultCompletionType = 'context'
 let g:VimuxHeight = "25"
 let g:haddock_browser = "firefox"
-
 let g:scala_sort_across_groups = 1
 let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
 let g:slime_paste_file = tempname()
 let g:slime_python_ipython = 1
 let g:slime_target = "tmux"
-let g:solarized_contrast = "high"
 let g:solarized_termcolors = 256
 let g:solarized_termtrans = 1
-let g:solarized_visibility = "high"
 let g:syntastic_python_checkers=['flake8', 'pyflakes', 'python']
 
 let g:syntastic_html_tidy_ignore_errors = [
@@ -67,7 +67,6 @@ let g:tmuxline_preset = 'tmux'
 let g:vimrplugin_underscore = 0
 
 
-set background=dark
 set backupdir=~/.vim/backup
 set directory=~/.vim/swap,.
 set expandtab
@@ -127,5 +126,11 @@ endfunction
 
 autocmd VimEnter * call StartUp()
 
-colorscheme Monokai
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave,FocusLost * setlocal nocursorline
+augroup END
 
+set background=dark
+colorscheme solarized
