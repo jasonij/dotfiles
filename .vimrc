@@ -1,3 +1,6 @@
+"""""""""""""""""""
+""" BEGIN NeoBundle
+
 if has('vim_starting')
   set nocompatible              " be iMproved, required
   set runtimepath+=~/.vim/bundle/neobundle.vim/
@@ -23,6 +26,7 @@ NeoBundle 'godlygeek/csapprox'
 NeoBundle 'jnurmine/Zenburn'
 NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
@@ -39,12 +43,14 @@ call neobundle#end()
 filetype plugin indent on     " required
 NeoBundleCheck
 
+""" END NeoBundle
+"""""""""""""""""
 
-let g:vim_json_syntax_conceal = 0
 let g:EclimCompletionMethod = 'omnifunc'
 let g:NERDTreeWinSize = 50
 let g:SuperTabDefaultCompletionType = 'context'
 let g:VimuxHeight = "25"
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 let g:haddock_browser = "firefox"
 let g:scala_sort_across_groups = 1
 let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
@@ -54,6 +60,8 @@ let g:slime_target = "tmux"
 let g:solarized_termcolors = 256
 let g:solarized_termtrans = 1
 let g:syntastic_python_checkers=['flake8', 'pyflakes', 'python']
+let g:syntastic_scala_checkers = [] " TODO only disable if Eclim is running
+let g:vim_json_syntax_conceal = 0
 
 let g:syntastic_html_tidy_ignore_errors = [
       \"trimming empty <i>",
@@ -84,7 +92,7 @@ set undodir=~/.vim/undo
 set undofile
 set undolevels=1000
 set undoreload=10000
-set wildignore=*.class,*.cache
+set wildignore=*.class,*.cache,target,project,bin
 
 
 " for the vim r-plugin
@@ -94,11 +102,6 @@ nmap <Space> <Plug>RDSendLine
 " absolutely essential
 noremap ; :
 noremap : ;
-
-nnoremap <M-J> <C-W><C-J>
-nnoremap <M-K> <C-W><C-K>
-nnoremap <M-L> <C-W><C-L>
-nnoremap <M-H> <C-W><C-H>
 
 """ vimux
 map <Leader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
@@ -118,14 +121,6 @@ augroup filetypedetect
   au! BufRead,BufNewFile *.m,*.oct set filetype=octave
 augroup END
 
-function! StartUp()
-  if 0 == argc()
-    NERDTree
-  end
-endfunction
-
-autocmd VimEnter * call StartUp()
-
 augroup CursorLine
   au!
   au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
@@ -133,4 +128,4 @@ augroup CursorLine
 augroup END
 
 set background=dark
-colorscheme solarized
+colorscheme desert
