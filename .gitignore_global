@@ -1,1 +1,10 @@
+.cache
+.classpath
+.project
+.ropeproject
+.settings
+bin/
+notes.txt
 tags
+target/
+*.pyc
