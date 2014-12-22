@@ -21,18 +21,23 @@ NeoBundle 'Shougo/vimproc.vim', {
 
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'benmills/vimux'
 NeoBundle 'bling/vim-airline'
+NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'derekwyatt/vim-sbt'
 NeoBundle 'derekwyatt/vim-scala'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'flazz/vim-colorschemes'
 NeoBundle 'godlygeek/csapprox'
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'jnurmine/Zenburn'
 NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'klen/python-mode'
 NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'plasticboy/vim-markdown'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tpope/vim-dispatch'
@@ -169,6 +174,7 @@ let g:slime_target = "tmux"
 let g:solarized_termcolors = 256
 let g:solarized_termtrans = 1
 let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_folding_disabled=1
 let g:vimrplugin_underscore = 0
 
 set backupdir=~/.vim/backup
@@ -191,7 +197,7 @@ set undofile
 set undolevels=1000
 set undoreload=10000
 
-set wildignore=*.class,*.cache,target,project,tags,vcr_cassettes
+set wildignore=*.class,*.cache,target,project,tags,vcr_cassettes,__pycache__,*.pyc
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in
 """ scala but not in python
@@ -221,15 +227,15 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 """ set up a highlight bar for current line
-augroup CursorLine
-  au!
-  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  au WinLeave,FocusLost * setlocal nocursorline
-augroup END
+" augroup CursorLine
+"   au!
+"   au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+"   au WinLeave,FocusLost * setlocal nocursorline
+" augroup END
 
-autocmd ColorScheme * hi CursorLine cterm=NONE ctermbg=darkgray
+" autocmd ColorScheme * hi CursorLine cterm=NONE ctermbg=black
 
 
 """ select the colorscheme here
 set background=dark
-colorscheme zenburn
+colorscheme solarized
