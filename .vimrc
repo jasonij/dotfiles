@@ -21,6 +21,7 @@ NeoBundle 'Shougo/vimproc.vim', {
 
 NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'benmills/vimux'
 NeoBundle 'bling/vim-airline'
@@ -28,10 +29,12 @@ NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'derekwyatt/vim-sbt'
 NeoBundle 'derekwyatt/vim-scala'
+NeoBundle 'elixir-lang/vim-elixir'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'flazz/vim-colorschemes'
 NeoBundle 'godlygeek/csapprox'
 NeoBundle 'godlygeek/tabular'
+NeoBundle 'jimenezrick/vimerl'
 NeoBundle 'jnurmine/Zenburn'
 NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'kchmck/vim-coffee-script'
@@ -144,6 +147,9 @@ let g:EclimCompletionMethod = 'omnifunc'
 let g:EclimPythonValidate = 0
 let g:EclimRubyValidate = 0
 "let g:EclimScalaValidate = 0
+"
+let g:syntastic_enable_elixir_checker = 1 " Disabled by default for security
+let g:syntastic_exilir_checkers = ["elixir"]
 let g:syntastic_python_checkers = [] " TODO only disable if pymode is running
 let g:syntastic_scala_checkers  = [] " TODO only disable if Eclim is running
 
@@ -155,7 +161,7 @@ let g:syntastic_html_tidy_ignore_errors = [
       \"proprietary attribute \"hidden\"",
       \]
 
-let g:NERDTreeWinSize = 40
+let g:NERDTreeWinSize = 35
 let g:SuperTabDefaultCompletionType = 'context'
 let g:acp_enableAtStartup = 0
 let g:haddock_browser = "firefox"
@@ -182,7 +188,7 @@ set cmdheight=2
 set directory=~/.vim/swap,.
 set expandtab
 set grepprg=ag
-set guifont=Menlo\ Regular:h13
+set guifont=Inconsolata\ 13
 set guioptions=0
 set hidden
 set list
@@ -217,6 +223,7 @@ noremap : ;
 "au FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
 "au! BufNewFile,BufRead *.r,*.R setfiletype r
 
+
 " Override that obnoxious bar in pymode
 au FileType python setlocal textwidth=0
 au BufWriteCmd *.py write || :PymodeLint
@@ -225,6 +232,7 @@ au BufWriteCmd *.py write || :PymodeLint
 """ Open NERDTree
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
 
 """ set up a highlight bar for current line
 " augroup CursorLine
@@ -238,4 +246,4 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 """ select the colorscheme here
 set background=dark
-colorscheme solarized
+colorscheme zenburn
