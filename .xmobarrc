@@ -1,0 +1,19 @@
+Config { -- font = "-misc-fixed-*-*-*-*-15-*-*-*-*-*-*-*"
+         -- font = "xft:DejaVu Sans Mono:pixelsize=15:hinting=true:antialias=true"
+         font = "xft:Inconsolata:size=13:hinting=true:antialias=true"
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = Top
+       , commands = [ Run Network "wlp3s0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                    , Run Battery ["-L","50","-H","75","-h","green","-n","yell","-l","red"] 10
+                    , Run MultiCpu ["-t","Cpu: <total0>% <total1>% <total2>% <total3>%","-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory [] 20
+                    , Run Swap [] 20
+                    , Run Weather "KBFI" ["-t", "Seattle: <tempF>F <tempC>C, <skyCondition>"] 600
+                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{ %multicpu%  | %memory% * %swap%  |  %wlp3s0%  |  %battery% | %KBFI% | %date%"
+       }
