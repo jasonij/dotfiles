@@ -1,8 +1,8 @@
 !URxvt*font: xft:DejaVu Sans Mono:pixelsize=14:antialias=true:hinting=true
 !URxvt*boldFont: xft:DejaVu Sans Mono:bold:pixelsize=14:antialias=true:hinting=true
 
-URxvt*font: xft:Inconsolata:size=13:antialias=true:hinting=true
-URxvt*boldFont: xft:Inconsolata:bold:size=13:antialias=true:hinting=true
+URxvt*font: xft:Inconsolata:size=11:antialias=true:hinting=true
+URxvt*boldFont: xft:Inconsolata:bold:size=11:antialias=true:hinting=true
 
 ! URxvt*transparent: true
 ! URxvt*tintColor: #203050
@@ -26,11 +26,12 @@ URxvt.urlLauncher: uzbl-browser
 URxvt.matcher.button: 2
 URxvt.matcher.pattern.1: \\bwww\\.[\\w-]\\.[\\w./?&@#-]*[\\w/-]
 
-!!!!!!!!!
-! Zenburn
+!!!!!!!!!!!
+!!! Zenburn
 
-URxvt.foreground: #dcdccc
+URxvt*foreground: #dcdccc
 URxvt*background: #3a3a3a
+!URxvt*background: #002b36
 
 URxvt*colorUL: #c5f779
 URxvt*underlineColor: #c5f779
