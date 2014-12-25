@@ -25,6 +25,7 @@
 ;; Evil-Mode
 
 (setq evil-want-C-u-scroll t)
+(setq evil-want-C-d-scroll t)
 
 (prelude-require-package 'evil)
 (require 'evil)
@@ -76,14 +77,14 @@
 
 (if (eq system-type 'darwin)
     (set-frame-font "-apple-Menlo-light-normal-normal-*-14-*-*-*-m-0-iso10646-1")
-  (set-frame-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
+  (set-frame-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
 )
 
 
-(prelude-require-package 'color-theme-sanityinc-solarized)
-;;(disable-theme 'zenburn)
+;;(prelude-require-package 'color-theme-sanityinc-solarized)
+(disable-theme 'zenburn)
 ;;(load-theme 'sanityinc-solarized-dark)
-;;(load-theme 'wombat)
+(load-theme 'wombat)
 
 
 (prelude-require-package 'golden-ratio)
@@ -142,6 +143,8 @@
 
 (setenv "SBT_OPTS" "-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M")
 
+(setenv "ESHELL" "/usr/bin/zsh")
+(setenv "SHELL" "/usr/bin/zsh")
+
 (provide 'personal)
 ;;; personal.el ends here
-
