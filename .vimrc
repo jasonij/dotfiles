@@ -109,7 +109,7 @@ let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
 let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.java =  '\%(\h\w*\|)\)\.\w*'
-"let g:neocomplete#sources#omni#input_patterns.scala = '\%(\h\w*\|)\)\.\w*'
+let g:neocomplete#sources#omni#input_patterns.scala = '\%(\h\w*\|)\)\.\w*'
 
 """ END neocomplete
 """""""""""""""""""
@@ -121,10 +121,10 @@ if executable('ag')
   let g:unite_source_grep_command = 'ag'
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column --hidden'
   let g:unite_source_grep_recursive_opt = ''
+  let g:unite_source_rec_async_command= 'ag --follow --nocolor --nogroup --hidden -g ""'
 endif
 
 let g:unite_source_history_yank_enable = 1
-let g:unite_source_rec_async_command='ag --nocolor --nogroup -g ""'
 
 nnoremap <space>f :Unite file_rec/async<cr>
 nnoremap <space>g :Unite grep:.<cr>
@@ -136,22 +136,15 @@ call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#filters#matcher_default#use([
       \ 'matcher_fuzzy',
       \ 'matcher_hide_hidden_files',
-      \ 'matcher_project_ignore_files'
       \ ])
 
 """ END Unite.vim
 """""""""""""""""
 
 
-let g:EclimCompletionMethod = 'omnifunc'
-let g:EclimPythonValidate = 0
-let g:EclimRubyValidate = 0
-"let g:EclimScalaValidate = 0
-"
-let g:syntastic_enable_elixir_checker = 1 " Disabled by default for security
+"let g:syntastic_enable_elixir_checker = 1 " Disabled by default for security
 let g:syntastic_exilir_checkers = ["elixir"]
 let g:syntastic_python_checkers = [] " TODO only disable if pymode is running
-let g:syntastic_scala_checkers  = [] " TODO only disable if Eclim is running
 
 let g:syntastic_html_tidy_ignore_errors = [
       \"trimming empty <i>",
@@ -161,8 +154,7 @@ let g:syntastic_html_tidy_ignore_errors = [
       \"proprietary attribute \"hidden\"",
       \]
 
-let g:NERDTreeWinSize = 35
-let g:SuperTabDefaultCompletionType = 'context'
+let g:NERDTreeWinSize = 45
 let g:acp_enableAtStartup = 0
 let g:haddock_browser = "firefox"
 let g:netrw_altv = 1
@@ -184,7 +176,7 @@ let g:vim_markdown_folding_disabled=1
 let g:vimrplugin_underscore = 0
 
 set backupdir=~/.vim/backup
-set cmdheight=2
+set cmdheight=1
 set directory=~/.vim/swap,.
 set expandtab
 set grepprg=ag
@@ -198,15 +190,15 @@ set shell=/bin/zsh
 set shiftwidth=2
 set t_Co=256
 set tabstop=2
+set tags=./.tags;
 set undodir=~/.vim/undo
 set undofile
 set undolevels=1000
 set undoreload=10000
 
-set wildignore=*.class,*.cache,target,project,tags,vcr_cassettes,__pycache__,*.pyc
+set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc
 
-""" we need a way to set wildignore based on project type. e.g., ignore bin in
-""" scala but not in python
+""" we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
 
 
 """ for the vim r-plugin
@@ -229,7 +221,9 @@ au FileType python setlocal textwidth=0
 au BufWriteCmd *.py write || :PymodeLint
 
 
-""" Open NERDTree
+""" NERDTree
+
+" Open NERDTree
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
@@ -246,4 +240,4 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 """ select the colorscheme here
 set background=dark
-colorscheme zenburn
+colorscheme solarized

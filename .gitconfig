@@ -1,11 +1,15 @@
 [user]
-	name = Jason Kroll
-	email = jkroll@alumni.tufts.edu
+  name = Jason Kroll
+  email = jkroll@alumni.tufts.edu
 [core]
-	editor = vim
-	excludesfile = ~/.gitignore_global
+  editor = vim
+  excludesfile = ~/.gitignore_global
 [alias]
 [push]
-	default = simple
+  default = simple
 [diff]
-	tool = vimdiff
+  tool = vimdiff
+[filter "media"]
+  clean = git media clean %f
+  smudge = git media smudge %f
+  required = true
