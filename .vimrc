@@ -1,3 +1,5 @@
+" if you cannot give it a name, is it really a concept you understand?
+
 """""""""""""""""""
 """ BEGIN NeoBundle
 
@@ -19,8 +21,68 @@ NeoBundle 'Shougo/vimproc.vim', {
       \    },
       \ }
 
-NeoBundle 'Shougo/neocomplete.vim'
+if has('nvim')
+  NeoBundle 'Shougo/neocomplcache.vim'
+else
+  NeoBundle 'Shougo/neocomplete.vim'
+  """""""""""""""
+  """ neocomplete
+
+  let g:neocomplete#enable_at_startup = 1
+  let g:neocomplete#enable_smart_case = 1
+  let g:neocomplete#sources#syntax#min_keyword_length = 3
+  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+  let g:neocomplete#sources#dictionary#dictionaries = {
+        \ 'default' : '',
+        \ 'vimshell' : $HOME.'/.vimshell_hist',
+        \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+  if !exists('g:neocomplete#keyword_patterns')
+      let g:neocomplete#keyword_patterns = {}
+  endif
+  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+  inoremap <expr><C-g>     neocomplete#undo_completion()
+  inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+  inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+  function! s:my_cr_function()
+    return neocomplete#close_popup() . "\<CR>"
+    " For no inserting <CR> key.
+    "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+  endfunction
+
+  inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+  inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
+  inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+  inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+  inoremap <expr><C-y>  neocomplete#close_popup()
+  inoremap <expr><C-e>  neocomplete#cancel_popup()
+
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+  if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+  endif
+  let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+  let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+  let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+  let g:neocomplete#sources#omni#input_patterns.java =  '\%(\h\w*\|)\)\.\w*'
+  let g:neocomplete#sources#omni#input_patterns.scala = '\%(\h\w*\|)\)\.\w*'
+
+  """ END neocomplete
+  """""""""""""""""""
+endif
+
+NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimfiler'
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'benmills/vimux'
@@ -39,9 +101,9 @@ NeoBundle 'jnurmine/Zenburn'
 NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'klen/python-mode'
+NeoBundle 'majutsushi/tagbar'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'plasticboy/vim-markdown'
-NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-endwise'
@@ -51,6 +113,7 @@ NeoBundle 'tpope/vim-sensible'
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'vim-scripts/ScrollColors'
 NeoBundle 'vim-scripts/Vim-R-plugin'
+NeoBundle 'wellle/tmux-complete.vim'
 
 call neobundle#end()
 filetype plugin indent on     " required
@@ -59,60 +122,6 @@ NeoBundleCheck
 """ END NeoBundle
 """""""""""""""""
 
-"""""""""""""""
-""" neocomplete
-
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-let g:neocomplete#sources#dictionary#dictionaries = {
-      \ 'default' : '',
-      \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'scheme' : $HOME.'/.gosh_completions'
-      \ }
-
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
-
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-let g:neocomplete#sources#omni#input_patterns.java =  '\%(\h\w*\|)\)\.\w*'
-let g:neocomplete#sources#omni#input_patterns.scala = '\%(\h\w*\|)\)\.\w*'
-
-""" END neocomplete
-"""""""""""""""""""
 
 """""""""""""
 """ Unite.vim
@@ -126,25 +135,27 @@ endif
 
 let g:unite_source_history_yank_enable = 1
 
-nnoremap <space>f :Unite file_rec/async<cr>
+nnoremap <space>f :Unite -start-insert file<cr>
+nnoremap <space>r :Unite -start-insert file_rec/async<cr>
+
 nnoremap <space>g :Unite grep:.<cr>
-nnoremap <space>b :Unite buffer<cr>
+
+nnoremap <space>b :Unite buffer bookmark<cr>
+nnoremap <space>l :Unite tmuxcomplete/lines<cr>
+nnoremap <space>t :Unite tmuxcomplete<cr>
 nnoremap <space>y :Unite history/yank<cr>
 
-call unite#custom#profile('files', 'filters', ['sorter_rank'])
+call unite#custom#source('file,file/new,buffer,file_rec', 'matchers', 'matcher_fuzzy')
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
-call unite#filters#matcher_default#use([
-      \ 'matcher_fuzzy',
-      \ 'matcher_hide_hidden_files',
-      \ ])
 
 """ END Unite.vim
 """""""""""""""""
 
-
 "let g:syntastic_enable_elixir_checker = 1 " Disabled by default for security
 let g:syntastic_exilir_checkers = ["elixir"]
 let g:syntastic_python_checkers = [] " TODO only disable if pymode is running
+let g:syntastic_scala_checkers  = [] " Realistically you're going to have ~test running
 
 let g:syntastic_html_tidy_ignore_errors = [
       \"trimming empty <i>",
@@ -154,8 +165,6 @@ let g:syntastic_html_tidy_ignore_errors = [
       \"proprietary attribute \"hidden\"",
       \]
 
-let g:NERDTreeWinSize = 45
-let g:acp_enableAtStartup = 0
 let g:haddock_browser = "firefox"
 let g:netrw_altv = 1
 let g:netrw_browse_split = 4
@@ -164,15 +173,24 @@ let g:pymode_lint_on_write = 1
 let g:pymode_lint_python_checkers = ['flake8', 'mccabe', 'pep257', 'pep8', 'pyflakes', 'pylama', 'pylint', 'python']
 let g:pymode_lint_unmodified = 1
 let g:pymode_options_max_line_length = 99
-let g:scala_sort_across_groups = 1
+let g:scala_first_party_namespaces='com\.socrata\.\(cetera\|phiddipides\).*'
+let g:scala_sort_across_groups=1
 let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
 let g:slime_paste_file = tempname()
 let g:slime_python_ipython = 1
 let g:slime_target = "tmux"
+let g:solarized_contrast="high"
 let g:solarized_termcolors = 256
 let g:solarized_termtrans = 1
+let g:tagbar_width = 45
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_folding_disabled=1
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_file_icon = '-'
+let g:vimfiler_marked_file_icon = '*'
+let g:vimfiler_tree_closed_icon = '▸'
+let g:vimfiler_tree_leaf_icon = ' '
+let g:vimfiler_tree_opened_icon = '▾'
 let g:vimrplugin_underscore = 0
 
 set backupdir=~/.vim/backup
@@ -186,11 +204,11 @@ set hidden
 set list
 set number
 set relativenumber
-set shell=/bin/zsh
+set shell=zsh
 set shiftwidth=2
 set t_Co=256
 set tabstop=2
-set tags=./.tags;
+set tags=.tags;
 set undodir=~/.vim/undo
 set undofile
 set undolevels=1000
@@ -211,21 +229,12 @@ noremap ; :
 noremap : ;
 
 
-""" filetypes
-"au FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
-"au! BufNewFile,BufRead *.r,*.R setfiletype r
-
-
 " Override that obnoxious bar in pymode
 au FileType python setlocal textwidth=0
+
+
+" Pymode sometimes doesn't run lint on save
 au BufWriteCmd *.py write || :PymodeLint
-
-
-""" NERDTree
-
-" Open NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 
 """ set up a highlight bar for current line
@@ -237,6 +246,11 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " autocmd ColorScheme * hi CursorLine cterm=NONE ctermbg=black
 
+
+""" Work around a bug in NeoVim (C-h remap is broken)
+if has('nvim')
+  nmap <BS> <C-h>
+endif
 
 """ select the colorscheme here
 set background=dark
