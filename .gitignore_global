@@ -11,10 +11,11 @@
 __pycache__/
 
 bin/
-notes.txt
 .tags
 tags
 target/
 
 old/
 venv/
+
+notes.txt
