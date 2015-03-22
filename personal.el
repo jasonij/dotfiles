@@ -77,9 +77,8 @@
 
 (if (eq system-type 'darwin)
     (set-frame-font "-apple-Menlo-light-normal-normal-*-14-*-*-*-m-0-iso10646-1")
-  (set-frame-font "-unknown-DejaVu Sans Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+  (set-default-font "Inconsolata-13")
 )
-
 
 ;;(prelude-require-package 'color-theme-sanityinc-solarized)
 (disable-theme 'zenburn)

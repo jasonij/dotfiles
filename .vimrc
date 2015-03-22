@@ -184,9 +184,11 @@ else
 
 endif
 
+NeoBundle 'JuliaLang/julia-vim'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler'
+NeoBundle 'Shougo/vimshell'
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'benmills/vimux'
@@ -350,6 +352,6 @@ endif
 
 
 """ select the colorscheme here
-let base16colorspace=256
 set background=dark
+let base16colorspace=256
 colorscheme base16-default
