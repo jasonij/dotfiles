@@ -1,6 +1,17 @@
+" C-h broken? Try this in your home directory:
+" infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
+" tic $TERM.ti
+" See https://github.com/neovim/neovim/issues/2048 for more details
+" This is still a problem in urxvt
+"
 " TODO:
 " Fix the C-h backspace issue in urxvt
 " Fix the junk characters issue with escape too (that can go here)
+" Look into more efficient/ergonomic leader/local-leader keys
+" What is going on with Unite bookmarks?
+" Can I use UNITE for \fs and \ft ??
+" I think tmuxcomplete may be fighting with neocomplcache and my haskell
+" plugins
 
 """""""""""""""""""
 """ BEGIN NeoBundle
@@ -198,7 +209,7 @@ nnoremap <space>r :Unite -start-insert file_rec/async<cr>
 
 nnoremap <space>g :Unite grep:.<cr>
 
-nnoremap <space>b :Unite buffer bookmark<cr>
+nnoremap <space>b :Unite buffer<cr> " bookmark
 nnoremap <space>l :Unite tmuxcomplete/lines<cr>
 nnoremap <space>t :Unite tmuxcomplete<cr>
 nnoremap <space>y :Unite history/yank<cr>
@@ -269,9 +280,11 @@ set undodir=~/.vim/undo
 set undofile
 set undolevels=1000
 set undoreload=10000
-set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc
+set previewheight=17
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
+set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc
+
 
 
 """ for the vim r-plugin

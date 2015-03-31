@@ -2,7 +2,7 @@
   name = Jason Kroll
   email = jkroll@alumni.tufts.edu
 [core]
-  editor = vim
+  editor = nvim
   excludesfile = ~/.gitignore_global
 [alias]
 [push]

@@ -18,4 +18,4 @@ target/
 old/
 venv/
 
-notes.txt
+/notes.*
