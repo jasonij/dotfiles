@@ -1,43 +1,120 @@
 " C-h broken? Try this in your home directory:
 " infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
 " tic $TERM.ti
-" See https://github.com/neovim/neovim/issues/2048 for more details
-" This is still a problem in urxvt
 "
 " TODO:
-" Fix the C-h backspace issue in urxvt
-" Fix the junk characters issue with escape too (that can go here)
+" Fix the C-h backspace issue in urxvt, see https://github.com/neovim/neovim/issues/2048
+" Fix the junk characters issue with escape
 " Look into more efficient/ergonomic leader/local-leader keys
 " What is going on with Unite bookmarks?
 " Can I use UNITE for \fs and \ft ??
-" I think tmuxcomplete may be fighting with neocomplcache and my haskell
-" plugins
+" tmuxcomplete may be fighting with neocomplcache and my haskell plugins
 
-"""""""""""""""""""
-""" BEGIN NeoBundle
+
+"""""""""""""
+""" NeoBundle
+
+" Note: Skip initialization for vim-tiny or vim-small.
+if !1 | finish | endif
 
 if has('vim_starting')
-  set nocompatible
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-end
+  if &compatible
+    set nocompatible               " Be iMproved
+  endif
 
+  " Required:
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+" Required:
 call neobundle#begin(expand('~/.vim/bundle/'))
 
+" Let NeoBundle manage NeoBundle
+" Required:
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-NeoBundle 'Shougo/vimproc.vim', {
-      \ 'build' : {
-      \     'windows' : 'tools\\update-dll-mingw',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'unix' : 'make -f make_unix.mak',
-      \    },
-      \ }
+" My Bundles here:
+" Refer to |:NeoBundle-examples|.
+" Note: You don't set neobundle setting in .gvimrc!
 
+" Data Formats
+NeoBundle 'chrisbra/csv.vim'
+NeoBundle 'elzr/vim-json'
+NeoBundle 'plasticboy/vim-markdown'
+
+" Elixir
+NeoBundle 'elixir-lang/vim-elixir'
+
+" Erlang
+NeoBundle 'jimenezrick/vimerl'
+
+" Git
+NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'tpope/vim-fugitive'
+
+" Haskell
+NeoBundle 'eagletmt/ghcmod-vim'
+NeoBundle 'eagletmt/neco-ghc'
+NeoBundle 'lukerandall/haskellmode-vim'
+
+" JavaScript
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'pangloss/vim-javascript'
+
+" Julia
+NeoBundle 'JuliaLang/julia-vim'
+
+" Python
+NeoBundle 'klen/python-mode'
+
+" R
+NeoBundle 'vim-scripts/Vim-R-plugin'
+
+" Ruby
+NeoBundle 'tpope/vim-rails'
+NeoBundle 'vim-ruby/vim-ruby'
+
+" Scala
+NeoBundle 'derekwyatt/vim-sbt'
+NeoBundle 'derekwyatt/vim-scala'
+
+" Tmux
+NeoBundle 'benmills/vimux'
+NeoBundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'jpalardy/vim-slime'
+NeoBundle 'wellle/tmux-complete.vim'
+
+" Vim
+NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimfiler'
+NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'unix' : 'make -f make_unix.mak'}}
+NeoBundle 'Shougo/vimshell'
+NeoBundle 'bling/vim-airline'
+NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'flazz/vim-colorschemes'
+NeoBundle 'godlygeek/csapprox'
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'majutsushi/tagbar'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'tpope/vim-dispatch'
+NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-sensible'
+NeoBundle 'vim-scripts/ScrollColors'
+
+call neobundle#end()
+
+" Required:
+filetype plugin indent on
+
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
+
 
 """""""""""""""""
-""" neocomplcache -- neocomplete is not compatible with nvim
+""" neocomplcache
 
 "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
 " Disable AutoComplPop.
@@ -110,87 +187,6 @@ let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\
 " https://github.com/c9s/perlomni.vim
 let g:neocomplcache_force_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
-""" END neocomplcache
-"""""""""""""""""""""
-
-"""""""""
-" Plugins
-
-" Data Formats
-NeoBundle 'chrisbra/csv.vim'
-NeoBundle 'elzr/vim-json'
-NeoBundle 'plasticboy/vim-markdown'
-
-" Elixir
-NeoBundle 'elixir-lang/vim-elixir'
-
-" Erlang
-NeoBundle 'jimenezrick/vimerl'
-
-" Git
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'tpope/vim-fugitive'
-
-" Haskell
-NeoBundle 'eagletmt/ghcmod-vim'
-NeoBundle 'eagletmt/neco-ghc'
-"NeoBundle 'lukerandall/haskellmode-vim'
-
-" JavaScript
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'pangloss/vim-javascript'
-
-" Julia
-NeoBundle 'JuliaLang/julia-vim'
-
-" Python
-NeoBundle 'klen/python-mode'
-
-" R
-NeoBundle 'vim-scripts/Vim-R-plugin'
-
-" Ruby
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'vim-ruby/vim-ruby'
-
-" Scala
-NeoBundle 'derekwyatt/vim-sbt'
-NeoBundle 'derekwyatt/vim-scala'
-
-" Tmux
-NeoBundle 'benmills/vimux'
-NeoBundle 'christoomey/vim-tmux-navigator'
-NeoBundle 'jpalardy/vim-slime'
-NeoBundle 'wellle/tmux-complete.vim'
-
-" Vim
-NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimfiler'
-NeoBundle 'Shougo/vimshell'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'flazz/vim-colorschemes'
-NeoBundle 'godlygeek/csapprox'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'tpope/vim-dispatch'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-sensible'
-NeoBundle 'vim-scripts/ScrollColors'
-
-" END Plugins
-"""""""""""""
-
-
-call neobundle#end()
-filetype plugin indent on     " required
-NeoBundleCheck
-
-""" END NeoBundle
-"""""""""""""""""
-
 
 """""""""""""
 """ Unite.vim
@@ -214,12 +210,14 @@ nnoremap <space>l :Unite tmuxcomplete/lines<cr>
 nnoremap <space>t :Unite tmuxcomplete<cr>
 nnoremap <space>y :Unite history/yank<cr>
 
-call unite#custom#source('file,file/new,buffer,file_rec', 'matchers', 'matcher_fuzzy')
+nnoremap <space>v :VimFilerExplorer -winwidth=50<cr>
+
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 
-""" END Unite.vim
-"""""""""""""""""
+
+"""""""
+""" let
 
 "let g:syntastic_enable_elixir_checker = 1 " Disabled by default for security
 let g:syntastic_exilir_checkers = ["elixir"]
@@ -238,8 +236,8 @@ let g:haddock_browser = "firefox"
 let g:netrw_altv = 1
 let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
-let g:pymode_lint_on_write = 1
-let g:pymode_lint_python_checkers = ['flake8', 'mccabe', 'pep257', 'pep8', 'pyflakes', 'pylama', 'pylint', 'python']
+let g:pymode_lint_on_write = 0
+let g:pymode_lint_python_checkers = [ 'pylint', 'pep257', 'pep8', 'pyflakes', 'mccabe' ]
 let g:pymode_lint_unmodified = 1
 let g:pymode_options_max_line_length = 99
 let g:scala_first_party_namespaces='com\.socrata\.\(cetera\|phiddipides\).*'
@@ -249,7 +247,8 @@ let g:slime_paste_file = tempname()
 let g:slime_python_ipython = 1
 let g:slime_target = "tmux"
 let g:tagbar_width = 45
-let g:tmuxcomplete#trigger = 'omnifunc'
+let g:tmuxcomplete#trigger = 'omnifunc' " ??
+let g:unite_enable_start_insert = 1
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_folding_disabled=1
 let g:vimfiler_as_default_explorer = 1
@@ -260,9 +259,13 @@ let g:vimfiler_tree_leaf_icon = ' '
 let g:vimfiler_tree_opened_icon = '▾'
 let g:vimrplugin_underscore = 0
 
+
+"""""""
+""" set
+
 set backupdir=~/.vim/backup
 set cmdheight=1
-set directory=~/.vim/swap,.
+set directory=~/.vim/swap
 set expandtab
 set grepprg=ag
 set guifont=Inconsolata\ 13
@@ -286,26 +289,22 @@ set previewheight=17
 set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc
 
 
+""" essential
+noremap ; :
+noremap : ;
+
 
 """ for the vim r-plugin
 vmap <Space> <Plug>RDSendSelection
 nmap <Space> <Plug>RDSendLine
 
 
-""" essential
-noremap ; :
-noremap : ;
+""" Pymode fixes
+au FileType python setlocal textwidth=0  " Override that obnoxious bar in pymode
+"au BufWriteCmd *.py write || :PymodeLint " Pymode sometimes doesn't run lint on save
 
 
-" Override that obnoxious bar in pymode
-au FileType python setlocal textwidth=0
-
-
-" Pymode sometimes doesn't run lint on save
-au BufWriteCmd *.py write || :PymodeLint
-
-
-""" select the colorscheme here
+""" colorscheme
 set background=dark
 let base16colorspace=256
 colorscheme base16-default
