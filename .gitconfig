@@ -13,3 +13,7 @@
   clean = git media clean %f
   smudge = git media smudge %f
   required = true
+[merge]
+	tool = vimdiff3
+[mergetool]
+	path = nvim

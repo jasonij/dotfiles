@@ -4,12 +4,13 @@
 "
 " TODO:
 " Fix the C-h backspace issue in urxvt, see https://github.com/neovim/neovim/issues/2048
-" Fix the junk characters issue with escape
+" Fix the junk characters issue with escape -- for me it's always »w
 " Look into more efficient/ergonomic leader/local-leader keys
 " What is going on with Unite bookmarks?
 " Can I use UNITE for \fs and \ft ??
 " tmuxcomplete may be fighting with neocomplcache and my haskell plugins
 
+" let's get PythonMode to open folds by default
 
 """""""""""""
 """ NeoBundle
@@ -53,6 +54,8 @@ NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'tpope/vim-fugitive'
 
 " Haskell
+" See https://github.com/begriffs/haskell-vim-now
+" Many probably best practices there
 NeoBundle 'eagletmt/ghcmod-vim'
 NeoBundle 'eagletmt/neco-ghc'
 NeoBundle 'lukerandall/haskellmode-vim'
@@ -200,12 +203,14 @@ endif
 
 let g:unite_source_history_yank_enable = 1
 
-nnoremap <space>f :Unite -start-insert file<cr>
-nnoremap <space>r :Unite -start-insert file_rec/async<cr>
+" -start-insert unneeded because setting globally
+
+nnoremap <space>f :Unite file<cr>
+nnoremap <space>r :Unite file_rec/async<cr>
 
 nnoremap <space>g :Unite grep:.<cr>
 
-nnoremap <space>b :Unite buffer<cr> " bookmark
+nnoremap <space>b :Unite buffer<cr>
 nnoremap <space>l :Unite tmuxcomplete/lines<cr>
 nnoremap <space>t :Unite tmuxcomplete<cr>
 nnoremap <space>y :Unite history/yank<cr>
@@ -215,15 +220,41 @@ nnoremap <space>v :VimFilerExplorer -winwidth=50<cr>
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 
+" fuzzy matching in grep too
+call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
+
 
 """""""
 """ let
+
+let g:vim_airline_theme = 'base16'
+
+let g:haddock_browser = "firefox"
+
+let mapleader=","
+
+let g:netrw_altv = 1
+let g:netrw_browse_split = 4
+let g:netrw_liststyle=3
+
+let g:pymode_lint_on_write = 0
+let g:pymode_lint_python_checkers = [ 'pylint', 'pep257', 'pep8', 'pyflakes', 'mccabe' ]
+let g:pymode_lint_unmodified = 1
+let g:pymode_options_max_line_length = 99
+
+let g:scala_first_party_namespaces='com\.socrata\.\(cetera\|phiddipides\).*'
+let g:scala_sort_across_groups=1
+let g:scala_use_builtin_tagbar_defs = 0
+
+let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
+let g:slime_paste_file = tempname()
+let g:slime_python_ipython = 1
+let g:slime_target = "tmux"
 
 "let g:syntastic_enable_elixir_checker = 1 " Disabled by default for security
 let g:syntastic_exilir_checkers = ["elixir"]
 let g:syntastic_python_checkers = [] " TODO only disable if pymode is running
 let g:syntastic_scala_checkers  = [] " Realistically you're going to have ~test running
-
 let g:syntastic_html_tidy_ignore_errors = [
       \"trimming empty <i>",
       \"trimming empty <span>",
@@ -232,31 +263,23 @@ let g:syntastic_html_tidy_ignore_errors = [
       \"proprietary attribute \"hidden\"",
       \]
 
-let g:haddock_browser = "firefox"
-let g:netrw_altv = 1
-let g:netrw_browse_split = 4
-let g:netrw_liststyle=3
-let g:pymode_lint_on_write = 0
-let g:pymode_lint_python_checkers = [ 'pylint', 'pep257', 'pep8', 'pyflakes', 'mccabe' ]
-let g:pymode_lint_unmodified = 1
-let g:pymode_options_max_line_length = 99
-let g:scala_first_party_namespaces='com\.socrata\.\(cetera\|phiddipides\).*'
-let g:scala_sort_across_groups=1
-let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
-let g:slime_paste_file = tempname()
-let g:slime_python_ipython = 1
-let g:slime_target = "tmux"
 let g:tagbar_width = 45
+
 let g:tmuxcomplete#trigger = 'omnifunc' " ??
+
 let g:unite_enable_start_insert = 1
+
 let g:vim_json_syntax_conceal = 0
+
 let g:vim_markdown_folding_disabled=1
+
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_file_icon = '-'
 let g:vimfiler_marked_file_icon = '*'
 let g:vimfiler_tree_closed_icon = '▸'
 let g:vimfiler_tree_leaf_icon = ' '
 let g:vimfiler_tree_opened_icon = '▾'
+
 let g:vimrplugin_underscore = 0
 
 
@@ -273,6 +296,7 @@ set guioptions=0
 set hidden
 set list
 set number
+set previewheight=17
 set relativenumber
 set shell=zsh
 set shiftwidth=2
@@ -283,20 +307,22 @@ set undodir=~/.vim/undo
 set undofile
 set undolevels=1000
 set undoreload=10000
-set previewheight=17
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
 set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc
 
 
-""" essential
+"""""""
+""" map
+
 noremap ; :
 noremap : ;
 
-
-""" for the vim r-plugin
 vmap <Space> <Plug>RDSendSelection
 nmap <Space> <Plug>RDSendLine
+
+map <Leader>w ;w<CR>
+map <ESC><ESC> ;w<CR>
 
 
 """ Pymode fixes
