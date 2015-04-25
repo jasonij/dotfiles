@@ -3,28 +3,36 @@
 " tic $TERM.ti
 "
 " TODO:
+"
 " Fix the C-h backspace issue in urxvt, see https://github.com/neovim/neovim/issues/2048
-" Fix the junk characters issue with escape -- for me it's always »w
-" Look into more efficient/ergonomic leader/local-leader keys
-" What is going on with Unite bookmarks?
-" Can I use UNITE for \fs and \ft ??
-" tmuxcomplete may be fighting with neocomplcache and my haskell plugins
+"
+" Look into vim ordering of buffers (sort by MRU for [b and ]b)
+"
+" Hot keys to go between tests and instances
 
-" let's get PythonMode to open folds by default
+" PythonMode to open folds by default
 
-"""""""""""""
+" can I use vimux, tslime, or tmux config to scroll the neighboring window?
+
+" can I get tmux paste to trigger paste mode in vim?
+
+" can I get C-tab to cycle vim windows and tmux panes?
+
+"" use c and C-o more often
+
+"""""""""""
 """ NeoBundle
 
 " Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
 
 if has('vim_starting')
-  if &compatible
-    set nocompatible               " Be iMproved
-  endif
+if &compatible
+  set nocompatible               " Be iMproved
+endif
 
-  " Required:
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+" Required:
+set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
 " Required:
@@ -41,7 +49,6 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Data Formats
 NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'elzr/vim-json'
-NeoBundle 'plasticboy/vim-markdown'
 
 " Elixir
 NeoBundle 'elixir-lang/vim-elixir'
@@ -55,7 +62,6 @@ NeoBundle 'tpope/vim-fugitive'
 
 " Haskell
 " See https://github.com/begriffs/haskell-vim-now
-" Many probably best practices there
 NeoBundle 'eagletmt/ghcmod-vim'
 NeoBundle 'eagletmt/neco-ghc'
 NeoBundle 'lukerandall/haskellmode-vim'
@@ -69,9 +75,6 @@ NeoBundle 'JuliaLang/julia-vim'
 
 " Python
 NeoBundle 'klen/python-mode'
-
-" R
-NeoBundle 'vim-scripts/Vim-R-plugin'
 
 " Ruby
 NeoBundle 'tpope/vim-rails'
@@ -88,23 +91,21 @@ NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'wellle/tmux-complete.vim'
 
 " Vim
-NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'unix' : 'make -f make_unix.mak'}}
-NeoBundle 'Shougo/vimshell'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'flazz/vim-colorschemes'
-NeoBundle 'godlygeek/csapprox'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'scrooloose/syntastic'
+NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-sensible'
-NeoBundle 'vim-scripts/ScrollColors'
+NeoBundle 'tpope/vim-unimpaired'
 
 call neobundle#end()
 
@@ -117,31 +118,13 @@ NeoBundleCheck
 
 
 """""""""""""""""
-""" neocomplcache
+""" neocomplcache -- neovim and neocomplete are not compatible
 
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
-" Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
 let g:neocomplcache_enable_smart_case = 1
-" Set minimum syntax keyword length.
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-" Enable heavy features.
-" Use camel case completion.
-"let g:neocomplcache_enable_camel_case_completion = 1
-" Use underbar completion.
-"let g:neocomplcache_enable_underbar_completion = 1
-
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-      \ 'default' : '',
-      \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'scheme' : $HOME.'/.gosh_completions'
-      \ }
 
 " Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
@@ -203,35 +186,19 @@ endif
 
 let g:unite_source_history_yank_enable = 1
 
-" -start-insert unneeded because setting globally
-
-nnoremap <space>f :Unite file<cr>
-nnoremap <space>r :Unite file_rec/async<cr>
-
-nnoremap <space>g :Unite grep:.<cr>
-
-nnoremap <space>b :Unite buffer<cr>
-nnoremap <space>l :Unite tmuxcomplete/lines<cr>
-nnoremap <space>t :Unite tmuxcomplete<cr>
-nnoremap <space>y :Unite history/yank<cr>
-
-nnoremap <space>v :VimFilerExplorer -winwidth=50<cr>
-
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
-
-" fuzzy matching in grep too
 call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 
 
 """""""
 """ let
 
-let g:vim_airline_theme = 'base16'
+" spacemacs!
+let mapleader=" "
+
 
 let g:haddock_browser = "firefox"
-
-let mapleader=","
 
 let g:netrw_altv = 1
 let g:netrw_browse_split = 4
@@ -251,27 +218,22 @@ let g:slime_paste_file = tempname()
 let g:slime_python_ipython = 1
 let g:slime_target = "tmux"
 
-"let g:syntastic_enable_elixir_checker = 1 " Disabled by default for security
-let g:syntastic_exilir_checkers = ["elixir"]
-let g:syntastic_python_checkers = [] " TODO only disable if pymode is running
-let g:syntastic_scala_checkers  = [] " Realistically you're going to have ~test running
-let g:syntastic_html_tidy_ignore_errors = [
-      \"trimming empty <i>",
-      \"trimming empty <span>",
-      \"<input> proprietary attribute \"autocomplete\"",
-      \"proprietary attribute \"role\"",
-      \"proprietary attribute \"hidden\"",
-      \]
+let g:sneak#streak = 1
+
+" scala has ~test and python has python-mode
+let g:syntastic_mode_map = { "mode" : "active", "passive_filetypes" : ["python", "scala"] }
 
 let g:tagbar_width = 45
 
-let g:tmuxcomplete#trigger = 'omnifunc' " ??
+let g:tmuxcomplete#trigger = 'omnifunc'
 
 let g:unite_enable_start_insert = 1
 
+let g:vim_airline_theme = 'base16'
+
 let g:vim_json_syntax_conceal = 0
 
-let g:vim_markdown_folding_disabled=1
+let g:vim_markdown_folding_disabled = 1
 
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_file_icon = '-'
@@ -279,8 +241,6 @@ let g:vimfiler_marked_file_icon = '*'
 let g:vimfiler_tree_closed_icon = '▸'
 let g:vimfiler_tree_leaf_icon = ' '
 let g:vimfiler_tree_opened_icon = '▾'
-
-let g:vimrplugin_underscore = 0
 
 
 """""""
@@ -291,7 +251,6 @@ set cmdheight=1
 set directory=~/.vim/swap
 set expandtab
 set grepprg=ag
-set guifont=Inconsolata\ 13
 set guioptions=0
 set hidden
 set list
@@ -312,25 +271,70 @@ set undoreload=10000
 set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc
 
 
-"""""""
-""" map
+""""""""""""""""
+""" MAPPINGS!!!!
 
-noremap ; :
-noremap : ;
+" experiment with turning these off
+" noremap ; :
+" noremap : ;
+" " to match with f F t T etc.
+" nmap : <Plug>SneakNext
 
-vmap <Space> <Plug>RDSendSelection
-nmap <Space> <Plug>RDSendLine
 
-map <Leader>w ;w<CR>
-map <ESC><ESC> ;w<CR>
+" Vim saving and quitting
+nnoremap <leader><ESC> :qa<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>w :w<CR>
+nnoremap <leader>x :x<CR>
+nnoremap <leader>z :xa<CR>
+
+" Git
+nnoremap <leader>gb :Gblame<CR>
+nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>ge :Gedit<CR>
+nnoremap <leader>gg :copen<CR>:Ggrep 
+nnoremap <leader>gs :Gstatus<CR>
+
+" Unite - experiminting with 1 and 2 keystrokes
+nnoremap <leader>u :Unite 
+
+nnoremap <leader>b :Unite buffer bookmark<cr>
+nnoremap <leader>f :Unite file<cr>
+nnoremap <leader>g :Unite grep:.<cr>
+nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
+nnoremap <leader>r :Unite file_rec/async<cr>
+nnoremap <leader>t :Unite tmuxcomplete<cr>
+nnoremap <leader>v :VimFilerExplorer -winwidth=50<cr>
+nnoremap <leader>y :Unite history/yank<cr>
+
+nnoremap <leader>ub :Unite buffer bookmark<cr>
+nnoremap <leader>uf :Unite file<cr>
+nnoremap <leader>ug :Unite grep:.<cr>
+nnoremap <leader>ul :Unite tmuxcomplete/lines<cr>
+nnoremap <leader>ur :Unite file_rec/async<cr>
+nnoremap <leader>ut :Unite tmuxcomplete<cr>
+nnoremap <leader>uv :VimFilerExplorer -winwidth=50<cr>
+nnoremap <leader>uy :Unite history/yank<cr>
+
+" Vimux
+noremap <leader>vi :VimuxInspectRunner<CR>
+noremap <leader>vl :VimuxRunLastCommand<CR>
+noremap <leader>vp :VimuxPromptCommand<CR>
+noremap <leader>vq :VimuxCloseRunner<CR>
+noremap <leader>vr :VimuxRunCommand ''<left>
+noremap <leader>vx :VimuxInterruptRunner<CR>
+noremap <leader>vz :call VimuxZoomRunner()<CR>
 
 
 """ Pymode fixes
 au FileType python setlocal textwidth=0  " Override that obnoxious bar in pymode
 "au BufWriteCmd *.py write || :PymodeLint " Pymode sometimes doesn't run lint on save
 
+" .md is more often markdown than modula-2
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
 """ colorscheme
-set background=dark
+set cursorline
+set background=light
 let base16colorspace=256
-colorscheme base16-default
+colorscheme base16-solarized
