@@ -20,6 +20,12 @@
 
 "" use c and C-o more often
 
+" hotkeys for sorting blocks (select bloc, sort, and return to line)
+
+" leader mappings for s, m, etc.
+
+" override python-mode bindings that override unite
+
 """""""""""
 """ NeoBundle
 
@@ -45,6 +51,15 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " My Bundles here:
 " Refer to |:NeoBundle-examples|.
 " Note: You don't set neobundle setting in .gvimrc!
+
+" C/C++
+NeoBundle 'justmao945/vim-clang'
+
+" Clojure
+NeoBundle 'guns/vim-sexp'
+NeoBundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'tpope/vim-fireplace'
+NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Data Formats
 NeoBundle 'chrisbra/csv.vim'
@@ -105,6 +120,7 @@ NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-sensible'
+NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-unimpaired'
 
 call neobundle#end()
@@ -197,6 +213,8 @@ call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 " spacemacs!
 let mapleader=" "
 
+" turn off rope because of a bug
+let g:pymode_rope = 0
 
 let g:haddock_browser = "firefox"
 
@@ -249,6 +267,7 @@ let g:vimfiler_tree_opened_icon = '▾'
 set backupdir=~/.vim/backup
 set cmdheight=1
 set directory=~/.vim/swap
+set encoding=utf-8
 set expandtab
 set grepprg=ag
 set guioptions=0
@@ -274,39 +293,28 @@ set wildignore=*.class,*.cache,target,project/target,project/project,project/boo
 """"""""""""""""
 """ MAPPINGS!!!!
 
-" experiment with turning these off
-" noremap ; :
-" noremap : ;
-" " to match with f F t T etc.
-" nmap : <Plug>SneakNext
-
+" Single keys for native vim stuff
+" Double keys for plugins
 
 " Vim saving and quitting
 nnoremap <leader><ESC> :qa<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :w<CR>
+nnoremap <leader>a :wa<CR>
 nnoremap <leader>x :x<CR>
 nnoremap <leader>z :xa<CR>
 
 " Git
 nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>go :Gdiff origin<CR>
+nnoremap <leader>gm :Gdiff master<CR>
 nnoremap <leader>ge :Gedit<CR>
 nnoremap <leader>gg :copen<CR>:Ggrep 
 nnoremap <leader>gs :Gstatus<CR>
 
-" Unite - experiminting with 1 and 2 keystrokes
+" Unite
 nnoremap <leader>u :Unite 
-
-nnoremap <leader>b :Unite buffer bookmark<cr>
-nnoremap <leader>f :Unite file<cr>
-nnoremap <leader>g :Unite grep:.<cr>
-nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
-nnoremap <leader>r :Unite file_rec/async<cr>
-nnoremap <leader>t :Unite tmuxcomplete<cr>
-nnoremap <leader>v :VimFilerExplorer -winwidth=50<cr>
-nnoremap <leader>y :Unite history/yank<cr>
-
 nnoremap <leader>ub :Unite buffer bookmark<cr>
 nnoremap <leader>uf :Unite file<cr>
 nnoremap <leader>ug :Unite grep:.<cr>
@@ -315,6 +323,8 @@ nnoremap <leader>ur :Unite file_rec/async<cr>
 nnoremap <leader>ut :Unite tmuxcomplete<cr>
 nnoremap <leader>uv :VimFilerExplorer -winwidth=50<cr>
 nnoremap <leader>uy :Unite history/yank<cr>
+
+nnoremap <leader>vf :VimFilerExplorer -winwidth=50<cr>
 
 " Vimux
 noremap <leader>vi :VimuxInspectRunner<CR>
