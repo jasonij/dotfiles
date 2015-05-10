@@ -6,27 +6,23 @@
 "
 " Fix the C-h backspace issue in urxvt, see https://github.com/neovim/neovim/issues/2048
 "
-" Look into vim ordering of buffers (sort by MRU for [b and ]b)
-"
 " Hot keys to go between tests and instances
-
-" PythonMode to open folds by default
-
-" can I use vimux, tslime, or tmux config to scroll the neighboring window?
 
 " can I get tmux paste to trigger paste mode in vim?
 
-" can I get C-tab to cycle vim windows and tmux panes?
+" how integrated do I really want vim and tmux to be?
 
-"" use c and C-o more often
+" use c and C-o and C-^ more often
 
-" hotkeys for sorting blocks (select bloc, sort, and return to line)
+" leader mappings for available keys (d, h, m, j, k, i, o, p)
 
-" leader mappings for s, m, etc.
+" splits often scroll is a way I don't like
 
-" override python-mode bindings that override unite
+" figure out which autocompletion to use
 
-"""""""""""
+" figure out zsh, zprofile, zsession, etc
+
+""""""""""
 """ NeoBundle
 
 " Note: Skip initialization for vim-tiny or vim-small.
@@ -106,7 +102,6 @@ NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'wellle/tmux-complete.vim'
 
 " Vim
-NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler'
@@ -114,7 +109,9 @@ NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'uni
 NeoBundle 'bling/vim-airline'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'godlygeek/tabular'
+NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'majutsushi/tagbar'
+NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-dispatch'
@@ -210,22 +207,29 @@ call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 """""""
 """ let
 
+let base16colorspace=256
+
 " spacemacs!
 let mapleader=" "
-
-" turn off rope because of a bug
-let g:pymode_rope = 0
+let maplocalleader="\\"
 
 let g:haddock_browser = "firefox"
 
+let g:NERDTreeWinSize=50
+
+" netrw is buggy
 let g:netrw_altv = 1
 let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
 
+let g:pymode_rope = 0
+let g:pymode_breakpoint_bind = '<localleader>b'
+let g:pymode_folding = 0
 let g:pymode_lint_on_write = 0
 let g:pymode_lint_python_checkers = [ 'pylint', 'pep257', 'pep8', 'pyflakes', 'mccabe' ]
 let g:pymode_lint_unmodified = 1
 let g:pymode_options_max_line_length = 99
+let g:pymode_run_bind = '<localleader>r'
 
 let g:scala_first_party_namespaces='com\.socrata\.\(cetera\|phiddipides\).*'
 let g:scala_sort_across_groups=1
@@ -253,19 +257,13 @@ let g:vim_json_syntax_conceal = 0
 
 let g:vim_markdown_folding_disabled = 1
 
-let g:vimfiler_as_default_explorer = 1
-let g:vimfiler_file_icon = '-'
-let g:vimfiler_marked_file_icon = '*'
-let g:vimfiler_tree_closed_icon = '▸'
-let g:vimfiler_tree_leaf_icon = ' '
-let g:vimfiler_tree_opened_icon = '▾'
-
 
 """""""
 """ set
 
 set backupdir=~/.vim/backup
 set cmdheight=1
+set cursorline
 set directory=~/.vim/swap
 set encoding=utf-8
 set expandtab
@@ -293,58 +291,71 @@ set wildignore=*.class,*.cache,target,project/target,project/project,project/boo
 """"""""""""""""
 """ MAPPINGS!!!!
 
-" Single keys for native vim stuff
-" Double keys for plugins
-
-" Vim saving and quitting
+" Write
 nnoremap <leader><ESC> :qa<CR>
+nnoremap <leader>a :wa<CR>
+nnoremap <leader>c <C-W>c
 nnoremap <leader>q :q<CR>
 nnoremap <leader>w :w<CR>
-nnoremap <leader>a :wa<CR>
 nnoremap <leader>x :x<CR>
 nnoremap <leader>z :xa<CR>
+
+nnoremap <C-n> :NERDTreeToggle<CR>
+
+" is this useful?
+nnoremap <leader>s (V)<BS>:sort<CR>
+
+" Edit
+nnoremap <leader>n :sp notes.txt<cr>
+nnoremap <leader>en :e notes.txt<cr>
+nnoremap <leader>et :e ~/dotfiles/.tmux.conf<cr>
+nnoremap <leader>ev :e ~/dotfiles/.vimrc<cr>
+nnoremap <leader>ez :e ~/dotfiles/.zshrc<cr>
+
+" Unite
+nnoremap <leader>b :Unite buffer bookmark<cr>
+nnoremap <leader>f :Unite file<cr>
+nnoremap <leader>g :Unite grep:.<cr>
+nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
+nnoremap <leader>r :Unite file_rec/async<cr>
+nnoremap <leader>t :Unite tmuxcomplete<cr>
+nnoremap <leader>u :Unite 
+nnoremap <leader>y :Unite history/yank<cr>
 
 " Git
 nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>go :Gdiff origin<CR>
-nnoremap <leader>gm :Gdiff master<CR>
 nnoremap <leader>ge :Gedit<CR>
 nnoremap <leader>gg :copen<CR>:Ggrep 
+nnoremap <leader>gh :Gdiff origin/HEAD<CR>
+nnoremap <leader>gm :Gdiff master<CR>
+nnoremap <leader>go :Gdiff origin<CR>
 nnoremap <leader>gs :Gstatus<CR>
 
-" Unite
-nnoremap <leader>u :Unite 
-nnoremap <leader>ub :Unite buffer bookmark<cr>
-nnoremap <leader>uf :Unite file<cr>
-nnoremap <leader>ug :Unite grep:.<cr>
-nnoremap <leader>ul :Unite tmuxcomplete/lines<cr>
-nnoremap <leader>ur :Unite file_rec/async<cr>
-nnoremap <leader>ut :Unite tmuxcomplete<cr>
-nnoremap <leader>uv :VimFilerExplorer -winwidth=50<cr>
-nnoremap <leader>uy :Unite history/yank<cr>
-
-nnoremap <leader>vf :VimFilerExplorer -winwidth=50<cr>
-
 " Vimux
-noremap <leader>vi :VimuxInspectRunner<CR>
-noremap <leader>vl :VimuxRunLastCommand<CR>
-noremap <leader>vp :VimuxPromptCommand<CR>
-noremap <leader>vq :VimuxCloseRunner<CR>
-noremap <leader>vr :VimuxRunCommand ''<left>
-noremap <leader>vx :VimuxInterruptRunner<CR>
-noremap <leader>vz :call VimuxZoomRunner()<CR>
+nnoremap <leader>vi :VimuxInspectRunner<CR>
+nnoremap <leader>vl :VimuxRunLastCommand<CR>
+nnoremap <leader>vp :VimuxPromptCommand<CR>
+nnoremap <leader>vq :VimuxCloseRunner<CR>
+nnoremap <leader>vr :VimuxRunCommand ''<left>
+nnoremap <leader>vx :VimuxInterruptRunner<CR>
+nnoremap <leader>vz :call VimuxZoomRunner()<CR>
 
 
-""" Pymode fixes
-au FileType python setlocal textwidth=0  " Override that obnoxious bar in pymode
-"au BufWriteCmd *.py write || :PymodeLint " Pymode sometimes doesn't run lint on save
+"""""""""""
+""" autocmd
 
 " .md is more often markdown than modula-2
-autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+au BufNewFile,BufReadPost *.md set filetype=markdown
 
+" Override that obnoxious bar in pymode
+au FileType python setlocal textwidth=0
+
+" Close vim if the only window left open is NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+
+"""""""""""""""
 """ colorscheme
-set cursorline
 set background=light
-let base16colorspace=256
-colorscheme base16-solarized
+colorscheme base16-twilight
