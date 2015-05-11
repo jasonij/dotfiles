@@ -1,3 +1,5 @@
+" Vim is a player's racquet
+"
 " C-h broken? Try this in your home directory:
 " infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
 " tic $TERM.ti
@@ -16,11 +18,11 @@
 
 " leader mappings for available keys (d, h, m, j, k, i, o, p)
 
-" splits often scroll is a way I don't like
+" splits often scroll in a way I don't like
 
 " figure out which autocompletion to use
 
-" figure out zsh, zprofile, zsession, etc
+" work out a shareable zshrc
 
 """"""""""
 """ NeoBundle
@@ -63,8 +65,6 @@ NeoBundle 'elzr/vim-json'
 
 " Elixir
 NeoBundle 'elixir-lang/vim-elixir'
-
-" Erlang
 NeoBundle 'jimenezrick/vimerl'
 
 " Git
@@ -217,11 +217,12 @@ let g:haddock_browser = "firefox"
 
 let g:NERDTreeWinSize=50
 
-" netrw is buggy
+" netrw is buggy stop using it
 let g:netrw_altv = 1
 let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
 
+" pymode should not use global leader
 let g:pymode_rope = 0
 let g:pymode_breakpoint_bind = '<localleader>b'
 let g:pymode_folding = 0
@@ -357,5 +358,5 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 
 """""""""""""""
 """ colorscheme
-set background=light
+set background=dark
 colorscheme base16-twilight
