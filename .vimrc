@@ -14,15 +14,11 @@
 
 " how integrated do I really want vim and tmux to be?
 
-" use c and C-o and C-^ more often
+" use C-o more often
 
 " leader mappings for available keys (d, h, m, j, k, i, o, p)
 
 " splits often scroll in a way I don't like
-
-" figure out which autocompletion to use
-
-" work out a shareable zshrc
 
 """"""""""
 """ NeoBundle
@@ -60,6 +56,7 @@ NeoBundle 'tpope/vim-fireplace'
 NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Data Formats
+NeoBundle 'cespare/vim-toml'
 NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'elzr/vim-json'
 
@@ -103,8 +100,9 @@ NeoBundle 'wellle/tmux-complete.vim'
 
 " Vim
 NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimfiler'
 NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'unix' : 'make -f make_unix.mak'}}
 NeoBundle 'bling/vim-airline'
 NeoBundle 'chriskempson/base16-vim'
@@ -186,6 +184,27 @@ let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\
 " https://github.com/c9s/perlomni.vim
 let g:neocomplcache_force_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
+""""""""""""""""""
+""" neosnippet.vim
+
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+
 
 """""""""""""
 """ Unite.vim
@@ -264,7 +283,7 @@ let g:vim_markdown_folding_disabled = 1
 
 set backupdir=~/.vim/backup
 set cmdheight=1
-set cursorline
+"set cursorline
 set directory=~/.vim/swap
 set encoding=utf-8
 set expandtab
@@ -304,14 +323,15 @@ nnoremap <leader>z :xa<CR>
 nnoremap <C-n> :NERDTreeToggle<CR>
 
 " is this useful?
-nnoremap <leader>s (V)<BS>:sort<CR>
+nnoremap <leader>s vip:sort<CR>
 
 " Edit
-nnoremap <leader>n :sp notes.txt<cr>
 nnoremap <leader>en :e notes.txt<cr>
+nnoremap <leader>er :e ~/RETRO_NOTES.md<cr>
 nnoremap <leader>et :e ~/dotfiles/.tmux.conf<cr>
 nnoremap <leader>ev :e ~/dotfiles/.vimrc<cr>
-nnoremap <leader>ez :e ~/dotfiles/.zshrc<cr>
+nnoremap <leader>ez :e ~/.zshrc<cr>
+nnoremap <leader>n :sp notes.txt<cr>
 
 " Unite
 nnoremap <leader>b :Unite buffer bookmark<cr>
@@ -327,6 +347,7 @@ nnoremap <leader>y :Unite history/yank<cr>
 nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>ge :Gedit<CR>
+nnoremap <leader>gf :Git! diff --name-only master<CR>
 nnoremap <leader>gg :copen<CR>:Ggrep 
 nnoremap <leader>gh :Gdiff origin/HEAD<CR>
 nnoremap <leader>gm :Gdiff master<CR>
@@ -358,5 +379,5 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 
 """""""""""""""
 """ colorscheme
-set background=dark
-colorscheme base16-twilight
+set background=light
+colorscheme base16-default
