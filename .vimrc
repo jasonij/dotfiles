@@ -1,24 +1,20 @@
 " Vim is a player's racquet
 "
-" C-h broken? Try this in your home directory:
-" infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
-" tic $TERM.ti
+" C-h broken? See https://github.com/neovim/neovim/issues/2048
 "
 " TODO:
-"
-" Fix the C-h backspace issue in urxvt, see https://github.com/neovim/neovim/issues/2048
-"
-" Hot keys to go between tests and instances
-
-" can I get tmux paste to trigger paste mode in vim?
-
+" Go between tests and instances
+" can I get tmux paste to trigger paste mode in neovim?
 " how integrated do I really want vim and tmux to be?
-
 " use C-o more often
-
-" leader mappings for available keys (d, h, m, j, k, i, o, p)
-
+" leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z)
 " splits often scroll in a way I don't like
+" What about <leader>m as <localleader> ?
+" What about a splitting version of C-] ?
+" NERDTree ignores my ignores on the first opening
+" How to get auto-corrections from spell checking??
+" SlimeConfig may get confused with C-6
+" leader combo for delete current buffer and swap to previous
 
 """"""""""
 """ NeoBundle
@@ -27,12 +23,12 @@
 if !1 | finish | endif
 
 if has('vim_starting')
-if &compatible
-  set nocompatible               " Be iMproved
-endif
+  if &compatible
+    set nocompatible               " Be iMproved
+  endif
 
-" Required:
-set runtimepath+=~/.vim/bundle/neobundle.vim/
+  " Required:
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
 " Required:
@@ -50,6 +46,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'justmao945/vim-clang'
 
 " Clojure
+NeoBundle 'guns/vim-clojure-highlight'
 NeoBundle 'guns/vim-sexp'
 NeoBundle 'kien/rainbow_parentheses.vim'
 NeoBundle 'tpope/vim-fireplace'
@@ -83,6 +80,9 @@ NeoBundle 'JuliaLang/julia-vim'
 
 " Python
 NeoBundle 'klen/python-mode'
+
+" R
+NeoBundle 'jalvesaq/Nvim-R'
 
 " Ruby
 NeoBundle 'tpope/vim-rails'
@@ -228,15 +228,22 @@ call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 
 let base16colorspace=256
 
+
 " spacemacs!
 let mapleader=" "
 let maplocalleader="\\"
 
 let g:haddock_browser = "firefox"
 
+" neocomplcache will freeze at 100% cpu elsewise
+let g:latex_to_unicode_tab = 0
+
+let g:latex_to_unicode_auto = 1
+
 let g:NERDTreeWinSize=50
 
 " netrw is buggy stop using it
+" wait, did neovim fix it?
 let g:netrw_altv = 1
 let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
@@ -251,6 +258,27 @@ let g:pymode_lint_unmodified = 1
 let g:pymode_options_max_line_length = 99
 let g:pymode_run_bind = '<localleader>r'
 
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+
 let g:scala_first_party_namespaces='com\.socrata\.\(cetera\|phiddipides\).*'
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
@@ -260,17 +288,20 @@ let g:slime_paste_file = tempname()
 let g:slime_python_ipython = 1
 let g:slime_target = "tmux"
 
-let g:sneak#streak = 1
+" Try it back to normal
+"let g:sneak#streak = 1
 
 " scala has ~test and python has python-mode
 let g:syntastic_mode_map = { "mode" : "active", "passive_filetypes" : ["python", "scala"] }
 
 let g:tagbar_width = 45
+let g:tagbar_sort = 0
 
 let g:tmuxcomplete#trigger = 'omnifunc'
 
 let g:unite_enable_start_insert = 1
 
+let g:airline_powerline_fonts = 1
 let g:vim_airline_theme = 'base16'
 
 let g:vim_json_syntax_conceal = 0
@@ -283,7 +314,7 @@ let g:vim_markdown_folding_disabled = 1
 
 set backupdir=~/.vim/backup
 set cmdheight=1
-"set cursorline
+set cursorline
 set directory=~/.vim/swap
 set encoding=utf-8
 set expandtab
@@ -305,45 +336,36 @@ set undolevels=1000
 set undoreload=10000
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
-set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc
+set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb
 
 
 """"""""""""""""
 """ MAPPINGS!!!!
+"
+" Inspired by Spacemacs, but going 'viminal'
 
-" Write
-nnoremap <leader><ESC> :qa<CR>
-nnoremap <leader>a :wa<CR>
-nnoremap <leader>c <C-W>c
-nnoremap <leader>q :q<CR>
-nnoremap <leader>w :w<CR>
-nnoremap <leader>x :x<CR>
-nnoremap <leader>z :xa<CR>
+" Saving and Quitting
+nnoremap <leader><ESC> :qa<cr>
+nnoremap <leader>Q :qa<cr>
+nnoremap <leader>W :wa<cr>
+nnoremap <leader>X :xa<cr>
+nnoremap <leader>c <c-w>c
+nnoremap <leader>d :bd<cr>
+nnoremap <leader>q :q<cr>
+nnoremap <leader>w :w<cr>
+nnoremap <leader>x :x<cr>
 
-nnoremap <C-n> :NERDTreeToggle<CR>
-
-" is this useful?
-nnoremap <leader>s vip:sort<CR>
-
-" Edit
-nnoremap <leader>en :e notes.txt<cr>
+" Edit Files
+nnoremap <leader>ed :e ~/TODO.md<cr>
+nnoremap <leader>em :e ~/menu.md<cr>
+nnoremap <leader>en :e notes.md<cr>
 nnoremap <leader>er :e ~/RETRO_NOTES.md<cr>
 nnoremap <leader>et :e ~/dotfiles/.tmux.conf<cr>
 nnoremap <leader>ev :e ~/dotfiles/.vimrc<cr>
 nnoremap <leader>ez :e ~/.zshrc<cr>
-nnoremap <leader>n :sp notes.txt<cr>
-
-" Unite
-nnoremap <leader>b :Unite buffer bookmark<cr>
-nnoremap <leader>f :Unite file<cr>
-nnoremap <leader>g :Unite grep:.<cr>
-nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
-nnoremap <leader>r :Unite file_rec/async<cr>
-nnoremap <leader>t :Unite tmuxcomplete<cr>
-nnoremap <leader>u :Unite 
-nnoremap <leader>y :Unite history/yank<cr>
 
 " Git
+" Remember <leader>h_ for GitGutter
 nnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>ge :Gedit<CR>
@@ -353,6 +375,35 @@ nnoremap <leader>gh :Gdiff origin/HEAD<CR>
 nnoremap <leader>gm :Gdiff master<CR>
 nnoremap <leader>go :Gdiff origin<CR>
 nnoremap <leader>gs :Gstatus<CR>
+
+" Misc
+nnoremap <leader>/ :noh<CR>
+
+
+" Sorting -- not sure this is so useful
+" Do we need something for sorting a visual selection?
+nnoremap <leader>s vip:sort<CR>
+
+" Toggles
+nnoremap <leader>n :NERDTreeToggle<CR>
+nnoremap <leader>t :TagbarToggle<CR>
+
+" Unite
+nnoremap <leader>u :Unite 
+nnoremap <leader>ub :Unite buffer bookmark<cr>
+nnoremap <leader>uf :Unite file<cr>
+nnoremap <leader>ug :Unite grep:.<cr>
+nnoremap <leader>ul :Unite tmuxcomplete/lines<cr>
+nnoremap <leader>ur :Unite file_rec/async<cr>
+nnoremap <leader>ut :Unite tmuxcomplete<cr>
+nnoremap <leader>uy :Unite history/yank<cr>
+
+" Unite shortcuts
+nnoremap <leader>b :Unite buffer bookmark<cr>
+nnoremap <leader>f :Unite file<cr>
+nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
+nnoremap <leader>r :Unite file_rec/async<cr>
+nnoremap <leader>y :Unite history/yank<cr>
 
 " Vimux
 nnoremap <leader>vi :VimuxInspectRunner<CR>
@@ -375,6 +426,12 @@ au FileType python setlocal textwidth=0
 
 " Close vim if the only window left open is NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" rainbow_parentheses
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 
 
 """""""""""""""
