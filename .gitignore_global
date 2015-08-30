@@ -5,15 +5,18 @@
 .cache
 .classpath
 .project
+.projectile
 .ropeproject
 .settings
 
 __pycache__/
 
 bin/
-.tags
-tags
 target/
+
+.tags
+TAGS
+tags
 
 venv/
 

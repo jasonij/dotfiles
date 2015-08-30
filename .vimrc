@@ -15,6 +15,17 @@
 " How to get auto-corrections from spell checking??
 " SlimeConfig may get confused with C-6
 " leader combo for delete current buffer and swap to previous
+" <leader>/ could analog coh
+" Unite sometimes enters in paste mode, that's atrocious.
+" Consider making gv come on after visual exit
+"
+" IDEAS: spacemacs for vim, and emacs for vim
+" probably start with a few useful spacemacs keybindings (<leader>-/ for unite
+" grep symbol under cursor)
+" d-J and d-K for column seek delete? make orthogonal?
+
+" NOTE: all signs point to MicroSpacemacs
+
 
 """"""""""
 """ NeoBundle
@@ -85,6 +96,7 @@ NeoBundle 'klen/python-mode'
 NeoBundle 'jalvesaq/Nvim-R'
 
 " Ruby
+NeoBundle 'ngmy/vim-rubocop'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'vim-ruby/vim-ruby'
 
@@ -111,9 +123,11 @@ NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
+NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-sensible'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-unimpaired'
@@ -228,7 +242,6 @@ call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 
 let base16colorspace=256
 
-
 " spacemacs!
 let mapleader=" "
 let maplocalleader="\\"
@@ -312,6 +325,8 @@ let g:vim_markdown_folding_disabled = 1
 """""""
 """ set
 
+" Remember to mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo
+
 set backupdir=~/.vim/backup
 set cmdheight=1
 set cursorline
@@ -322,9 +337,9 @@ set grepprg=ag
 set guioptions=0
 set hidden
 set list
-set number
+"set number
 set previewheight=17
-set relativenumber
+"set relativenumber
 set shell=zsh
 set shiftwidth=2
 set t_Co=256
@@ -336,13 +351,14 @@ set undolevels=1000
 set undoreload=10000
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
-set wildignore=*.class,*.cache,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb
+set wildignore=*.class,*.cache,.chef,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb
 
 
 """"""""""""""""
 """ MAPPINGS!!!!
 "
 " Inspired by Spacemacs, but going 'viminal'
+" This is creeping towards Spacemacs bindings
 
 " Saving and Quitting
 nnoremap <leader><ESC> :qa<cr>
@@ -364,6 +380,12 @@ nnoremap <leader>et :e ~/dotfiles/.tmux.conf<cr>
 nnoremap <leader>ev :e ~/dotfiles/.vimrc<cr>
 nnoremap <leader>ez :e ~/.zshrc<cr>
 
+" Files
+nnoremap <leader>fS :wa<cr>
+nnoremap <leader>ff :Unite file_rec/async<cr>
+nnoremap <leader>fs :w<cr>
+nnoremap <leader>ft :NERDTreeToggle<CR>
+
 " Git
 " Remember <leader>h_ for GitGutter
 nnoremap <leader>gb :Gblame<CR>
@@ -376,16 +398,11 @@ nnoremap <leader>gm :Gdiff master<CR>
 nnoremap <leader>go :Gdiff origin<CR>
 nnoremap <leader>gs :Gstatus<CR>
 
-" Misc
-nnoremap <leader>/ :noh<CR>
-
-
-" Sorting -- not sure this is so useful
-" Do we need something for sorting a visual selection?
-nnoremap <leader>s vip:sort<CR>
+" Searching
+nnoremap <leader>sc :let @/ = ""<cr>
+nnoremap <leader>/ :UniteWithCursorWord grep:.<cr>
 
 " Toggles
-nnoremap <leader>n :NERDTreeToggle<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 " Unite
@@ -399,10 +416,8 @@ nnoremap <leader>ut :Unite tmuxcomplete<cr>
 nnoremap <leader>uy :Unite history/yank<cr>
 
 " Unite shortcuts
-nnoremap <leader>b :Unite buffer bookmark<cr>
-nnoremap <leader>f :Unite file<cr>
+nnoremap <leader>bb :Unite buffer bookmark<cr>
 nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
-nnoremap <leader>r :Unite file_rec/async<cr>
 nnoremap <leader>y :Unite history/yank<cr>
 
 " Vimux
@@ -424,8 +439,15 @@ au BufNewFile,BufReadPost *.md set filetype=markdown
 " Override that obnoxious bar in pymode
 au FileType python setlocal textwidth=0
 
+" Open NERDTree automatically when vim starts up if no files are specified
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
 " Close vim if the only window left open is NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+" OS X and crontabs. moan. sigh. groan.
+autocmd filetype crontab setlocal nobackup nowritebackup
 
 " rainbow_parentheses
 au VimEnter * RainbowParenthesesToggle
@@ -436,5 +458,5 @@ au Syntax * RainbowParenthesesLoadBraces
 
 """""""""""""""
 """ colorscheme
-set background=light
+set background=dark
 colorscheme base16-default
