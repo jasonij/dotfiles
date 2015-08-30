@@ -1,6 +1,6 @@
 Config { -- font = "-misc-fixed-*-*-*-*-15-*-*-*-*-*-*-*"
          -- font = "xft:DejaVu Sans Mono:pixelsize=15:hinting=true:antialias=true"
-         font = "xft:Inconsolata:size=13:hinting=true:antialias=true"
+         font = "xft:Source Code Pro:size=14:hinting=true:antialias=true"
        , bgColor = "black"
        , fgColor = "grey"
        , position = Top
