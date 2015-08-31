@@ -19,11 +19,13 @@
      auto-completion
      better-defaults
      clojure
+     elixir
      emacs-lisp
+     erlang
      evil-snipe
      (git :variables
-          git-enable-github-support t
           git-gutter-use-fringe t)
+     github
      haml
      haskell
      html
@@ -35,7 +37,7 @@
      scala
      (shell :variables
             shell-default-shell 'eshell
-            shell-default-term-shell "/usr/local/bin/zsh")
+            shell-default-term-shell "zsh")
      syntax-checking
      themes-megapack
      version-control
@@ -182,7 +184,7 @@ layers configuration."
   (setq mac-command-modifier 'meta)
   (setq mac-option-modifier 'super)
 
-  (setq multi-term-program "/usr/local/bin/zsh")
+  ;; (setq multi-term-program "/usr/local/bin/zsh")
 
   ;; (setq diff-hl-side 'left)
 
@@ -206,8 +208,8 @@ layers configuration."
 
   (setenv "SBT_OPTS" "-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M")
 
-  (setenv "ESHELL" "/usr/bin/zsh")
-  (setenv "SHELL" "/usr/bin/zsh")
+  ;; (setenv "ESHELL" "/usr/bin/zsh")
+  ;; (setenv "SHELL" "/usr/bin/zsh")
   )
 
 ;; TODO
@@ -217,7 +219,7 @@ layers configuration."
 ;; Turn off search highlighting (SPC-s-c)
 ;; Look into Perspectives
 ;; Shortcut for "next lint warning" S-e-n
-;; inf-ruby should use pry instead
+;; inf-ruby should use pry instead (create ~/.irbrc or something)
 ;; could C-] center the line?
 
 ;; Do not write anything past this comment. This is where Emacs will
