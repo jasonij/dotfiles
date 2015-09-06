@@ -82,7 +82,8 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-light
+   dotspacemacs-themes '(anti-zenburn
+                         solarized-light
                          solarized-dark
                          spacemacs-light
                          spacemacs-dark
@@ -184,9 +185,13 @@ layers configuration."
   (setq mac-command-modifier 'meta)
   (setq mac-option-modifier 'super)
 
+  (setq ns-use-native-fullscreen nil)
   ;; (setq multi-term-program "/usr/local/bin/zsh")
 
   ;; (setq diff-hl-side 'left)
+
+  (setq comint-move-point-for-output nil)
+  (setq comint-scroll-show-maximum-output nil)
 
   ;; HEADS UP this is not great but we're wasting time on this
   (setq projectile-globally-ignored-directories
@@ -207,6 +212,15 @@ layers configuration."
   (setenv "JAVA_HOME" "/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home")
 
   (setenv "SBT_OPTS" "-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M")
+
+  ;; From jaycotton https://github.com/bbatsov/projectile/issues/683#issuecomment-131570808
+  ;; Allows projectile-find-tag to have > 511 entries.
+  (defun my-expand-completion-table (orig-fun &rest args)
+    "Extract all symbols from COMPLETION-TABLE before calling projectile--tags."
+    (let ((completion-table (all-completions "" (car args))))
+      (funcall orig-fun completion-table)))
+
+  (advice-add 'projectile--tags :around #'my-expand-completion-table)
 
   ;; (setenv "ESHELL" "/usr/bin/zsh")
   ;; (setenv "SHELL" "/usr/bin/zsh")
