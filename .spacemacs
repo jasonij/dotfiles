@@ -29,11 +29,17 @@
      haml
      haskell
      html
+     javascript
      latex
      markdown
      org
+     osx
+     (perspectives :variables
+                   perspective-enable-persp-projectile t)
      python
      ruby
+     ruby-on-rails
+     rust
      scala
      (shell :variables
             shell-default-shell 'eshell
@@ -82,14 +88,12 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(anti-zenburn
+   dotspacemacs-themes '(zenburn
                          solarized-light
                          solarized-dark
                          spacemacs-light
                          spacemacs-dark
-                         leuven
-                         monokai
-                         zenburn)
+                         anti-zenburn)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -186,12 +190,14 @@ layers configuration."
   (setq mac-option-modifier 'super)
 
   (setq ns-use-native-fullscreen nil)
-  ;; (setq multi-term-program "/usr/local/bin/zsh")
 
-  ;; (setq diff-hl-side 'left)
-
+  ;; Not sure these accomplish anything
   (setq comint-move-point-for-output nil)
   (setq comint-scroll-show-maximum-output nil)
+
+  (setq py-python-command "python3")
+  (setq python-shell-interpreter 'python3)
+  (setq neo-vc-integration nil)
 
   ;; HEADS UP this is not great but we're wasting time on this
   (setq projectile-globally-ignored-directories
@@ -208,10 +214,7 @@ layers configuration."
   ;; this one for my arch linux box
   (global-set-key (kbd "<C-S-iso-lefttab>") 'previous-multiframe-window)
 
-  ;; mac-only!
-  (setenv "JAVA_HOME" "/Library/Java/JavaVirtualMachines/jdk1.7.0_55.jdk/Contents/Home")
-
-  (setenv "SBT_OPTS" "-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M")
+  (setenv "SBT_OPTS" "-Xms510M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M")
 
   ;; From jaycotton https://github.com/bbatsov/projectile/issues/683#issuecomment-131570808
   ;; Allows projectile-find-tag to have > 511 entries.
@@ -222,8 +225,9 @@ layers configuration."
 
   (advice-add 'projectile--tags :around #'my-expand-completion-table)
 
-  ;; (setenv "ESHELL" "/usr/bin/zsh")
-  ;; (setenv "SHELL" "/usr/bin/zsh")
+  ;; For eshell aliases
+  ;;(require 'em-alias)
+  ;;(setq eshell-aliases-file "~/.emacs.d/eshell/alias")
   )
 
 ;; TODO
@@ -233,8 +237,11 @@ layers configuration."
 ;; Turn off search highlighting (SPC-s-c)
 ;; Look into Perspectives
 ;; Shortcut for "next lint warning" S-e-n
-;; inf-ruby should use pry instead (create ~/.irbrc or something)
 ;; could C-] center the line?
+;; always follow sym links
+;; figure out an analog to git diff origin
+;; let's get vim-like tab completion (Tab for complete, C-N and C-P for cycling)
+;; Get Helm and Projectile to agree on exclusions (e.g., in S-/ where bower_components is included)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
