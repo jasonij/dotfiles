@@ -9,7 +9,7 @@
 " use C-o more often
 " leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z)
 " splits often scroll in a way I don't like
-" What about <leader>m as <localleader> ?
+" What about <leader>m as another alias for , which is <localleader> ?
 " What about a splitting version of C-] ?
 " NERDTree ignores my ignores on the first opening
 " How to get auto-corrections from spell checking??
@@ -19,12 +19,13 @@
 " Unite sometimes enters in paste mode, that's atrocious.
 " Consider making gv come on after visual exit
 "
-" IDEAS: spacemacs for vim, and emacs for vim
-" probably start with a few useful spacemacs keybindings (<leader>-/ for unite
-" grep symbol under cursor)
 " d-J and d-K for column seek delete? make orthogonal?
-
-" NOTE: all signs point to MicroSpacemacs
+" Can we get C-Tab to cycle through vim windows?
+" I am losing enthusiasm for Spacemacs because Emacs is so sluggish and
+" unstable.
+" Let's look into ignore_globs for unite
+" RuboCop!!! Fscking modes don't use local leader!
+" Ace-Jump line mode?
 
 
 """"""""""
@@ -103,6 +104,8 @@ NeoBundle 'vim-ruby/vim-ruby'
 " Scala
 NeoBundle 'derekwyatt/vim-sbt'
 NeoBundle 'derekwyatt/vim-scala'
+NeoBundle 'ensime/ensime-vim'
+NeoBundle 'aemoncannon/ensime'
 
 " Tmux
 NeoBundle 'benmills/vimux'
@@ -116,9 +119,11 @@ NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'unix' : 'make -f make_unix.mak'}}
+NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'godlygeek/tabular'
+NeoBundle 'jnurmine/Zenburn'
 NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'scrooloose/nerdtree'
@@ -232,9 +237,12 @@ endif
 
 let g:unite_source_history_yank_enable = 1
 
+""" we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
+set wildignore=*.class,*.cache,.chef,target/,project/target/,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb,target/sbt-ctags-dep-srcs/,.ensime_cache/,node_modules/,bower_components/,dev-server/
+call unite#custom#source('file_rec,file_rec/async', 'ignore_globs', split(&wildignore, ','))
+call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
-call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 
 
 """""""
@@ -292,7 +300,10 @@ let g:rbpt_colorpairs = [
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
 
-let g:scala_first_party_namespaces='com\.socrata\.\(cetera\|phiddipides\).*'
+let g:vimrubocop_keymap = 0
+nmap <LocalLeader>r :RuboCop<CR>
+
+let g:scala_first_party_namespaces='.*\(cetera\|phidippides\).*'
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
@@ -350,9 +361,6 @@ set undofile
 set undolevels=1000
 set undoreload=10000
 
-""" we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
-set wildignore=*.class,*.cache,.chef,target,project/target,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb
-
 
 """"""""""""""""
 """ MAPPINGS!!!!
@@ -381,10 +389,7 @@ nnoremap <leader>ev :e ~/dotfiles/.vimrc<cr>
 nnoremap <leader>ez :e ~/.zshrc<cr>
 
 " Files
-nnoremap <leader>fS :wa<cr>
-nnoremap <leader>ff :Unite file_rec/async<cr>
-nnoremap <leader>fs :w<cr>
-nnoremap <leader>ft :NERDTreeToggle<CR>
+nnoremap <leader>n :NERDTreeToggle<CR>
 
 " Git
 " Remember <leader>h_ for GitGutter
@@ -408,16 +413,20 @@ nnoremap <leader>t :TagbarToggle<CR>
 " Unite
 nnoremap <leader>u :Unite 
 nnoremap <leader>ub :Unite buffer bookmark<cr>
-nnoremap <leader>uf :Unite file<cr>
+nnoremap <leader>uf :Unite file/async<cr>
 nnoremap <leader>ug :Unite grep:.<cr>
 nnoremap <leader>ul :Unite tmuxcomplete/lines<cr>
-nnoremap <leader>ur :Unite file_rec/async<cr>
+nnoremap <leader>ur :Unite file_rec/git<cr>
+nnoremap <leader>uR :Unite file_rec/async<cr>
 nnoremap <leader>ut :Unite tmuxcomplete<cr>
 nnoremap <leader>uy :Unite history/yank<cr>
 
 " Unite shortcuts
-nnoremap <leader>bb :Unite buffer bookmark<cr>
+nnoremap <leader>b :Unite buffer bookmark<cr>
 nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
+nnoremap <leader>f :Unite file/async<cr>
+nnoremap <leader>R :Unite file_rec/async<cr>
+nnoremap <leader>r :Unite file_rec/git<cr>
 nnoremap <leader>y :Unite history/yank<cr>
 
 " Vimux
@@ -458,5 +467,6 @@ au Syntax * RainbowParenthesesLoadBraces
 
 """""""""""""""
 """ colorscheme
-set background=dark
-colorscheme base16-default
+""" base16 is lovely but Mac's latest upgrade broke it.
+set background=light
+colorscheme solarized
