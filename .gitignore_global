@@ -2,8 +2,11 @@
 *.pyc
 *.swp
 
+.env
+
 .cache
 .classpath
+.ensime_cache/
 .project
 .projectile
 .ropeproject
@@ -13,6 +16,7 @@ __pycache__/
 
 bin/
 target/
+target/sbt-ctags-dep-srcs/
 
 .tags
 TAGS
@@ -21,3 +25,5 @@ tags
 venv/
 
 /notes.*
+
+karma-test/
