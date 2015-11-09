@@ -22,7 +22,9 @@
      elixir
      emacs-lisp
      erlang
-     evil-snipe
+     ess
+     (evil-snipe :variables
+                 evil-snipe-enable-alternate-f-and-t-behaviors t)
      (git :variables
           git-gutter-use-fringe t)
      github
@@ -32,6 +34,7 @@
      javascript
      latex
      markdown
+     ocaml
      org
      osx
      (perspectives :variables
@@ -46,7 +49,9 @@
             shell-default-term-shell "zsh")
      syntax-checking
      themes-megapack
+     unimpaired
      version-control
+     vim-empty-lines
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -88,12 +93,12 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
-                         solarized-light
+   dotspacemacs-themes '(solarized-light
                          solarized-dark
                          spacemacs-light
                          spacemacs-dark
-                         anti-zenburn)
+                         anti-zenburn
+                         zenburn)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -199,6 +204,10 @@ layers configuration."
   (setq python-shell-interpreter 'python3)
   (setq neo-vc-integration nil)
 
+  ;; Avoid the default and use homebrew's
+  ;; TODO: need to have some separate Mac & Linux config blocks
+  (setq inferior-julia-program-name "/usr/local/bin/julia")
+
   ;; HEADS UP this is not great but we're wasting time on this
   (setq projectile-globally-ignored-directories
     (append '(".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn")
@@ -210,9 +219,16 @@ layers configuration."
 
   (global-set-key (kbd "<C-tab>") 'next-multiframe-window)
   (global-set-key (kbd "<C-S-tab>") 'previous-multiframe-window)
-
   ;; this one for my arch linux box
   (global-set-key (kbd "<C-S-iso-lefttab>") 'previous-multiframe-window)
+
+  (global-set-key (kbd "<s-tab>") 'next-multiframe-window)
+  (global-set-key (kbd "<S-s-tab>") 'previous-multiframe-window)
+
+  (global-set-key (kbd "s-h") 'evil-window-left)
+  (global-set-key (kbd "s-j") 'evil-window-down)
+  (global-set-key (kbd "s-k") 'evil-window-up)
+  (global-set-key (kbd "s-l") 'evil-window-right)
 
   (setenv "SBT_OPTS" "-Xms510M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M")
 
@@ -235,13 +251,33 @@ layers configuration."
 ;; Line numbers -- or do you want them?
 ;; Get delete to work in zsh
 ;; Turn off search highlighting (SPC-s-c)
-;; Look into Perspectives
+;; Fix perspectives if possible (name is off by one, etc)
 ;; Shortcut for "next lint warning" S-e-n
 ;; could C-] center the line?
 ;; always follow sym links
-;; figure out an analog to git diff origin
 ;; let's get vim-like tab completion (Tab for complete, C-N and C-P for cycling)
 ;; Get Helm and Projectile to agree on exclusions (e.g., in S-/ where bower_components is included)
+;; get magit to open diffed files in other window
+;; autocomplete could stand to work with julia, spacemacs julia support is not great
+;; magit-blame-quit needs a bloomin' hotkey
+;; autosave or something in prog-mode ?
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("0b6645497e51d80eda1d337d6cabe31814d6c381e69491931a688836c16137ed" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:background nil))))
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

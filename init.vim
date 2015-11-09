@@ -104,8 +104,6 @@ NeoBundle 'vim-ruby/vim-ruby'
 " Scala
 NeoBundle 'derekwyatt/vim-sbt'
 NeoBundle 'derekwyatt/vim-scala'
-NeoBundle 'ensime/ensime-vim'
-NeoBundle 'aemoncannon/ensime'
 
 " Tmux
 NeoBundle 'benmills/vimux'
@@ -261,7 +259,7 @@ let g:latex_to_unicode_tab = 0
 
 let g:latex_to_unicode_auto = 1
 
-let g:NERDTreeWinSize=50
+" let g:NERDTreeWinSize=50
 
 " netrw is buggy stop using it
 " wait, did neovim fix it?
