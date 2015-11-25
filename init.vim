@@ -26,33 +26,21 @@
 " Let's look into ignore_globs for unite
 " RuboCop!!! Fscking modes don't use local leader!
 " Ace-Jump line mode?
+" Can I get Syntastic to run Rubocop?
+" What is the ] for next syntastic error?
+" When I delete a buffer, the window shouldn't close, instead the next buffer
+" should pop into that window. (more emacs-like)
 
-
-""""""""""
+"""""""""""""
 """ NeoBundle
 
-" Note: Skip initialization for vim-tiny or vim-small.
-if !1 | finish | endif
-
-if has('vim_starting')
-  if &compatible
-    set nocompatible               " Be iMproved
-  endif
-
-  " Required:
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-
 " Required:
+set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.vim/bundle/'))
 
 " Let NeoBundle manage NeoBundle
 " Required:
 NeoBundleFetch 'Shougo/neobundle.vim'
-
-" My Bundles here:
-" Refer to |:NeoBundle-examples|.
-" Note: You don't set neobundle setting in .gvimrc!
 
 " C/C++
 NeoBundle 'justmao945/vim-clang'
@@ -104,6 +92,7 @@ NeoBundle 'vim-ruby/vim-ruby'
 " Scala
 NeoBundle 'derekwyatt/vim-sbt'
 NeoBundle 'derekwyatt/vim-scala'
+NeoBundle 'ensime/ensime-vim'
 
 " Tmux
 NeoBundle 'benmills/vimux'
@@ -112,11 +101,26 @@ NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'wellle/tmux-complete.vim'
 
 " Vim
-NeoBundle 'Shougo/neocomplcache.vim'
+
+"" tpope
+NeoBundle 'tpope/vim-abolish'
+NeoBundle 'tpope/vim-dispatch'
+NeoBundle 'tpope/vim-endwise'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'tpope/vim-rsi.git'
+NeoBundle 'tpope/vim-sensible'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-unimpaired'
+
+"" Shougo
+NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'Shougo/neoyank.vim'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'unix' : 'make -f make_unix.mak'}}
+
+"" et al
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'chriskempson/base16-vim'
@@ -127,13 +131,6 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-dispatch'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-sensible'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-unimpaired'
 
 call neobundle#end()
 
@@ -143,63 +140,6 @@ filetype plugin indent on
 " If there are uninstalled bundles found on startup,
 " this will conveniently prompt you to install them.
 NeoBundleCheck
-
-
-"""""""""""""""""
-""" neocomplcache -- neovim and neocomplete are not compatible
-
-let g:acp_enableAtStartup = 0
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_enable_smart_case = 1
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-" Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplcache#smart_close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-endfunction
-
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_force_omni_patterns')
-  let g:neocomplcache_force_omni_patterns = {}
-endif
-let g:neocomplcache_force_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_force_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplcache_force_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
 """"""""""""""""""
 """ neosnippet.vim
@@ -211,11 +151,11 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \: "\<TAB>"
 
 " For snippet_complete marker.
 if has('conceal')
@@ -236,7 +176,8 @@ endif
 let g:unite_source_history_yank_enable = 1
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
-set wildignore=*.class,*.cache,.chef,target/,project/target/,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb,target/sbt-ctags-dep-srcs/,.ensime_cache/,node_modules/,bower_components/,dev-server/
+set wildignore=*.class,*.cache,.chef,target/,project/target/,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb,.ensime_cache/,node_modules/,bower_components/,dev-server/,bower/,
+"set wildignore=*.class,*.cache,*.pyc,.*/
 call unite#custom#source('file_rec,file_rec/async', 'ignore_globs', split(&wildignore, ','))
 call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
@@ -252,12 +193,9 @@ let base16colorspace=256
 let mapleader=" "
 let maplocalleader="\\"
 
+let g:deoplete#enable_at_startup = 1
+
 let g:haddock_browser = "firefox"
-
-" neocomplcache will freeze at 100% cpu elsewise
-let g:latex_to_unicode_tab = 0
-
-let g:latex_to_unicode_auto = 1
 
 " let g:NERDTreeWinSize=50
 
@@ -267,15 +205,17 @@ let g:netrw_altv = 1
 let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
 
-" pymode should not use global leader
-let g:pymode_rope = 0
+" pymode should not use global leader, omg srsly.
 let g:pymode_breakpoint_bind = '<localleader>b'
 let g:pymode_folding = 0
 let g:pymode_lint_on_write = 0
 let g:pymode_lint_python_checkers = [ 'pylint', 'pep257', 'pep8', 'pyflakes', 'mccabe' ]
 let g:pymode_lint_unmodified = 1
 let g:pymode_options_max_line_length = 99
+let g:pymode_rope = 0
 let g:pymode_run_bind = '<localleader>r'
+
+let g:python3_host_prog = 'python3'
 
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
@@ -316,18 +256,15 @@ let g:slime_target = "tmux"
 " scala has ~test and python has python-mode
 let g:syntastic_mode_map = { "mode" : "active", "passive_filetypes" : ["python", "scala"] }
 
-let g:tagbar_width = 45
+"let g:tagbar_width = 45
 let g:tagbar_sort = 0
-
-let g:tmuxcomplete#trigger = 'omnifunc'
 
 let g:unite_enable_start_insert = 1
 
 let g:airline_powerline_fonts = 1
-let g:vim_airline_theme = 'base16'
 
+"let g:vim_airline_theme = 'base16'
 let g:vim_json_syntax_conceal = 0
-
 let g:vim_markdown_folding_disabled = 1
 
 
@@ -335,26 +272,28 @@ let g:vim_markdown_folding_disabled = 1
 """ set
 
 " Remember to mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo
-
 set backupdir=~/.vim/backup
+set directory=~/.vim/swap
+set undodir=~/.vim/undo
+
+" TODO: many of these are probbaly in sensible.vim so remove them here or drop
+" sensible instead.
 set cmdheight=1
 set cursorline
-set directory=~/.vim/swap
 set encoding=utf-8
 set expandtab
 set grepprg=ag
 set guioptions=0
 set hidden
 set list
-"set number
+set number
 set previewheight=17
-"set relativenumber
+set relativenumber
 set shell=zsh
 set shiftwidth=2
 set t_Co=256
 set tabstop=2
 set tags=.tags;
-set undodir=~/.vim/undo
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -364,7 +303,6 @@ set undoreload=10000
 """ MAPPINGS!!!!
 "
 " Inspired by Spacemacs, but going 'viminal'
-" This is creeping towards Spacemacs bindings
 
 " Saving and Quitting
 nnoremap <leader><ESC> :qa<cr>
@@ -377,17 +315,18 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>w :w<cr>
 nnoremap <leader>x :x<cr>
 
+" Windows
+nnoremap <leader>s :split<cr>
+nnoremap <leader>v :vsplit<cr>
+
 " Edit Files
 nnoremap <leader>ed :e ~/TODO.md<cr>
 nnoremap <leader>em :e ~/menu.md<cr>
 nnoremap <leader>en :e notes.md<cr>
 nnoremap <leader>er :e ~/RETRO_NOTES.md<cr>
 nnoremap <leader>et :e ~/dotfiles/.tmux.conf<cr>
-nnoremap <leader>ev :e ~/dotfiles/.vimrc<cr>
+nnoremap <leader>ev :e ~/dotfiles/init.vim<cr>
 nnoremap <leader>ez :e ~/.zshrc<cr>
-
-" Files
-nnoremap <leader>n :NERDTreeToggle<CR>
 
 " Git
 " Remember <leader>h_ for GitGutter
@@ -402,10 +341,12 @@ nnoremap <leader>go :Gdiff origin<CR>
 nnoremap <leader>gs :Gstatus<CR>
 
 " Searching
+" TODO: Hey what should we replace this with??
 nnoremap <leader>sc :let @/ = ""<cr>
 nnoremap <leader>/ :UniteWithCursorWord grep:.<cr>
 
 " Toggles
+nnoremap <leader>n :NERDTreeToggle<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 " Unite
@@ -427,6 +368,7 @@ nnoremap <leader>R :Unite file_rec/async<cr>
 nnoremap <leader>r :Unite file_rec/git<cr>
 nnoremap <leader>y :Unite history/yank<cr>
 
+" TODO: you don't actually use these, so either use them or remove them
 " Vimux
 nnoremap <leader>vi :VimuxInspectRunner<CR>
 nnoremap <leader>vl :VimuxRunLastCommand<CR>
@@ -445,13 +387,6 @@ au BufNewFile,BufReadPost *.md set filetype=markdown
 
 " Override that obnoxious bar in pymode
 au FileType python setlocal textwidth=0
-
-" Open NERDTree automatically when vim starts up if no files are specified
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
-" Close vim if the only window left open is NERDTree
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " OS X and crontabs. moan. sigh. groan.
 autocmd filetype crontab setlocal nobackup nowritebackup
