@@ -29,5 +29,4 @@ URxvt.matcher.pattern.1: \\bwww\\.[\\w-]\\.[\\w./?&@#-]*[\\w/-]
 !URxvt.intensityStyles: false
 
 !#include "solarized-xresources"
-!#include "zenburn-xresources"
 #include "base16-default.dark.256.xresources"
