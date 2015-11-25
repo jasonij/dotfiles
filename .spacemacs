@@ -29,8 +29,10 @@
           git-gutter-use-fringe t)
      github
      haml
-     haskell
+     (haskell :variables
+              haskell-enable-ghc-mod-support t)
      html
+     idris
      javascript
      latex
      markdown
@@ -62,6 +64,7 @@
      base16-theme
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
+   ;; TODO: remove evil-lisp-state from exclusions (it got mangled on Nov 22nd 2015)
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
@@ -97,7 +100,7 @@ before layers configuration."
                          solarized-dark
                          spacemacs-light
                          spacemacs-dark
-                         anti-zenburn
+                         leuven
                          zenburn)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -202,7 +205,7 @@ layers configuration."
 
   (setq py-python-command "python3")
   (setq python-shell-interpreter 'python3)
-  (setq neo-vc-integration nil)
+  (setq neo-vc-integration nil) ;; do you remember what this does?
 
   ;; Avoid the default and use homebrew's
   ;; TODO: need to have some separate Mac & Linux config blocks
@@ -232,6 +235,8 @@ layers configuration."
 
   (setenv "SBT_OPTS" "-Xms510M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M")
 
+  (setq vc-follow-symlinks t)
+
   ;; From jaycotton https://github.com/bbatsov/projectile/issues/683#issuecomment-131570808
   ;; Allows projectile-find-tag to have > 511 entries.
   (defun my-expand-completion-table (orig-fun &rest args)
@@ -248,36 +253,41 @@ layers configuration."
 
 ;; TODO
 ;;
-;; Line numbers -- or do you want them?
-;; Get delete to work in zsh
-;; Turn off search highlighting (SPC-s-c)
+;; '(default ((t (:background nil))))
 ;; Fix perspectives if possible (name is off by one, etc)
-;; Shortcut for "next lint warning" S-e-n
-;; could C-] center the line?
-;; always follow sym links
-;; let's get vim-like tab completion (Tab for complete, C-N and C-P for cycling)
 ;; Get Helm and Projectile to agree on exclusions (e.g., in S-/ where bower_components is included)
-;; get magit to open diffed files in other window
+;; Get delete to work in zsh
+;; What's the right way to switch between branches in version control? (magit keeps not noticing in buffers)
 ;; autocomplete could stand to work with julia, spacemacs julia support is not great
-;; magit-blame-quit needs a bloomin' hotkey
 ;; autosave or something in prog-mode ?
+;; can I get zsh aliases into eshell?
+;; get magit to open diffed files in other window
+;; let's get vim-like tab completion (Tab for complete, C-N and C-P for cycling)
+;; magit refresh g doesn't work in evil-mode
+;; magit-blame-quit needs a bloomin' hotkey
+;; neotree and magit-status still don't jive
+;; use spacemacs-light theme in terminal, solarized-light in gui
+;; Can I use the same meta key in terminal and gui?
+;; magit is not working great in emacs25, let's stay with git cli
+;; should I just default to spacemacs-light so that terminals work better?
+;; what is the best pattern for keeping emacs up as a daemon? (for terminal and gui)
+;; zoom-frame does not work well in fullscreen
+;; I want allowable line lengths of say 100 to 120 across languages
+;; What about common tmux pane manipulations like C-a { ? How about C-w { ?
+;; julia? use develop branch instead?
 
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
+ '(package-selected-packages
    (quote
-    ("0b6645497e51d80eda1d337d6cabe31814d6c381e69491931a688836c16137ed" default))))
+    (tern alert helm-core bind-map smartparens ws-butler spaceline restart-emacs persp-mode osx-trash lorem-ipsum jbeans-theme help-fns+ helm-flx helm-company github-clone farmhouse-theme evil-mc evil-magit evil-indent-plus auto-compile ace-jump-helm-line markdown-mode js2-mode haml-mode gitignore-mode git-commit flycheck auctex anaconda-mode evil-leader evil package-build bind-key s ess haskell-mode helm magit async robe linum-relative cider zonokai-theme zenburn-theme zen-and-art-theme window-numbering which-key web-mode web-beautify volatile-highlights utop use-package underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tuareg tronesque-theme toxi-theme toml-mode toc-org tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme stekene-theme spray spacemacs-theme spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smooth-scrolling smeargle slim-mode shm shell-pop seti-theme scss-mode sass-mode ruby-tools ruby-test-mode ruby-end reverse-theme reveal-in-osx-finder rbenv rainbow-delimiters racer queue quelpa pyvenv pytest pyenv-mode purple-haze-theme projectile-rails professional-theme powerline popwin planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persp-projectile pcre2el pbcopy pastels-on-dark-theme paradox page-break-lines organic-green-theme org-repo-todo org-present org-pomodoro org-plus-contrib org-bullets open-junk-file oldlace-theme ocp-indent occidental-theme obsidian-theme noflet noctilux-theme niflheim-theme neotree naquadah-theme mustang-theme multi-term move-text monochrome-theme molokai-theme moe-theme mmm-mode minimal-theme merlin material-theme markdown-toc magit-gitflow magit-gh-pulls macrostep lush-theme light-soap-theme leuven-theme less-css-mode launchctl json-mode js2-refactor js-doc jazz-theme jade-mode ir-black-theme inkpot-theme info+ indent-guide idris-mode ido-vertical-mode hy-mode hungry-delete htmlize hindent highlight-parentheses highlight-numbers highlight-indentation heroku-theme hemisu-theme helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-descbinds helm-css-scss helm-c-yasnippet helm-ag hc-zenburn-theme haskell-snippets gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gist gh-md gandalf-theme flycheck-rust flycheck-pos-tip flycheck-haskell flx-ido flatui-theme flatland-theme firebelly-theme fill-column-indicator feature-mode fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-matchit evil-lisp-state evil-jumper evil-indent-textobject evil-iedit-state evil-exchange evil-escape evil-args evil-anzu ess-smart-equals ess-R-object-popup ess-R-data-view espresso-theme eshell-prompt-extras esh-help erlang ensime enh-ruby-mode emmet-mode elisp-slime-nav django-theme diff-hl define-word darktooth-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme company-web company-tern company-statistics company-racer company-quickhelp company-ghc company-cabal company-auctex company-anaconda colorsarenice-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized coffee-mode cmm-mode clues-theme clj-refactor clean-aindent-mode cider-eval-sexp-fu cherry-blossom-theme busybee-theme bundler buffer-move bubbleberry-theme birds-of-paradise-plus-theme base16-theme auto-yasnippet auto-highlight-symbol auto-dictionary apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme align-cljlet alect-themes alchemist aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background nil))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
