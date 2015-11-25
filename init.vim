@@ -31,15 +31,13 @@
 " When I delete a buffer, the window shouldn't close, instead the next buffer
 " should pop into that window. (more emacs-like)
 
+
 """""""""""""
 """ NeoBundle
 
-" Required:
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.vim/bundle/'))
 
-" Let NeoBundle manage NeoBundle
-" Required:
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " C/C++
@@ -133,13 +131,10 @@ NeoBundle 'scrooloose/syntastic'
 NeoBundle 'terryma/vim-multiple-cursors'
 
 call neobundle#end()
-
-" Required:
 filetype plugin indent on
 
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
 NeoBundleCheck
+
 
 """"""""""""""""""
 """ neosnippet.vim
@@ -176,8 +171,7 @@ endif
 let g:unite_source_history_yank_enable = 1
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
-set wildignore=*.class,*.cache,.chef,target/,project/target/,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb,.ensime_cache/,node_modules/,bower_components/,dev-server/,bower/,
-"set wildignore=*.class,*.cache,*.pyc,.*/
+set wildignore=*.class,*.cache,.chef,target/,project/target/,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb,.ensime_cache/,node_modules/,bower_components/,dev-server/,bower/
 call unite#custom#source('file_rec,file_rec/async', 'ignore_globs', split(&wildignore, ','))
 call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
@@ -263,7 +257,7 @@ let g:unite_enable_start_insert = 1
 
 let g:airline_powerline_fonts = 1
 
-"let g:vim_airline_theme = 'base16'
+let g:vim_airline_theme = 'base16'
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_folding_disabled = 1
 
