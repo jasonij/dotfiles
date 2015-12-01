@@ -15,7 +15,6 @@
 " SlimeConfig may get confused with C-6
 " Unite sometimes enters in paste mode, that's atrocious.
 " What about a splitting version of C-] ?
-" What is the ] for next syntastic error?
 " When I delete a buffer, the window shouldn't close, instead the next buffer
 " can I get tmux paste to trigger paste mode in neovim?
 " d-J and d-K for column seek delete? make orthogonal?
@@ -30,6 +29,8 @@
 " Get rid of Syntastic -> use NeoMake
 " Possibly replace NeoBundle with Plug
 " Possibly <leader>hjkl for pane navigation?
+" What I'd really like is <leader><leader>key for bidirectional hop to key
+" Possibly <leader><leader>l for easy motion to all lines
 
 
 """""""""""""
@@ -121,6 +122,7 @@ NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'uni
 
 "" et al
 NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'benekastah/neomake'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'godlygeek/tabular'
@@ -128,7 +130,6 @@ NeoBundle 'jnurmine/Zenburn'
 NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'scrooloose/syntastic'
 NeoBundle 'terryma/vim-multiple-cursors'
 
 call neobundle#end()
@@ -248,11 +249,21 @@ let g:slime_target = "tmux"
 
 let g:sneak#streak = 1
 
-" scala has ~test and python has python-mode
-" TODO: try this again with neovim, might be async now
-" Nope, but there's NeoMake
-let g:syntastic_javascript_checkers=[ 'jshint' ]
-let g:syntastic_mode_map = { "mode" : "active", "passive_filetypes" : ["python", "scala"] }
+"replace 'f' with 1-char Sneak
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
+
+"replace 't' with 1-char Sneak
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
 
 "let g:tagbar_width = 45
 let g:tagbar_sort = 0
@@ -397,6 +408,9 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+" Neomake
+autocmd! BufWritePost * Neomake
 
 
 """""""""""""""
