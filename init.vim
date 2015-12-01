@@ -3,33 +3,33 @@
 " C-h broken? See https://github.com/neovim/neovim/issues/2048
 "
 " TODO:
-" Go between tests and instances
-" can I get tmux paste to trigger paste mode in neovim?
-" how integrated do I really want vim and tmux to be?
-" use C-o more often
-" leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z)
-" splits often scroll in a way I don't like
-" What about <leader>m as another alias for , which is <localleader> ?
-" What about a splitting version of C-] ?
-" NERDTree ignores my ignores on the first opening
-" How to get auto-corrections from spell checking??
-" SlimeConfig may get confused with C-6
-" leader combo for delete current buffer and swap to previous
 " <leader>/ could analog coh
-" Unite sometimes enters in paste mode, that's atrocious.
-" Consider making gv come on after visual exit
-"
-" d-J and d-K for column seek delete? make orthogonal?
-" Can we get C-Tab to cycle through vim windows?
-" I am losing enthusiasm for Spacemacs because Emacs is so sluggish and
-" unstable.
-" Let's look into ignore_globs for unite
-" RuboCop!!! Fscking modes don't use local leader!
 " Ace-Jump line mode?
 " Can I get Syntastic to run Rubocop?
+" Can we get C-Tab to cycle through vim windows?
+" Consider making gv come on after visual exit
+" Go between tests and instances
+" How to get auto-corrections from spell checking??
+" NERDTree ignores my ignores on the first opening
+" RuboCop!!! Fscking modes don't use local leader!
+" SlimeConfig may get confused with C-6
+" Unite sometimes enters in paste mode, that's atrocious.
+" What about a splitting version of C-] ?
 " What is the ] for next syntastic error?
 " When I delete a buffer, the window shouldn't close, instead the next buffer
+" can I get tmux paste to trigger paste mode in neovim?
+" d-J and d-K for column seek delete? make orthogonal?
+" how integrated do I really want vim and tmux to be?
+" leader combo for delete current buffer and swap to previous
+" leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z)
 " should pop into that window. (more emacs-like)
+" splits often scroll in a way I don't like
+" use C-o more often
+" Is there something analogous to M-q for wrapping?
+" Get rid of NERDTree -> netrw seems to be working? Oh no, still broken.
+" Get rid of Syntastic -> use NeoMake
+" Possibly replace NeoBundle with Plug
+" Possibly <leader>hjkl for pane navigation?
 
 
 """""""""""""
@@ -54,6 +54,7 @@ NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
 NeoBundle 'cespare/vim-toml'
 NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'elzr/vim-json'
+NeoBundle 'plasticboy/vim-markdown'
 
 " Elixir
 NeoBundle 'elixir-lang/vim-elixir'
@@ -191,7 +192,7 @@ let g:deoplete#enable_at_startup = 1
 
 let g:haddock_browser = "firefox"
 
-" let g:NERDTreeWinSize=50
+let g:NERDTreeWinSize=50
 
 " netrw is buggy stop using it
 " wait, did neovim fix it?
@@ -232,10 +233,11 @@ let g:rbpt_colorpairs = [
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
 
+let g:vimrubocop_config = '~/.rubocop.yml'
 let g:vimrubocop_keymap = 0
 nmap <LocalLeader>r :RuboCop<CR>
 
-let g:scala_first_party_namespaces='.*\(cetera\|phidippides\).*'
+let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|rammstein\).*'
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
@@ -244,10 +246,12 @@ let g:slime_paste_file = tempname()
 let g:slime_python_ipython = 1
 let g:slime_target = "tmux"
 
-" Try it back to normal
-"let g:sneak#streak = 1
+let g:sneak#streak = 1
 
 " scala has ~test and python has python-mode
+" TODO: try this again with neovim, might be async now
+" Nope, but there's NeoMake
+let g:syntastic_javascript_checkers=[ 'jshint' ]
 let g:syntastic_mode_map = { "mode" : "active", "passive_filetypes" : ["python", "scala"] }
 
 "let g:tagbar_width = 45
@@ -280,9 +284,9 @@ set grepprg=ag
 set guioptions=0
 set hidden
 set list
-set number
+"set number
 set previewheight=17
-set relativenumber
+"set relativenumber
 set shell=zsh
 set shiftwidth=2
 set t_Co=256
@@ -314,10 +318,10 @@ nnoremap <leader>s :split<cr>
 nnoremap <leader>v :vsplit<cr>
 
 " Edit Files
-nnoremap <leader>ed :e ~/TODO.md<cr>
-nnoremap <leader>em :e ~/menu.md<cr>
+nnoremap <leader>ed :e ~/notes/TODO.md<cr>
+nnoremap <leader>em :e ~/notes/menu.md<cr>
 nnoremap <leader>en :e notes.md<cr>
-nnoremap <leader>er :e ~/RETRO_NOTES.md<cr>
+nnoremap <leader>er :e ~/notes/RETRO_NOTES.md<cr>
 nnoremap <leader>et :e ~/dotfiles/.tmux.conf<cr>
 nnoremap <leader>ev :e ~/dotfiles/init.vim<cr>
 nnoremap <leader>ez :e ~/.zshrc<cr>
@@ -335,11 +339,13 @@ nnoremap <leader>go :Gdiff origin<CR>
 nnoremap <leader>gs :Gstatus<CR>
 
 " Searching
-" TODO: Hey what should we replace this with??
+" TODO: Hey what should we replace this with?? (because we want s back)
 nnoremap <leader>sc :let @/ = ""<cr>
 nnoremap <leader>/ :UniteWithCursorWord grep:.<cr>
 
 " Toggles
+" Let's try this Esc code just to see
+inoremap jj <Esc>
 nnoremap <leader>n :NERDTreeToggle<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
@@ -363,6 +369,7 @@ nnoremap <leader>r :Unite file_rec/git<cr>
 nnoremap <leader>y :Unite history/yank<cr>
 
 " TODO: you don't actually use these, so either use them or remove them
+" Q: Can we replace these with a different prefix to get v back for vsp?
 " Vimux
 nnoremap <leader>vi :VimuxInspectRunner<CR>
 nnoremap <leader>vl :VimuxRunLastCommand<CR>
@@ -394,6 +401,6 @@ au Syntax * RainbowParenthesesLoadBraces
 
 """""""""""""""
 """ colorscheme
-""" base16 is lovely but Mac's latest upgrade broke it.
+""" base16 is working again evidently
 set background=light
 colorscheme solarized
