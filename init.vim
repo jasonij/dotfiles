@@ -3,39 +3,44 @@
 " C-h broken? See https://github.com/neovim/neovim/issues/2048
 "
 " TODO:
-" <leader>/ could analog coh
 " Ace-Jump line mode?
-" Can I get Syntastic to run Rubocop?
 " Can we get C-Tab to cycle through vim windows?
-" Consider making gv come on after visual exit
-" Go between tests and instances
-" How to get auto-corrections from spell checking??
+" Go between tests and instances in Scala
+" Is there something analogous to M-q for wrapping? Yes, gq
+" M-s-< and M-s->
 " NERDTree ignores my ignores on the first opening
-" RuboCop!!! Fscking modes don't use local leader!
+" Possibly <leader>l for easy motion to all lines
+" Possibly <leader><leader><char> for easy motion to character
+" Possibly <leader>hjkl for pane navigation?
+" Possibly replace NeoBundle with Plug
 " SlimeConfig may get confused with C-6
 " Unite sometimes enters in paste mode, that's atrocious.
+" What I'd really like is <leader><leader>key for bidirectional hop to key
 " What about a splitting version of C-] ?
 " When I delete a buffer, the window shouldn't close, instead the next buffer
 " can I get tmux paste to trigger paste mode in neovim?
 " d-J and d-K for column seek delete? make orthogonal?
 " how integrated do I really want vim and tmux to be?
 " leader combo for delete current buffer and swap to previous
-" leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z)
+" leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z) and non-alpha!
 " should pop into that window. (more emacs-like)
 " splits often scroll in a way I don't like
 " use C-o more often
-" Is there something analogous to M-q for wrapping?
-" Get rid of NERDTree -> netrw seems to be working? Oh no, still broken.
-" Get rid of Syntastic -> use NeoMake
-" Possibly replace NeoBundle with Plug
-" Possibly <leader>hjkl for pane navigation?
-" What I'd really like is <leader><leader>key for bidirectional hop to key
-" Possibly <leader><leader>l for easy motion to all lines
-
+" Get scalastyle to run with NeoMake
+" Get NeoMake listing next and previous to work (they aren't relative to
+" cursor position)
+" Space may not be the best leader key, possibly ; is.
+" (SPC and \) or (; and ,) make more sense as leader/localleader combos
+" But (; and ,) requires intelligent on/off of streak mode or whatever it is
+" Let's try , as localleader too, see which mappings make sense
+" How to get spelling suggestions to show up?
+" Let's try to get C-hjkl back, I like C-h (maybe just in tmux)
+" The violin approach -- multiple shortcuts for the same actions
 
 """""""""""""
 """ NeoBundle
 
+" TODO: point me to neovim by default now
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.vim/bundle/'))
 
@@ -85,7 +90,6 @@ NeoBundle 'klen/python-mode'
 NeoBundle 'jalvesaq/Nvim-R'
 
 " Ruby
-NeoBundle 'ngmy/vim-rubocop'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'vim-ruby/vim-ruby'
 
@@ -193,7 +197,9 @@ let g:deoplete#enable_at_startup = 1
 
 let g:haddock_browser = "firefox"
 
-let g:NERDTreeWinSize=50
+"let g:neomake_scala_enabled_makers = ['fsc', 'scalastyle']
+
+let g:NERDTreeWinSize=45
 
 " netrw is buggy stop using it
 " wait, did neovim fix it?
@@ -233,10 +239,6 @@ let g:rbpt_colorpairs = [
     \ ]
 let g:rbpt_max = 16
 let g:rbpt_loadcmd_toggle = 0
-
-let g:vimrubocop_config = '~/.rubocop.yml'
-let g:vimrubocop_keymap = 0
-nmap <LocalLeader>r :RuboCop<CR>
 
 let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|rammstein\).*'
 let g:scala_sort_across_groups=1
@@ -313,6 +315,9 @@ set undoreload=10000
 "
 " Inspired by Spacemacs, but going 'viminal'
 
+" I want to experiment with this
+nmap ; <leader>
+
 " Saving and Quitting
 nnoremap <leader><ESC> :qa<cr>
 nnoremap <leader>Q :qa<cr>
@@ -327,6 +332,8 @@ nnoremap <leader>x :x<cr>
 " Windows
 nnoremap <leader>s :split<cr>
 nnoremap <leader>v :vsplit<cr>
+nnoremap <leader>o :only<cr>
+
 
 " Edit Files
 nnoremap <leader>ed :e ~/notes/TODO.md<cr>
@@ -353,6 +360,9 @@ nnoremap <leader>gs :Gstatus<CR>
 " TODO: Hey what should we replace this with?? (because we want s back)
 nnoremap <leader>sc :let @/ = ""<cr>
 nnoremap <leader>/ :UniteWithCursorWord grep:.<cr>
+
+" Terminal!
+tnoremap <Esc> <C-\><C-n>
 
 " Toggles
 " Let's try this Esc code just to see
@@ -417,4 +427,4 @@ autocmd! BufWritePost * Neomake
 """ colorscheme
 """ base16 is working again evidently
 set background=light
-colorscheme solarized
+colorscheme base16-default

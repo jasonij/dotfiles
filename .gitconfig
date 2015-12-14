@@ -20,4 +20,5 @@
 [mergetool "vimdiff"]
   path = nvim
   cmd = nvim -d $LOCAL $REMOTE -c '$wincmd w' -c '$wincmd l'
+  #cmd = nvim -d $REMOTE $LOCAL $MERGED -c '$wincmd w' -c '$wincmd J'
   #cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
