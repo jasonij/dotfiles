@@ -36,6 +36,7 @@
 " How to get spelling suggestions to show up?
 " Let's try to get C-hjkl back, I like C-h (maybe just in tmux)
 " The violin approach -- multiple shortcuts for the same actions
+" Gdiff should have $BASE, $LOCAL, $REMOTE, $MERGED or something like that
 
 """""""""""""
 """ NeoBundle
@@ -178,10 +179,10 @@ let g:unite_source_history_yank_enable = 1
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
 set wildignore=*.class,*.cache,.chef,target/,project/target/,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb,.ensime_cache/,node_modules/,bower_components/,dev-server/,bower/
-call unite#custom#source('file_rec,file_rec/async', 'ignore_globs', split(&wildignore, ','))
+call unite#custom#source('file_rec,file_rec/async,file_rec/neovim,file_rec/neovim2', 'ignore_globs', split(&wildignore, ','))
 call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
+call unite#filters#sorter_default#use(['sorter_selecta'])
 
 
 """""""
@@ -202,7 +203,7 @@ let g:haddock_browser = "firefox"
 let g:NERDTreeWinSize=45
 
 " netrw is buggy stop using it
-" wait, did neovim fix it?
+" wait, did neovim fix it? no, not yet.
 let g:netrw_altv = 1
 let g:netrw_browse_split = 4
 let g:netrw_liststyle=3
@@ -219,6 +220,7 @@ let g:pymode_run_bind = '<localleader>r'
 
 let g:python3_host_prog = 'python3'
 
+" not sure how useful this has been
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
     \ ['Darkblue',    'SeaGreen3'],
@@ -297,9 +299,9 @@ set grepprg=ag
 set guioptions=0
 set hidden
 set list
-"set number
+set number
 set previewheight=17
-"set relativenumber
+set relativenumber
 set shell=zsh
 set shiftwidth=2
 set t_Co=256
@@ -316,7 +318,10 @@ set undoreload=10000
 " Inspired by Spacemacs, but going 'viminal'
 
 " I want to experiment with this
+" Unfortunately, I use ; and , a lot, why can't I get these to turn off in
+" streak mode?
 nmap ; <leader>
+nmap , <localleader>
 
 " Saving and Quitting
 nnoremap <leader><ESC> :qa<cr>
@@ -358,7 +363,8 @@ nnoremap <leader>gs :Gstatus<CR>
 
 " Searching
 " TODO: Hey what should we replace this with?? (because we want s back)
-nnoremap <leader>sc :let @/ = ""<cr>
+" Look out gitgutter uses leader h for hunks
+nnoremap <leader>h :let @/ = ""<cr>
 nnoremap <leader>/ :UniteWithCursorWord grep:.<cr>
 
 " Terminal!
@@ -373,18 +379,21 @@ nnoremap <leader>t :TagbarToggle<CR>
 " Unite
 nnoremap <leader>u :Unite 
 nnoremap <leader>ub :Unite buffer bookmark<cr>
-nnoremap <leader>uf :Unite file/async<cr>
+nnoremap <leader>uf :Unite file<cr>
 nnoremap <leader>ug :Unite grep:.<cr>
 nnoremap <leader>ul :Unite tmuxcomplete/lines<cr>
 nnoremap <leader>ur :Unite file_rec/git<cr>
+" Keep an eye on neovim-specific file_recs, now are slower but could get faster
 nnoremap <leader>uR :Unite file_rec/async<cr>
 nnoremap <leader>ut :Unite tmuxcomplete<cr>
 nnoremap <leader>uy :Unite history/yank<cr>
 
 " Unite shortcuts
+" would nnoremap <leader>f <leader>uf be more semantic?
+" Or, should we maybe bail on Unite shortcuts?
 nnoremap <leader>b :Unite buffer bookmark<cr>
 nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
-nnoremap <leader>f :Unite file/async<cr>
+nnoremap <leader>f :Unite file<cr>
 nnoremap <leader>R :Unite file_rec/async<cr>
 nnoremap <leader>r :Unite file_rec/git<cr>
 nnoremap <leader>y :Unite history/yank<cr>
@@ -392,13 +401,13 @@ nnoremap <leader>y :Unite history/yank<cr>
 " TODO: you don't actually use these, so either use them or remove them
 " Q: Can we replace these with a different prefix to get v back for vsp?
 " Vimux
-nnoremap <leader>vi :VimuxInspectRunner<CR>
-nnoremap <leader>vl :VimuxRunLastCommand<CR>
-nnoremap <leader>vp :VimuxPromptCommand<CR>
-nnoremap <leader>vq :VimuxCloseRunner<CR>
-nnoremap <leader>vr :VimuxRunCommand ''<left>
-nnoremap <leader>vx :VimuxInterruptRunner<CR>
-nnoremap <leader>vz :call VimuxZoomRunner()<CR>
+" nnoremap <leader>vi :VimuxInspectRunner<CR>
+" nnoremap <leader>vl :VimuxRunLastCommand<CR>
+" nnoremap <leader>vp :VimuxPromptCommand<CR>
+" nnoremap <leader>vq :VimuxCloseRunner<CR>
+" nnoremap <leader>vr :VimuxRunCommand ''<left>
+" nnoremap <leader>vx :VimuxInterruptRunner<CR>
+" nnoremap <leader>vz :call VimuxZoomRunner()<CR>
 
 
 """""""""""
