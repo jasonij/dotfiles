@@ -3,7 +3,13 @@ dotfiles
 
 These are my dotfiles.
 
-The setup is typically Spacemacs and/or tmux-zsh-neovim.
+Setup is typically Neovim-zsh-tmux and/or Spacemacs.
 
-The main languages are Scala, Ruby, and Python.
+Main languages are Scala, Ruby, Python, Julia, Clojure.
+
+Work dev box is a Mac, home is Arch Linux ThinkPad.
+
+Usability Essentials:
+* Remap caps lock to control
+* Set Mac's option to Meta
 
