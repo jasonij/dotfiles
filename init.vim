@@ -37,13 +37,18 @@
 " Let's try to get C-hjkl back, I like C-h (maybe just in tmux)
 " The violin approach -- multiple shortcuts for the same actions
 " Gdiff should have $BASE, $LOCAL, $REMOTE, $MERGED or something like that
+" What about ;; and ,, for next and prev?
+" Need to get NeoMake to respect my style rules for Ruby & Scala
+" Open from Unite into vsplit or hsplit windows
+" Use _ as a word separator line -? Is Emacs and shell-compatible
+" gggqG (is there something shorter?)
 
 """""""""""""
 """ NeoBundle
 
 " TODO: point me to neovim by default now
-set runtimepath+=~/.vim/bundle/neobundle.vim/
-call neobundle#begin(expand('~/.vim/bundle/'))
+set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
+call neobundle#begin(expand('~/.config/nvim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
@@ -284,10 +289,10 @@ let g:vim_markdown_folding_disabled = 1
 """""""
 """ set
 
-" Remember to mkdir -p ~/.vim/backup ~/.vim/swap ~/.vim/undo
-set backupdir=~/.vim/backup
-set directory=~/.vim/swap
-set undodir=~/.vim/undo
+" Remember to mkdir -p ~/.config/nvim/backup ~/.config/nvim/swap ~/.config/nvim/undo
+set backupdir=~/.config/nvim/backup
+set directory=~/.config/nvim/swap
+set undodir=~/.config/nvim/undo
 
 " TODO: many of these are probbaly in sensible.vim so remove them here or drop
 " sensible instead.
