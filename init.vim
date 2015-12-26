@@ -42,6 +42,7 @@
 " Open from Unite into vsplit or hsplit windows
 " Use _ as a word separator line -? Is Emacs and shell-compatible
 " gggqG (is there something shorter?)
+" Possibly C-w = after NeoTree open
 
 """""""""""""
 """ NeoBundle
