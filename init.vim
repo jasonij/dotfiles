@@ -3,32 +3,18 @@
 " C-h broken? See https://github.com/neovim/neovim/issues/2048
 "
 " TODO:
-" Ace-Jump line mode?
-" Can we get C-Tab to cycle through vim windows?
 " Go between tests and instances in Scala
-" Is there something analogous to M-q for wrapping? Yes, gq
 " M-s-< and M-s->
 " NERDTree ignores my ignores on the first opening
-" Possibly <leader>l for easy motion to all lines
-" Possibly <leader><leader><char> for easy motion to character
-" Possibly <leader>hjkl for pane navigation?
-" Possibly replace NeoBundle with Plug
-" SlimeConfig may get confused with C-6
-" Unite sometimes enters in paste mode, that's atrocious.
+" leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z) and non-alpha!
+" <leader><leader><char> for easy motion to character
 " What I'd really like is <leader><leader>key for bidirectional hop to key
 " What about a splitting version of C-] ?
 " When I delete a buffer, the window shouldn't close, instead the next buffer
 " can I get tmux paste to trigger paste mode in neovim?
 " d-J and d-K for column seek delete? make orthogonal?
-" how integrated do I really want vim and tmux to be?
 " leader combo for delete current buffer and swap to previous
-" leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z) and non-alpha!
-" should pop into that window. (more emacs-like)
-" splits often scroll in a way I don't like
-" use C-o more often
-" Get scalastyle to run with NeoMake
-" Get NeoMake listing next and previous to work (they aren't relative to
-" cursor position)
+" Get NeoMake listing next and previous to work (they aren't relative to cursor position)
 " Space may not be the best leader key, possibly ; is.
 " (SPC and \) or (; and ,) make more sense as leader/localleader combos
 " But (; and ,) requires intelligent on/off of streak mode or whatever it is
@@ -37,17 +23,39 @@
 " Let's try to get C-hjkl back, I like C-h (maybe just in tmux)
 " The violin approach -- multiple shortcuts for the same actions
 " Gdiff should have $BASE, $LOCAL, $REMOTE, $MERGED or something like that
-" What about ;; and ,, for next and prev?
+" What about ;; and ,, for next and prev? Or bail on those as leaders
 " Need to get NeoMake to respect my style rules for Ruby & Scala
 " Open from Unite into vsplit or hsplit windows
 " Use _ as a word separator line -? Is Emacs and shell-compatible
 " gggqG (is there something shorter?)
 " Possibly C-w = after NeoTree open
+" gf should support the usual master, origin, merged, etc.
+" S-Cmd or S-M -> and < for top and bottom?
+" hotkey to regenerate tags
+" should we make Unite grep do a source grep?
+" get scalastyle from neomake to read from local config file (or global or whatever)
+" How to get :unite whatever-was-my-last-unite-thing
+" Use :unite line and those sorts of things (good hotkey)
+" Unite recent files?
+"
+" Let's think about autocomplete. It's not often optimal:
+" * built-in C-n and C-p are very useful when programming
+" * C-x C-o for ensime and some others
+" * deoplete but maybe not by default
+"
+" I'm used to <leader>-ESC for QA but is it actually a good idea?
+" - Not necessarily, I often do <leader>-ESC when I want to get out of leader
+"
+" Smart-case with vim-sneak? Does it exist?
+"
+" messages from ensime stay up for like 1 second. How can I change this?
+"
+" Essential ruby regex: s/:\(\w\+\)=>/\1: /g
+
 
 """""""""""""
 """ NeoBundle
 
-" TODO: point me to neovim by default now
 set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
 call neobundle#begin(expand('~/.config/nvim/bundle/'))
 
@@ -59,7 +67,7 @@ NeoBundle 'justmao945/vim-clang'
 " Clojure
 NeoBundle 'guns/vim-clojure-highlight'
 NeoBundle 'guns/vim-sexp'
-NeoBundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'luochen1990/rainbow'
 NeoBundle 'tpope/vim-fireplace'
 NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
 
@@ -67,15 +75,18 @@ NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
 NeoBundle 'cespare/vim-toml'
 NeoBundle 'chrisbra/csv.vim'
 NeoBundle 'elzr/vim-json'
-NeoBundle 'plasticboy/vim-markdown'
+"doc collision on ]u is just too annoying
+"NeoBundle 'plasticboy/vim-markdown'
 
 " Elixir
+NeoBundle 'awetzel/elixir.nvim', { 'build': { 'mac' : 'yes | ./install.sh', 'unix' : 'yes | ./install.sh' } }
 NeoBundle 'elixir-lang/vim-elixir'
 NeoBundle 'jimenezrick/vimerl'
+NeoBundle 'thinca/vim-ref'
 
 " Git
 NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
 
 " Haskell
 " See https://github.com/begriffs/haskell-vim-now
@@ -103,11 +114,15 @@ NeoBundle 'vim-ruby/vim-ruby'
 " Scala
 NeoBundle 'derekwyatt/vim-sbt'
 NeoBundle 'derekwyatt/vim-scala'
-NeoBundle 'ensime/ensime-vim'
+"NeoBundle 'ensime/ensime-vim'
 
 " Tmux
 NeoBundle 'benmills/vimux'
 NeoBundle 'christoomey/vim-tmux-navigator'
+
+" Disabled until tmuxline has true color support
+"NeoBundle 'edkolev/tmuxline.vim'
+
 NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'wellle/tmux-complete.vim'
 
@@ -122,9 +137,14 @@ NeoBundle 'tpope/vim-rsi.git'
 NeoBundle 'tpope/vim-sensible'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'tpope/vim-vinegar'
 
 "" Shougo
+NeoBundle 'Shougo/context_filetype.vim'
 NeoBundle 'Shougo/deoplete.nvim'
+NeoBundle 'Shougo/echodoc.vim'
+NeoBundle 'Shougo/neoinclude.vim'
+NeoBundle 'Shougo/neopairs.vim'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/neoyank.vim'
@@ -132,16 +152,23 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'unix' : 'make -f make_unix.mak'}}
 
 "" et al
+NeoBundle 'Konfekt/FastFold'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'benekastah/neomake'
-NeoBundle 'bling/vim-airline'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'jnurmine/Zenburn'
+NeoBundle 'junegunn/fzf'
+NeoBundle 'junegunn/fzf.vim'
 NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'majutsushi/tagbar'
-NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'scrooloose/nerdtree', { 'augroup' : 'NERDTreeHijackNetrw' }
 NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'tsukkee/unite-tag'
+NeoBundle 'vim-airline/vim-airline'
+NeoBundle 'vim-airline/vim-airline-themes'
+NeoBundle 'vim-scripts/ScrollColors'
 
 call neobundle#end()
 filetype plugin indent on
@@ -181,7 +208,9 @@ if executable('ag')
   let g:unite_source_rec_async_command= 'ag --follow --nocolor --nogroup --hidden -g ""'
 endif
 
+let g:unite_enable_start_insert = 1
 let g:unite_source_history_yank_enable = 1
+
 
 """ we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
 set wildignore=*.class,*.cache,.chef,target/,project/target/,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb,.ensime_cache/,node_modules/,bower_components/,dev-server/,bower/
@@ -194,19 +223,24 @@ call unite#filters#sorter_default#use(['sorter_selecta'])
 """""""
 """ let
 
-let base16colorspace=256
-
-" spacemacs!
-let mapleader=" "
-let maplocalleader="\\"
-
-let g:deoplete#enable_at_startup = 1
-
-let g:haddock_browser = "firefox"
-
-"let g:neomake_scala_enabled_makers = ['fsc', 'scalastyle']
+"let base16colorspace=256
 
 let g:NERDTreeWinSize=45
+
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'base16'
+
+let g:deoplete#auto_completion_start_length = 3
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case = 1
+let g:deoplete#omni#input_patterns = {}
+let g:deoplete#omni#input_patterns.java = '[^. *\t]\.\w*'
+let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
+
+let g:haddock_browser = "firefox"
+let g:haddock_docdir="/usr/local/share/doc/ghc/html/"
+
+"let g:neomake_scala_enabled_makers = ['fsc', 'scalastyle']
 
 " netrw is buggy stop using it
 " wait, did neovim fix it? no, not yet.
@@ -226,27 +260,7 @@ let g:pymode_run_bind = '<localleader>r'
 
 let g:python3_host_prog = 'python3'
 
-" not sure how useful this has been
-let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['black',       'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
-let g:rbpt_max = 16
-let g:rbpt_loadcmd_toggle = 0
+let g:rainbow_active = 1
 
 let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|rammstein\).*'
 let g:scala_sort_across_groups=1
@@ -258,6 +272,8 @@ let g:slime_python_ipython = 1
 let g:slime_target = "tmux"
 
 let g:sneak#streak = 1
+
+let g:VimuxRunnerIndex = 2
 
 "replace 'f' with 1-char Sneak
 nmap f <Plug>Sneak_f
@@ -276,13 +292,8 @@ omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
 "let g:tagbar_width = 45
-let g:tagbar_sort = 0
+"let g:tagbar_sort = 0
 
-let g:unite_enable_start_insert = 1
-
-let g:airline_powerline_fonts = 1
-
-let g:vim_airline_theme = 'base16'
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_folding_disabled = 1
 
@@ -310,9 +321,10 @@ set previewheight=17
 set relativenumber
 set shell=zsh
 set shiftwidth=2
-set t_Co=256
+"set t_Co=256
 set tabstop=2
 set tags=.tags;
+set textwidth=100
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -321,13 +333,13 @@ set undoreload=10000
 """"""""""""""""
 """ MAPPINGS!!!!
 "
-" Inspired by Spacemacs, but going 'viminal'
+" Inspired by Spacemacs, but semantically vimmish
 
-" I want to experiment with this
-" Unfortunately, I use ; and , a lot, why can't I get these to turn off in
-" streak mode?
-nmap ; <leader>
+" Leaders
+let mapleader=" "
+let maplocalleader="\\"
 nmap , <localleader>
+nmap <leader>m <localleader>
 
 " Saving and Quitting
 nnoremap <leader><ESC> :qa<cr>
@@ -340,11 +352,19 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>w :w<cr>
 nnoremap <leader>x :x<cr>
 
-" Windows
-nnoremap <leader>s :split<cr>
-nnoremap <leader>v :vsplit<cr>
+" Windows (see if you like these or want those keys back)
+nnoremap <leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
+nnoremap <leader>= <C-w>=
 nnoremap <leader>o :only<cr>
+nnoremap <leader>s :split<cr>
+nnoremap <leader>sp :split<cr>
+nnoremap <leader>ss :split<cr>
+nnoremap <leader>v :vsplit<cr>
+nnoremap <leader>vs :vsplit<cr>
+nnoremap <leader>vv :vsplit<cr>
 
+nnoremap <C-S-}> :sp <CR>:exec("tag ".expand("<cword>"))<CR>
 
 " Edit Files
 nnoremap <leader>ed :e ~/notes/TODO.md<cr>
@@ -354,6 +374,15 @@ nnoremap <leader>er :e ~/notes/RETRO_NOTES.md<cr>
 nnoremap <leader>et :e ~/dotfiles/.tmux.conf<cr>
 nnoremap <leader>ev :e ~/dotfiles/init.vim<cr>
 nnoremap <leader>ez :e ~/.zshrc<cr>
+
+" Consider: <leader> for ~/<file> and <localleader> for ./<file>
+nnoremap <leader>sd :sp ~/notes/TODO.md<cr>
+nnoremap <leader>sm :sp ~/notes/menu.md<cr>
+nnoremap <leader>sn :sp notes.md<cr>
+nnoremap <leader>sr :sp ~/notes/RETRO_NOTES.md<cr>
+nnoremap <leader>st :sp ~/dotfiles/.tmux.conf<cr>
+nnoremap <leader>sv :sp ~/dotfiles/init.vim<cr>
+nnoremap <leader>sz :sp ~/.zshrc<cr>
 
 " Git
 " Remember <leader>h_ for GitGutter
@@ -368,52 +397,62 @@ nnoremap <leader>go :Gdiff origin<CR>
 nnoremap <leader>gs :Gstatus<CR>
 
 " Searching
-" TODO: Hey what should we replace this with?? (because we want s back)
 " Look out gitgutter uses leader h for hunks
-nnoremap <leader>h :let @/ = ""<cr>
-nnoremap <leader>/ :UniteWithCursorWord grep:.<cr>
+nnoremap <leader>* :UniteWithCursorWord grep/git:.<cr>
+nnoremap <leader># :UniteWithCursorWord grep/.:.<cr>
+nnoremap <leader>/ :Unite grep/git:.<cr>
+nnoremap <leader>? :Unite grep:.<cr>
+nnoremap <leader>hh :let @/ = ""<cr>
 
 " Terminal!
+" <leader>' for :terminal ?
 tnoremap <Esc> <C-\><C-n>
 
 " Toggles
-" Let's try this Esc code just to see
-inoremap jj <Esc>
 nnoremap <leader>n :NERDTreeToggle<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 " Unite
+" TODO: define a [unite] prefix and roll from there
+" Also, don't duplicate the u and shortcut mappings
+" Keep an eye on neovim-specific file_recs, now are slower but could get faster
 nnoremap <leader>u :Unite 
 nnoremap <leader>ub :Unite buffer bookmark<cr>
 nnoremap <leader>uf :Unite file<cr>
 nnoremap <leader>ug :Unite grep:.<cr>
 nnoremap <leader>ul :Unite tmuxcomplete/lines<cr>
 nnoremap <leader>ur :Unite file_rec/git<cr>
-" Keep an eye on neovim-specific file_recs, now are slower but could get faster
 nnoremap <leader>uR :Unite file_rec/async<cr>
 nnoremap <leader>ut :Unite tmuxcomplete<cr>
 nnoremap <leader>uy :Unite history/yank<cr>
 
 " Unite shortcuts
-" would nnoremap <leader>f <leader>uf be more semantic?
-" Or, should we maybe bail on Unite shortcuts?
 nnoremap <leader>b :Unite buffer bookmark<cr>
 nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
 nnoremap <leader>f :Unite file<cr>
-nnoremap <leader>R :Unite file_rec/async<cr>
 nnoremap <leader>r :Unite file_rec/git<cr>
+nnoremap <leader>R :Unite file_rec/async<cr>
 nnoremap <leader>y :Unite history/yank<cr>
 
-" TODO: you don't actually use these, so either use them or remove them
-" Q: Can we replace these with a different prefix to get v back for vsp?
 " Vimux
-" nnoremap <leader>vi :VimuxInspectRunner<CR>
-" nnoremap <leader>vl :VimuxRunLastCommand<CR>
-" nnoremap <leader>vp :VimuxPromptCommand<CR>
-" nnoremap <leader>vq :VimuxCloseRunner<CR>
-" nnoremap <leader>vr :VimuxRunCommand ''<left>
-" nnoremap <leader>vx :VimuxInterruptRunner<CR>
-" nnoremap <leader>vz :call VimuxZoomRunner()<CR>
+nnoremap <leader>vi :VimuxInspectRunner<CR>
+nnoremap <leader>vl :VimuxRunLastCommand<CR>
+nnoremap <leader>vp :VimuxPromptCommand<CR>
+nnoremap <leader>vq :VimuxCloseRunner<CR>
+nnoremap <leader>vr :VimuxRunCommand ''<left>
+nnoremap <leader>vx :VimuxInterruptRunner<CR>
+nnoremap <leader>vz :call VimuxZoomRunner()<CR>
+
+function! VimuxSlime()
+ call VimuxSendText(@v)
+ call VimuxSendKeys("Enter")
+endfunction
+
+" If text is selected, save it in the v buffer and send that buffer it to tmux
+vmap <leader>vs "vy :call VimuxSlime()<CR>
+
+" Select current paragraph and send it to tmux
+nmap <leader>vs vip<leader>vs<CR>
 
 
 """""""""""
@@ -428,18 +467,12 @@ au FileType python setlocal textwidth=0
 " OS X and crontabs. moan. sigh. groan.
 autocmd filetype crontab setlocal nobackup nowritebackup
 
-" rainbow_parentheses
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
-
 " Neomake
 autocmd! BufWritePost * Neomake
 
 
 """""""""""""""
 """ colorscheme
-""" base16 is working again evidently
+
 set background=light
-colorscheme base16-default
+colorscheme base16-atelierdune
