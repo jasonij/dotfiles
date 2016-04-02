@@ -27,3 +27,6 @@ venv/
 /notes.*
 
 karma-test/
+
+damn-it-sbt-plugins/
+
