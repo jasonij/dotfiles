@@ -47,133 +47,130 @@
 "
 " Populate Unite with test files automatically
 "
-" Remember to change from NeoBundle to Shougo's new one whatever it's called
+" Remember to change from Plug to Shougo's new one whatever it's called
 "
 " Get "open in split" working for Unite
 
 
-"""""""""""""
-""" NeoBundle
+""""""""
+""" Plug
 
-set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
-call neobundle#begin(expand('~/.config/nvim/bundle/'))
-
-NeoBundleFetch 'Shougo/neobundle.vim'
+"" This is non-standard, because I migrated from NeoBundle
+call plug#begin('~/.config/nvim/bundle')
 
 " About 70 plugins, that's probably too many
 
 " C/C++
-NeoBundle 'justmao945/vim-clang'
+Plug 'justmao945/vim-clang'
 
 " Clojure
 " salve?
-NeoBundle 'guns/vim-clojure-highlight'
-NeoBundle 'guns/vim-sexp'
-NeoBundle 'luochen1990/rainbow'
-NeoBundle 'tpope/vim-fireplace'
-NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
+Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
+Plug 'guns/vim-sexp'
+Plug 'luochen1990/rainbow'
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 
 " Data Formats
-NeoBundle 'cespare/vim-toml'
-NeoBundle 'chrisbra/csv.vim'
-NeoBundle 'elzr/vim-json'
+Plug 'cespare/vim-toml'
+Plug 'chrisbra/csv.vim'
+Plug 'elzr/vim-json'
 
 " Elixir
-NeoBundle 'awetzel/elixir.nvim', { 'build': { 'mac' : 'yes | ./install.sh', 'unix' : 'yes | ./install.sh' } }
-NeoBundle 'elixir-lang/vim-elixir'
-NeoBundle 'jimenezrick/vimerl'
-NeoBundle 'thinca/vim-ref'
+Plug 'awetzel/elixir.nvim', { 'do': 'yes \| ./install.sh' }
+Plug 'elixir-lang/vim-elixir'
+Plug 'jimenezrick/vimerl'
+Plug 'thinca/vim-ref'
 
 " Git
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 
 " Haskell
 " See https://github.com/begriffs/haskell-vim-now
-NeoBundle 'eagletmt/ghcmod-vim'
-NeoBundle 'eagletmt/neco-ghc'
-NeoBundle 'lukerandall/haskellmode-vim'
+Plug 'eagletmt/ghcmod-vim'
+Plug 'eagletmt/neco-ghc'
+Plug 'lukerandall/haskellmode-vim'
 
 " JavaScript
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'pangloss/vim-javascript'
+Plug 'kchmck/vim-coffee-script'
+Plug 'pangloss/vim-javascript'
 
 " Julia
-NeoBundle 'JuliaLang/julia-vim'
+Plug 'JuliaLang/julia-vim'
 
 " Python
-NeoBundle 'klen/python-mode'
+Plug 'klen/python-mode'
 
 " R
-NeoBundle 'jalvesaq/Nvim-R'
+Plug 'jalvesaq/Nvim-R'
 
 " Ruby
-NeoBundle 'sunaku/vim-ruby-minitest'
-NeoBundle 'tpope/vim-rails'
-NeoBundle 'vim-ruby/vim-ruby'
+Plug 'sunaku/vim-ruby-minitest'
+Plug 'tpope/vim-rails'
+Plug 'vim-ruby/vim-ruby'
 
 " Scala
 " Q: Could we get autocompletion without Ensime? It's so janky.
-NeoBundle 'derekwyatt/vim-sbt'
-NeoBundle 'derekwyatt/vim-scala'
+Plug 'derekwyatt/vim-sbt'
+Plug 'derekwyatt/vim-scala'
 
 " Tmux
-NeoBundle 'benmills/vimux'
-NeoBundle 'christoomey/vim-tmux-navigator'
+Plug 'benmills/vimux'
+Plug 'christoomey/vim-tmux-navigator'
 
 " TODO: submit PR to tmuxline for adding optional window status?
-NeoBundle 'edkolev/tmuxline.vim'
+Plug 'edkolev/tmuxline.vim'
 
-NeoBundle 'jpalardy/vim-slime'
-NeoBundle 'wellle/tmux-complete.vim'
+Plug 'jpalardy/vim-slime'
+Plug 'wellle/tmux-complete.vim'
 
 " Vim
 
 "" tpope misc
-NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-dispatch'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-rsi.git'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-unimpaired'
-NeoBundle 'tpope/vim-vinegar'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar'
 
 "" Shougo misc
-NeoBundle 'Shougo/context_filetype.vim'
-NeoBundle 'Shougo/deoplete.nvim'
-NeoBundle 'Shougo/echodoc.vim'
-NeoBundle 'Shougo/neoinclude.vim'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'Shougo/neopairs.vim'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'Shougo/neoyank.vim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimfiler.vim'
-NeoBundle 'Shougo/vimproc.vim', {'build' : {'mac' : 'make -f make_mac.mak', 'unix' : 'make -f make_unix.mak'}}
+Plug 'Shougo/context_filetype.vim'
+Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/echodoc.vim'
+Plug 'Shougo/neoinclude.vim'
+Plug 'Shougo/neomru.vim'
+Plug 'Shougo/neopairs.vim'
+Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'Shougo/neoyank.vim'
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/vimfiler.vim'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 "" et al
-NeoBundle 'Konfekt/FastFold'
-NeoBundle 'benekastah/neomake'
-NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'junegunn/fzf', {'build' : {'mac' : './install --all', 'unix' : './install --all'}}
-NeoBundle 'junegunn/fzf.vim'
-NeoBundle 'justinmk/vim-sneak'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'scrooloose/nerdtree', { 'augroup' : 'NERDTreeHijackNetrw' }
-NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'tsukkee/unite-tag'
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
+Plug 'Konfekt/FastFold'
+Plug 'benekastah/neomake'
+Plug 'chriskempson/base16-vim'
+Plug 'godlygeek/tabular'
+Plug 'junegunn/fzf', { 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf.vim'
+Plug 'justinmk/vim-sneak'
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'terryma/vim-multiple-cursors'
+Plug 'tsukkee/unite-tag'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
-call neobundle#end()
+call plug#end()
+
 filetype plugin indent on
 syntax enable
-
-NeoBundleCheck
 
 
 """"""""""""""""""
@@ -241,11 +238,6 @@ let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
 
 let g:haddock_browser = "firefox"
 let g:haddock_docdir="/usr/local/share/doc/ghc/html/"
-
-" Try this out, do you prefer this?
-" This seems to be buggy
-"let g:neomake_serialize = 1
-"let g:neomake_serialize_abort_on_error = 1
 
 " netrw is buggy stop using it
 " wait, did neovim fix it? no, not yet.
@@ -407,13 +399,16 @@ nnoremap <leader>gx :Gbrowse<CR>
 " Searching
 " Look out gitgutter uses leader h for hunks
 " You need a non-cursorword unite tags shortcut
-nnoremap <leader>* :UniteWithCursorWord grep/git:.<cr>
+" Try l and w for lines and word, then t is free for tags
+" These belong in Unite section maybe?
 nnoremap <leader># :UniteWithCursorWord grep/.:.<cr>
+nnoremap <leader>* :UniteWithCursorWord grep/git:.<cr>
+nnoremap <leader>. :UniteWithCursorWord tag:/^.:.<cr>
 nnoremap <leader>/ :Unite grep/git:.<cr>
 nnoremap <leader>? :Unite grep:.<cr>
-nnoremap <leader>hh :let @/ = ""<cr>
 nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<cr>
-nnoremap <leader>. :UniteWithCursorWord tag:/^.:.<cr>
+nnoremap <leader>hh :let @/ = ""<cr>
+nnoremap <leader>t :Unite tag<cr>
 
 " Terminal!
 " <leader>' for :terminal ?
