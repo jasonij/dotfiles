@@ -1,0 +1,8 @@
+.git
+bower_components
+coverage
+log
+node_modules
+public
+target
+tmp
