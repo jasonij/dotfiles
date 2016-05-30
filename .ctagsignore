@@ -1,6 +1,9 @@
+*.json
 .git
 bower_components
 coverage
+dev-server
+karma
 log
 node_modules
 public
