@@ -2,63 +2,90 @@
 "
 " C-h broken? See https://github.com/neovim/neovim/issues/2048
 "
-" TODO:
-" Go between tests and instances in Scala (really any langauge, right?)
-" NERDTree ignores my ignores on the first opening
-" leader mappings for available prefixes (a, h (git gutter uses me), m, j, k, i, o, p, z) and non-alpha!
-" <leader><leader><char> for easy motion to character
-" What I'd really like is <leader><leader>key for bidirectional hop to key
-" What about a splitting version of C-] ?
-" When I delete a buffer, the window shouldn't close, instead the next buffer
-" d-J and d-K for column seek delete? make orthogonal?
 " Get NeoMake listing next and previous to work (they aren't relative to cursor position)
-" Let's try , as localleader too, see which mappings make sense
-" How to get spelling suggestions to show up?
+" Sort quickfix window by line number, can it be done?
+"
 " Gdiff should have $BASE, $LOCAL, $REMOTE, $MERGED or something like that
-" Open from Unite into vsplit or hsplit windows
 " gggqG (is there something shorter?)
-" gf should support the usual master, origin, merged, etc.
-" S-Cmd or S-M -> and < for top and bottom?
-" hotkey to regenerate tags
-" should we make Unite grep do a source grep?
-" How to get :unite whatever-was-my-last-unite-thing
-" More :Unite hotkeys (line, recent files, split)
-" Unite recent files?
-" Figure out an 80-column version of gq for comments
-"
-" I'm used to <leader>-ESC for QA but is it actually a good idea?
-" - Not necessarily, I often do <leader>-ESC when I want to get out of leader
-"
-" Smart-case with vim-sneak? Does it exist?
-"
-" messages from ensime stay up for like 1 second. How can I change this?
+" <leader>gf should support the usual master, origin, merged, etc. (it's broken now anyway)
 "
 " Q: How best to store favorite regexes?
+" A: Likely you'll want some leader-key bindings or named fns for common calls
 " Essential ruby regex: s/:\(\w\+\)=>/\1: /g
 " Essential python call: !python -m json.tool
 "
-" Go back to the double-layer tags (tags for local, dep_tags or something for deps)
-" Re-gen locals with hotkey but regen deps should probably be manual or shell alias
-" (can depend on language)
+" Should I try to get auto-save on focus-lost working? I hit SPC-w too much
 "
-" sbt-ctags should NOT tag my source tree, only tag deps
+" Can I let vim "steal" open files from other vim sessions?
+" Can I then auto-update from the changed file on disk?
 "
-" How to point Vimux to a pane in another tmux session?
+" Binding for subvert?
+" Subvert more often! e.g., :'<,'>Subvert/categor{y,ies}/tag{,s}/g
+" The plural case is so common maybe have a fn or hotkey around it
 "
-" Populate Unite with test files automatically
+" Make use of marks! ''
 "
-" Remember to change from Plug to Shougo's new one whatever it's called
+" Copy current filename into system clipboard
+" And/or Vimux start populated with filename (if possible)
 "
-" Get "open in split" working for Unite
-
+" Can I unite git diff master files?
+"
+" Can I unite grep through just the open buffers?
+"
+" Don't toggle paste, just use yo and yO
+"
+" The main things about editing:
+" * Navigation -> Unite, VimFiler, ctags
+" * SCM interaction -> Fugitive
+" * REPL (Tmux integration) -> Vimux
+" * Autocompletion -> Deoplete (with #input_patterns for special omni)
+" * Code comprehension -> Problematic
+"   - Docs
+"   - Find uses of (refactoring)
+"   - Semantic completion -> Omni + 3rd party services
+"   - Syntax checking -> NeoMake
+"   - Type taxonomy exploration
+"
+" aucommand to change wildignore based on project type
+"
+" Markdown headings to tagbar
+"
+" C-; is unused
+"
+" VimFiler interacts with Fugitive (git blame) badly
+" VimFiler choose, how to open new split from there?
+"
+" M-p and M-n in normal more for [b and ]b ?
+"
+" What if you have too many leader key mappings?
+" Maybe tpope's approach of unused key seqs is better?
+"
+" Can I trigger deoplete with tab when it's in timeout mode?
+"
+" binding for 'send this selection to tmux pane x'
+"
+" Markdown mode O has a funny indentation and I'm not sure why
+"
+" Can I change some visual state to indicate that leader or local leader has been pressed?
+"
+" VimFiler jumps in, Tagbar does not. Inconsistent!
+"
+" Unite menu could be used for dotfile editing, etc
+"
+" Find instances of tag in file (not across files)
+"
+" Add buffer names to each of the unite buffers possibly?
+"
+" Remember to use vis instead of this other goofy stuff
 
 """"""""
 """ Plug
 
 "" This is non-standard, because I migrated from NeoBundle
+"" TODO: rename to plug or whatever is the norm or look into Shougo's new project
 call plug#begin('~/.config/nvim/bundle')
 
-" About 70 plugins, that's probably too many
+" About 70 plugins, that's probably too many (right Spacemacs?)
 
 " C/C++
 Plug 'justmao945/vim-clang'
@@ -69,12 +96,13 @@ Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'guns/vim-sexp'
 Plug 'luochen1990/rainbow'
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Data Formats
-Plug 'cespare/vim-toml'
-Plug 'chrisbra/csv.vim'
-Plug 'elzr/vim-json'
+Plug 'cespare/vim-toml', { 'for': 'toml' }
+Plug 'chrisbra/csv.vim', { 'for': 'csv' }
+Plug 'elzr/vim-json', { 'for': 'json' }
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 
 " Elixir
 Plug 'awetzel/elixir.nvim', { 'do': 'yes \| ./install.sh' }
@@ -92,12 +120,20 @@ Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'lukerandall/haskellmode-vim'
 
-" JavaScript
-Plug 'kchmck/vim-coffee-script'
+" JavaScript is not a good language
 Plug 'pangloss/vim-javascript'
 
 " Julia
 Plug 'JuliaLang/julia-vim'
+
+" LaTeX
+" remember to put `$pdflatex = 'xelatex --shell-escape %O %S';` in ~/.latexmkrc
+Plug 'lervag/vimtex'
+
+" Lua
+Plug 'xolox/vim-lua-ftplugin'
+Plug 'xolox/vim-lua-inspect'
+Plug 'xolox/vim-misc'
 
 " Python
 Plug 'klen/python-mode'
@@ -114,6 +150,7 @@ Plug 'vim-ruby/vim-ruby'
 " Q: Could we get autocompletion without Ensime? It's so janky.
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
+Plug 'ensime/ensime-vim'
 
 " Tmux
 Plug 'benmills/vimux'
@@ -121,21 +158,19 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " TODO: submit PR to tmuxline for adding optional window status?
 Plug 'edkolev/tmuxline.vim'
-
-Plug 'jpalardy/vim-slime'
 Plug 'wellle/tmux-complete.vim'
 
 " Vim
 
 "" tpope misc
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-vinegar'
 
 "" Shougo misc
 Plug 'Shougo/context_filetype.vim'
@@ -147,6 +182,7 @@ Plug 'Shougo/neopairs.vim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoyank.vim'
+Plug 'Shougo/unite-outline'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
@@ -160,8 +196,6 @@ Plug 'junegunn/fzf', { 'do': 'yes \| ./install' }
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'majutsushi/tagbar'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tsukkee/unite-tag'
 Plug 'vim-airline/vim-airline'
@@ -202,17 +236,41 @@ if executable('ag')
   let g:unite_source_grep_command = 'ag'
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column --hidden'
   let g:unite_source_grep_recursive_opt = ''
-  let g:unite_source_rec_async_command= 'ag --follow --nocolor --nogroup --hidden -g ""'
+  let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', '']
 endif
 
 let g:unite_enable_start_insert = 1
 let g:unite_source_history_yank_enable = 1
 
+" From http://bleibinha.us/blog/2013/08/my-vim-setup-for-scala
+" Wildmenu completion: use for file exclusions
+set wildmenu
+set wildmode=list:longest
+set wildignore+=.hg/,.git/,.svn/ " Version Controls [ed: had to append /]"
+set wildignore+=*.aux,*.out,*.toc "Latex Indermediate files"
+set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg "Binary Imgs"
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest "Compiled Object files"
+set wildignore+=*.spl "Compiled speolling world list"
+set wildignore+=*.sw? "Vim swap files"
+set wildignore+=*.DS_Store "OSX SHIT"
+set wildignore+=*.luac "Lua byte code"
+set wildignore+=migrations "Django migrations"
+set wildignore+=*.pyc "Python Object codes"
+set wildignore+=*.orig "Merge resolution files"
+set wildignore+=*.class "java/scala class files"
+set wildignore+=*/target/* "sbt target directory"
 
-""" we need a way to set wildignore based on project type. e.g., ignore bin in scala but not in python
-set wildignore=*.class,*.cache,.chef,target/,project/target/,project/project,project/boot,project/plugins/project/,tags,vcr_cassettes,__pycache__,*.pyc,*.ipynb,.ensime_cache/,node_modules/,bower_components/,dev-server/,bower/
-call unite#custom#source('file_rec,file_rec/async,file_rec/neovim,file_rec/neovim2', 'ignore_globs', split(&wildignore, ','))
+" ignores necessary for my various projects
+set wildignore+=/bower_components/
+set wildignore+=/dev-server/
+set wildignore+=/karma/
+
+call unite#custom#source('file, file/async, file/new, file_include, file_list, file_mru, file_point, file_rec, file_rec/async, file_rec/neovim', 'ignore_globs', split(&wildignore, ','))
+call unite#custom#source('file_mru', 'sorters', 'ftime')
+" file_rec/git should hit everything under git with a few exceptions
+call unite#custom#source('file_rec/git', 'ignore_globs', ['/bower_components/', '/dev-server/', '/karma/'])
 call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
+
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_selecta'])
 
@@ -222,38 +280,54 @@ call unite#filters#sorter_default#use(['sorter_selecta'])
 
 let base16colorspace=256
 
-let g:NERDTreeWinSize=45
-
 let g:VimuxRunnerIndex = 2
 
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#left_alt_sep = '|'
+" let g:airline#extensions#tabline#left_sep = ' '
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'base16'
 
-let g:deoplete#auto_completion_start_length = 3
+" TODO: Some of these copy ignorecase and smart_case, set those instead
+" autocomplete delay is necessary because tmux-complete slows down insertion too much
+let g:deoplete#auto_complete_delay = 100
+let g:deoplete#auto_completion_start_length = 2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
-let g:deoplete#omni#input_patterns = {}
-let g:deoplete#omni#input_patterns.java = '[^. *\t]\.\w*'
-let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
 
+let g:deoplete#omni#input_patterns = {}
+
+" see https://github.com/ensime/ensime-vim/pull/259
+let g:deoplete#omni#input_patterns.scala = '[^. *\t]\.\w*'
+
+" These may make some trouble, have a second look
+" let g:deoplete#omni#input_patterns.java = '[^. *\t]\.\w*'
+" let g:deoplete#omni#input_patterns.scala = '[^. *\t]\.\w*'
+" let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
+
+" or maybe we need let g:deoplete#omni_patterns.tex =
+let g:deoplete#omni#input_patterns.tex =
+      \ '\v\\%('
+      \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
+      \ . '|hyperref\s*\[[^]]*'
+      \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|%(include%(only)?|input)\s*\{[^}]*'
+      \ . '|\a*(gls|Gls|GLS)(pl)?\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|includepdf%(\s*\[[^]]*\])?\s*\{[^}]*'
+      \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
+      \ . ')'
+
+let g:gitgutter_grep_command = 'ag --nogroup --nocolor --hidden'
 let g:haddock_browser = "firefox"
 let g:haddock_docdir="/usr/local/share/doc/ghc/html/"
 
-" netrw is buggy stop using it
-" wait, did neovim fix it? no, not yet.
-let g:netrw_altv = 1
-let g:netrw_browse_split = 4
-let g:netrw_liststyle=3
-
 " pymode should not use global leader, omg srsly.
 let g:pymode_breakpoint_bind = '<localleader>b'
-let g:pymode_folding = 0
-let g:pymode_lint_on_write = 0
-let g:pymode_lint_python_checkers = [ 'pylint', 'pep257', 'pep8', 'pyflakes', 'mccabe' ]
-let g:pymode_lint_unmodified = 1
-let g:pymode_options_max_line_length = 99
-let g:pymode_rope = 0
 let g:pymode_run_bind = '<localleader>r'
+
+" Neomake runs pylama
+let g:pymode_lint = 0
 
 let g:python3_host_prog = 'python3'
 
@@ -263,12 +337,96 @@ let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|procrustes\|rammste
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
-let g:slime_default_config = {"socket_name": "default", "target_pane": "2"}
-let g:slime_paste_file = tempname()
-let g:slime_python_ipython = 1
-let g:slime_target = "tmux"
 
-"let g:sneak#streak = 1
+""""""""
+" Tagbar
+
+let g:tagbar_sort = 0
+
+let g:tagbar_type_elixir = {
+    \ 'ctagstype' : 'elixir',
+    \ 'kinds' : [
+        \ 'f:functions',
+        \ 'functions:functions',
+        \ 'c:callbacks',
+        \ 'd:delegates',
+        \ 'e:exceptions',
+        \ 'i:implementations',
+        \ 'a:macros',
+        \ 'o:operators',
+        \ 'm:modules',
+        \ 'p:protocols',
+        \ 'r:records'
+    \ ]
+\ }
+
+let g:tagbar_type_markdown = {
+    \ 'ctagstype' : 'markdown',
+    \ 'kinds' : [
+        \ 'h:Heading_L1',
+        \ 'i:Heading_L2',
+        \ 'k:Heading_L3'
+    \ ]
+\ }
+
+let g:tagbar_type_r = {
+    \ 'ctagstype' : 'r',
+    \ 'kinds'     : [
+        \ 'f:Functions',
+        \ 'g:GlobalVariables',
+        \ 'v:FunctionVariables',
+    \ ]
+\ }
+
+let g:tagbar_type_ruby = {
+    \ 'ctagstype' : 'ruby',
+    \ 'kinds' : [
+        \ 'm:modules',
+        \ 'c:classes',
+        \ 'd:describes',
+        \ 'C:contexts',
+        \ 'f:methods',
+        \ 'F:singleton methods'
+    \ ]
+\ }
+
+let g:tagbar_type_rust = {
+    \ 'ctagstype' : 'rust',
+    \ 'kinds' : [
+        \'T:types,type definitions',
+        \'f:functions,function definitions',
+        \'g:enum,enumeration names',
+        \'s:structure names',
+        \'m:modules,module names',
+        \'c:consts,static constants',
+        \'t:traits,traits',
+        \'i:impls,trait implementations',
+    \ ]
+\ }
+
+let g:tagbar_type_scala = {
+    \ 'ctagstype' : 'scala',
+    \ 'sro'       : '.',
+    \ 'kinds'     : [
+      \ 'p:packages',
+      \ 'T:types:1',
+      \ 't:traits',
+      \ 'o:objects',
+      \ 'O:case objects',
+      \ 'c:classes',
+      \ 'C:case classes',
+      \ 'm:methods',
+      \ 'V:values:1',
+      \ 'v:variables:1'
+    \ ]
+\ }
+
+
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_ignore_filters = ['matcher_ignore_pattern', 'matcher_ignore_wildignore']
+
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_folding_disabled = 1
 
 ""replace 'f' with 1-char Sneak
 nmap f <Plug>Sneak_f
@@ -286,16 +444,13 @@ xmap T <Plug>Sneak_T
 omap t <Plug>Sneak_t
 omap T <Plug>Sneak_T
 
-"let g:tagbar_width = 45
-"let g:tagbar_sort = 0
-
 let g:vim_json_syntax_conceal = 0
 
 
 """""""
 """ set
 
-" Remember to mkdir -p ~/.config/nvim/backup ~/.config/nvim/swap ~/.config/nvim/undo
+" mkdir -p ~/.config/nvim/backup ~/.config/nvim/swap ~/.config/nvim/undo
 set backupdir=~/.config/nvim/backup
 set directory=~/.config/nvim/swap
 set undodir=~/.config/nvim/undo
@@ -309,6 +464,7 @@ set grepprg=ag
 set guioptions=0
 set hidden
 set list
+set nolazyredraw
 set number
 set previewheight=17
 set relativenumber
@@ -323,29 +479,43 @@ set undolevels=1000
 set undoreload=10000
 
 
-""""""""""""""""
-""" MAPPINGS!!!!
+""""""""""""
+""" MAPPINGS
 "
 " Inspired by Spacemacs, but semantically vimmish
 
 " Leaders
+" This way, you can use , as local leader and still have , work for reverse last command
 let mapleader=" "
 let maplocalleader="\\"
 nmap , <localleader>
 nmap <leader>m <localleader>
 
 " Saving and Quitting
-nnoremap <leader><ESC> :qa<cr>
+"nnoremap <leader><ESC> :qa<cr>
+
 nnoremap <leader>Q :qa<cr>
-nnoremap <leader>W :wa<cr>
-nnoremap <leader>X :xa<cr>
-nnoremap <leader>c <c-w>c
-nnoremap <leader>d :bd<cr>
 nnoremap <leader>q :q<cr>
+
+nnoremap <leader>W :wa<cr>
 nnoremap <leader>w :w<cr>
+
+nnoremap <leader>X :xa<cr>
 nnoremap <leader>x :x<cr>
 
+nnoremap <leader>c :close<cr>
+
+nnoremap <leader>d :bd<cr>
+
+nnoremap <leader>z :w<cr>:bd<cr>
+nnoremap <leader>Z :xa!<cr>
+
 " Windows
+
+" And then use C-i instead of Tab
+nnoremap <C-Tab> <C-w>w
+nnoremap <C-S-Tab> <C-w>W
+
 nnoremap <leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <leader>= <C-w>=
@@ -353,11 +523,11 @@ nnoremap <leader>o :only<cr>
 nnoremap <leader>ss :split<cr>
 nnoremap <leader>vv :vsplit<cr>
 
-" Split open tag
-nnoremap <C-S-}> :sp <CR>:exec("tag ".expand("<cword>"))<CR>
+nnoremap <leader>~ :UniteWithInputDirectory file<CR>$HOME<CR>
+nnoremap <leader>` :UniteWithInputDirectory file<CR>$HOME/notes/<CR>
 
 " Edit Files
-" TODO: Think about a Unite environment, Unite project docs, etc.
+" TODO: Think about a Unite environment (documents), Unite project docs, etc.
 nnoremap <leader>ed :e ~/notes/TODO.md<cr>
 nnoremap <leader>em :e ~/notes/menu.md<cr>
 nnoremap <leader>en :e notes.md<cr>
@@ -375,87 +545,171 @@ nnoremap <leader>st :sp ~/dotfiles/.tmux.conf<cr>
 nnoremap <leader>sv :sp ~/dotfiles/init.vim<cr>
 nnoremap <leader>sz :sp ~/.zshrc<cr>
 
-" External Calls
-nnoremap <leader>T :call jobstart('/usr/local/bin/ctags --exclude=@/Users/jasonkroll/.ctagsignore -RV .')<cr>
-
-" Git
-" Remember <leader>h_ for GitGutter
+" Fugitive
 " Consider <leader>gd_ for different sources
-" Maybe leave CR off of destructive cmds
-nnoremap <leader>gb :Gblame<CR>
-nnoremap <leader>gc :Gcommit<CR>
-nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>ge :Gedit<CR>
-nnoremap <leader>gf :Git! diff --name-only master<CR>
-nnoremap <leader>gg :copen<CR>:Ggrep 
-nnoremap <leader>gh :Gdiff origin/HEAD<CR>
-nnoremap <leader>gm :Gdiff master<CR>
-nnoremap <leader>go :Gdiff origin<CR>
-nnoremap <leader>gr :Gread<CR>
-nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gw :Gwrite<CR>
-nnoremap <leader>gx :Gbrowse<CR>
 
-" Searching
-" Look out gitgutter uses leader h for hunks
-" You need a non-cursorword unite tags shortcut
-" Try l and w for lines and word, then t is free for tags
-" These belong in Unite section maybe?
-nnoremap <leader># :UniteWithCursorWord grep/.:.<cr>
-nnoremap <leader>* :UniteWithCursorWord grep/git:.<cr>
-nnoremap <leader>. :UniteWithCursorWord tag:/^.:.<cr>
-nnoremap <leader>/ :Unite grep/git:.<cr>
-nnoremap <leader>? :Unite grep:.<cr>
-nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<cr>
+nnoremap [fugitive] <Nop>
+nmap <leader>g [fugitive]
+
+nnoremap [fugitive]b :Gblame<CR>
+nnoremap [fugitive]c :Gcommit<CR>
+nnoremap [fugitive]d :Gdiff<CR>
+nnoremap [fugitive]e :Gedit<CR>
+nnoremap [fugitive]f :Git! diff --name-only master<CR>
+nnoremap [fugitive]g :copen<CR>:Ggrep 
+nnoremap [fugitive]h :Gdiff origin/HEAD<CR>
+nnoremap [fugitive]m :Gdiff master<CR>
+nnoremap [fugitive]o :Gdiff origin<CR>
+nnoremap [fugitive]r :Gread<CR>
+nnoremap [fugitive]s :Gstatus<CR>
+nnoremap [fugitive]w :Gwrite<CR>
+nnoremap [fugitive]x :Gbrowse<CR>
+
+" Misc
+" Remember gitgutter's <leader>h bindings
+" nmap <Leader>hs <Plug>GitGutterStageHunk
+" nmap <Leader>hr <Plug>GitGutterRevertHunk
+" nmap <Leader>hp <Plug>GitGutterPreviewHunk
 nnoremap <leader>hh :let @/ = ""<cr>
-nnoremap <leader>t :Unite tag<cr>
+noremap <leader>; :Commentary<cr>
 
-" Terminal!
+" Tags
+" See also Unite tags
+" split open key binding is not quite right
+nnoremap <C-M-]> :sp <CR>:exec("tag ".expand("<cword>"))<CR>
+nnoremap <leader>T :call jobstart('/usr/local/bin/ctags --exclude=@/Users/jasonkroll/.ctagsignore -RV .')<cr>
+nnoremap <leader>t :TagbarToggle<CR>
+
+" Terminal
 " <leader>' for :terminal ?
+" Q: How to send <Esc> inside terminal?
 tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>' :split \| terminal<CR>
 
-" Toggles
-nnoremap <leader>n :NERDTreeToggle<CR>
-nnoremap <leader>t :TagbarToggle<CR>
 
+"""""""
 " Unite
-" TODO: define a [unite] prefix and roll from there
-" Also, don't duplicate the u and shortcut mappings
-" Keep an eye on neovim-specific file_recs, now are slower but could get faster
-"nnoremap <leader>u :Unite 
+
+" TODO: <leader>p for UniteWithProjectDir
+
+""""""""""""""""""""""""""
+" Unite - shallow mappings
 
 nnoremap [unite] <Nop>
 nmap <leader>u [unite]
 
-nnoremap [unite]<leader> :Unite 
-nnoremap [unite]b :Unite buffer bookmark<cr>
-nnoremap [unite]f :Unite file<cr>
-nnoremap [unite]R :Unite file_rec/async<cr>
-nnoremap [unite]r :Unite file_rec/git<cr>
-nnoremap [unite]g :Unite grep:.<cr>
-nnoremap [unite]y :Unite history/yank<cr>
-nnoremap [unite]t :Unite tmuxcomplete<cr>
-nnoremap [unite]l :Unite tmuxcomplete/lines<cr>
+nnoremap [unite] :Unite<CR>
+nnoremap <leader>U :Unite -buffer-name=resume resume<CR>
 
-" Unite shortcuts
+" alternate files (needs filename source)
+" tags get 'a' and 'A' until we figure this out
+" nnoremap <leader>a :Unite file_rec/git -input=
+" nnoremap <leader>A :Unite file_rec/git -input=
+
+" buffers
 nnoremap <leader>b :Unite buffer bookmark<cr>
-nnoremap <leader>l :Unite tmuxcomplete/lines<cr>
-nnoremap <leader>f :Unite file<cr>
+
+" command
+nnoremap <leader>: :Unite command<cr>
+
+" files
+" nnoremap <leader>f :Unite file<cr>
+
+" files most recently used
+nnoremap <leader>m :UniteWithProjectDir file_mru<cr>
+nnoremap <leader>M :Unite file_mru<cr>
+
+" files recursive
 nnoremap <leader>r :Unite file_rec/git<cr>
 nnoremap <leader>R :Unite file_rec/async<cr>
+nnoremap <leader>& :UniteWithCursorWord file_rec/git:.<cr>
+nnoremap <leader>@ :UniteWithCursorWord file_rec/async:.<cr>
+
+" grep
+nnoremap <leader>/ :Unite grep/git:.<cr>
+nnoremap <leader>? :Unite grep:.<cr>
+nnoremap <leader>* :UniteWithCursorWord grep/git:.<cr>
+nnoremap <leader># :UniteWithCursorWord grep:.<cr>
+
+" jump
+nnoremap <leader>j :Unite jump<cr>
+
+" lines
+nnoremap <leader>l :Unite line:all<cr>
+
+" tags
+" TODO: reorganize tag bindings!!! including generation and tagbar
+nnoremap <leader>$ :Unite tag/file<cr>
+nnoremap <leader>% :Unite tag<cr>
+
+nnoremap <leader>a :Unite tag/file<cr>
+nnoremap <leader>A :Unite tag<cr>
+
+nnoremap <leader>i :Unite tag/include<cr>
+nnoremap <leader>I :Unite tag:%<cr>
+
+nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<cr>
+
+" yank
 nnoremap <leader>y :Unite history/yank<cr>
-nnoremap <leader>a :Unite file_rec/git -input=
+nnoremap <leader>y :Unite register<cr>
 
-" Unite splits -- why don't these work?
-inoremap <silent><buffer><expr> <C-s> unite#do_action('split')
-inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+" first, prev, next, last
+nnoremap <leader>P :UniteFirst<cr>
+nnoremap <leader>p :UnitePrevious<cr>
+nnoremap <leader>n :UniteNext<cr>
+nnoremap <leader>N UniteLast<cr>
 
+" Unite splits
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()
+  "{{{
+  inoremap <silent><buffer><expr> <C-s> unite#do_action('split')
+  inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+  "}}}
+endfunction
+
+""""""""""
+" VimFiler
+
+nnoremap [vimfiler] <Nop>
+nmap <leader>vf [vimfiler]
+
+" TODO: add :Unite mapping on timeouts
+
+nnoremap [vimfiler] :Unite mapping -input=[vimfiler]<CR>
+" nnoremap [vimfiler] :VimFiler<CR>
+nnoremap [vimfiler]b :VimFilerBufferDir<CR>
+nnoremap [vimfiler]c :VimFilerCurrentDir<CR>
+nnoremap [vimfiler]d :VimFilerDouble<CR>
+nnoremap [vimfiler]e :VimFilerExplorer<CR>
+nnoremap [vimfiler]f :VimFilerExplorer -find<CR>
+nnoremap [vimfiler]s :VimFilerSplit<CR>
+nnoremap [vimfiler]t :VimFilerTab<CR>
+
+nnoremap - :VimFilerBufferDir<CR>
+nnoremap \| :VimFilerSplit<CR>
+nnoremap <leader>f :VimFilerExplorer<CR>
+nnoremap <leader>F :VimFilerExplorer -find<CR>
+
+"""""""
 " Vimux
 
 nnoremap [vimux] <Nop>
 nmap <leader>v [vimux]
+vmap <leader>v [vimux]
 
+function! VimuxSlime()
+ call VimuxSendText(@v)
+ call VimuxSendKeys("Enter")
+endfunction
+
+vmap [vimux]s "vy :call VimuxSlime()<CR>
+nmap [vimux]s vip[vimux]s<CR>
+
+nnoremap [vimux] :Unite mapping -input=[vimux]<CR>
+
+nnoremap [vimux]<leader> :let g:VimuxRunnerIndex=
 nnoremap [vimux]i :VimuxInspectRunner<CR>
 nnoremap [vimux]l :VimuxRunLastCommand<CR>
 nnoremap [vimux]p :VimuxPromptCommand<CR>
@@ -464,25 +718,11 @@ nnoremap [vimux]r :VimuxRunCommand ''<left>
 nnoremap [vimux]x :VimuxInterruptRunner<CR>
 nnoremap [vimux]z :call VimuxZoomRunner()<CR>
 
-function! VimuxSlime()
- call VimuxSendText(@v)
- call VimuxSendKeys("Enter")
-endfunction
-
-" If text is selected, save it in the v buffer and send that buffer it to tmux
-vmap <leader>vs "vy :call VimuxSlime()<CR>
-
-" Select current paragraph and send it to tmux
-nmap <leader>vs vip<leader>vs<CR>
-
-
 """""""""""
 """ autocmd
 
-" .md is more often markdown than modula-2
-au BufNewFile,BufReadPost *.md set filetype=markdown
-
 " Override that obnoxious bar in pymode
+" Q: Does python-mode let us turn this off directly?
 au FileType python setlocal textwidth=0
 
 " OS X and crontabs. moan. sigh. groan.
@@ -491,9 +731,26 @@ autocmd filetype crontab setlocal nobackup nowritebackup
 " Neomake
 autocmd! BufWritePost * Neomake
 
+" Lua has : in keywords
+augroup filetype_lua
+  autocmd!
+  autocmd FileType lua setlocal iskeyword+=:
+augroup END
+
+" See https://github.com/benekastah/neomake/issues/15
+au FileType clojure setlocal makeprg=lein\ kibit\ %
+au FileType clojure setlocal errorformat=%IAt\ %f:%l:,%C%m,%Z,%-G%.%#
+let g:neomake_clojure_kibit_maker = {
+      \ 'buffer_output': 1,
+      \ 'exe': 'lein',
+      \ 'args': ['kibit'],
+      \ 'errorformat': '%IAt\ %f:%l:,%C%m,%Z,%-G%.%#',
+      \ }
+let g:neomake_clojure_enabled_makers = ['kibit']
+
 
 """""""""""""""
 """ colorscheme
 
-set background=light
-colorscheme base16-atelierdune
+set background=dark
+colorscheme base16-default
