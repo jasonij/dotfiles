@@ -62,7 +62,7 @@
 "
 " Can I trigger deoplete with tab when it's in timeout mode?
 "
-" binding for 'send this selection to tmux pane x'
+" Good idea: binding for 'send this selection to tmux pane x'
 "
 " Markdown mode O has a funny indentation and I'm not sure why
 "
@@ -77,6 +77,35 @@
 " Add buffer names to each of the unite buffers possibly?
 "
 " Remember to use vis instead of this other goofy stuff
+"
+" Tags shortcut should do a mv at the end
+"
+" More git diff viewers and file finders (possibly through Unite) for head~1, master, origin, etc.
+"
+" Can I scroll back through previous things I typed into a unite buffer when I reopen a buffer?
+"
+" Can I get a jobstart that doesn't close when I close vim?
+"
+" Other unites (e.g. cursorword tag) may want a non-selecta-rank sorter as well.
+" Possibly mapping would be better with literal match or something
+" TODO: Identify ideal sorts for unites
+"
+" Learn Fugitive much better, it's very powerful
+"
+" May need to write custom unite to get git modified files into unite. Why so difficult?
+"
+" Wait, do I want :Unite filelist ... :Git! diff-tree --no-commit-id --name-only -r head~1
+"
+" Remember also :Unite history/unite
+"
+" The three super plugins:
+" * Unite / VimFiler
+" * Fugitive
+" * Vimux
+"
+" Consider: put Unite at the bottom or at the left, see how you like it.
+"
+" Consider: actually remap C-l so you can get out of CVmFiler
 
 """"""""
 """ Plug
@@ -237,10 +266,23 @@ if executable('ag')
   let g:unite_source_grep_default_opts = '--nogroup --nocolor --column --hidden'
   let g:unite_source_grep_recursive_opt = ''
   let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', '']
+  " let g:unite_source_rec_async_command = ['git', 'diff', '--name-only', 'head~1']
 endif
 
 let g:unite_enable_start_insert = 1
 let g:unite_source_history_yank_enable = 1
+
+let g:unite_source_menu_menus = {}
+
+let g:unite_source_menu_menus.zsh = {
+      \ 'description' : 'zsh files',
+      \ }
+let g:unite_source_menu_menus.zsh.file_candidates = [
+      \ ['zshenv'    , '~/.zshenv'],
+      \ ['zshrc'     , '~/.zshrc'],
+      \ ['zplug'     , '~/.zplug']
+      \ ]
+
 
 " From http://bleibinha.us/blog/2013/08/my-vim-setup-for-scala
 " Wildmenu completion: use for file exclusions
@@ -489,7 +531,7 @@ set undoreload=10000
 let mapleader=" "
 let maplocalleader="\\"
 nmap , <localleader>
-nmap <leader>m <localleader>
+" nmap <leader>m <localleader>
 
 " Saving and Quitting
 "nnoremap <leader><ESC> :qa<cr>
@@ -527,7 +569,7 @@ nnoremap <leader>~ :UniteWithInputDirectory file<CR>$HOME<CR>
 nnoremap <leader>` :UniteWithInputDirectory file<CR>$HOME/notes/<CR>
 
 " Edit Files
-" TODO: Think about a Unite environment (documents), Unite project docs, etc.
+" TODO: Replace these with Unite menu(s) except possibly notes.md
 nnoremap <leader>ed :e ~/notes/TODO.md<cr>
 nnoremap <leader>em :e ~/notes/menu.md<cr>
 nnoremap <leader>en :e notes.md<cr>
@@ -545,24 +587,36 @@ nnoremap <leader>st :sp ~/dotfiles/.tmux.conf<cr>
 nnoremap <leader>sv :sp ~/dotfiles/init.vim<cr>
 nnoremap <leader>sz :sp ~/.zshrc<cr>
 
+
+""""""""""
 " Fugitive
-" Consider <leader>gd_ for different sources
 
 nnoremap [fugitive] <Nop>
 nmap <leader>g [fugitive]
 
+nnoremap [fugitive] :Unite mapping -input=[fugitive]<CR>
+
+nnoremap [fugitive]a :Gcommit --amend<CR>
 nnoremap [fugitive]b :Gblame<CR>
-nnoremap [fugitive]c :Gcommit<CR>
-nnoremap [fugitive]d :Gdiff<CR>
+nnoremap [fugitive]B :Git branch<Space>
+nnoremap [fugitive]c :Gcommit -v -q<CR>
+" nnoremap [fugitive]c :Gcommit<CR>
+" nnoremap [fugitive]d :Gdiff<CR>
+nnoremap [fugitive]d :Gdiff origin/master<CR>
 nnoremap [fugitive]e :Gedit<CR>
-nnoremap [fugitive]f :Git! diff --name-only master<CR>
+nnoremap [fugitive]f :Git! diff --name-only origin/master<CR>
+nnoremap [fugitive]F :Git diff --name-only origin/master<CR>
 nnoremap [fugitive]g :copen<CR>:Ggrep 
-nnoremap [fugitive]h :Gdiff origin/HEAD<CR>
-nnoremap [fugitive]m :Gdiff master<CR>
-nnoremap [fugitive]o :Gdiff origin<CR>
+nnoremap [fugitive]l :silent! Glog<CR>
+nnoremap [fugitive]m :Gmove<Space>
+nnoremap [fugitive]o :Git checkout<Space>
+nnoremap [fugitive]p :Ggrep<Space>
+nnoremap [fugitive]pl :Dispatch! git pull<CR>
+nnoremap [fugitive]ps :Dispatch! git push<CR>
 nnoremap [fugitive]r :Gread<CR>
 nnoremap [fugitive]s :Gstatus<CR>
-nnoremap [fugitive]w :Gwrite<CR>
+nnoremap [fugitive]t :Gcommit -v -q %<CR>
+nnoremap [fugitive]w :Gwrite<CR><CR>
 nnoremap [fugitive]x :Gbrowse<CR>
 
 " Misc
@@ -571,13 +625,14 @@ nnoremap [fugitive]x :Gbrowse<CR>
 " nmap <Leader>hr <Plug>GitGutterRevertHunk
 " nmap <Leader>hp <Plug>GitGutterPreviewHunk
 nnoremap <leader>hh :let @/ = ""<cr>
+nnoremap <leader>k :let @/ = ""<cr>
 noremap <leader>; :Commentary<cr>
 
 " Tags
 " See also Unite tags
 " split open key binding is not quite right
 nnoremap <C-M-]> :sp <CR>:exec("tag ".expand("<cword>"))<CR>
-nnoremap <leader>T :call jobstart('/usr/local/bin/ctags --exclude=@/Users/jasonkroll/.ctagsignore -RV .')<cr>
+nnoremap <leader>T :call jobstart('ctags --exclude=@$HOME/.ctagsignore -RV -f tags-regenerating . && mv tags-regenerating tags')<cr>
 nnoremap <leader>t :TagbarToggle<CR>
 
 " Terminal
@@ -590,21 +645,11 @@ nnoremap <leader>' :split \| terminal<CR>
 """""""
 " Unite
 
-" TODO: <leader>p for UniteWithProjectDir
-
-""""""""""""""""""""""""""
-" Unite - shallow mappings
-
 nnoremap [unite] <Nop>
 nmap <leader>u [unite]
 
 nnoremap [unite] :Unite<CR>
 nnoremap <leader>U :Unite -buffer-name=resume resume<CR>
-
-" alternate files (needs filename source)
-" tags get 'a' and 'A' until we figure this out
-" nnoremap <leader>a :Unite file_rec/git -input=
-" nnoremap <leader>A :Unite file_rec/git -input=
 
 " buffers
 nnoremap <leader>b :Unite buffer bookmark<cr>
@@ -620,7 +665,7 @@ nnoremap <leader>m :UniteWithProjectDir file_mru<cr>
 nnoremap <leader>M :Unite file_mru<cr>
 
 " files recursive
-nnoremap <leader>r :Unite file_rec/git<cr>
+nnoremap <leader>r :Unite file_rec/git:--cached:--others:--exclude-standard<CR>
 nnoremap <leader>R :Unite file_rec/async<cr>
 nnoremap <leader>& :UniteWithCursorWord file_rec/git:.<cr>
 nnoremap <leader>@ :UniteWithCursorWord file_rec/async:.<cr>
@@ -633,15 +678,16 @@ nnoremap <leader># :UniteWithCursorWord grep:.<cr>
 
 " jump
 nnoremap <leader>j :Unite jump<cr>
+nnoremap <leader>J :Unite jump_point<cr>
 
 " lines
 nnoremap <leader>l :Unite line:all<cr>
 
+" menus
+nnoremap <leader>^ :Unite menu<cr>
+
 " tags
 " TODO: reorganize tag bindings!!! including generation and tagbar
-nnoremap <leader>$ :Unite tag/file<cr>
-nnoremap <leader>% :Unite tag<cr>
-
 nnoremap <leader>a :Unite tag/file<cr>
 nnoremap <leader>A :Unite tag<cr>
 
@@ -669,6 +715,7 @@ function! s:unite_my_settings()
   "}}}
 endfunction
 
+
 """"""""""
 " VimFiler
 
@@ -692,12 +739,27 @@ nnoremap \| :VimFilerSplit<CR>
 nnoremap <leader>f :VimFilerExplorer<CR>
 nnoremap <leader>F :VimFilerExplorer -find<CR>
 
+
 """""""
 " Vimux
 
 nnoremap [vimux] <Nop>
 nmap <leader>v [vimux]
 vmap <leader>v [vimux]
+nnoremap [vimux] :Unite mapping -input=[vimux]<CR>
+
+nnoremap [vimux]<leader> :let g:VimuxRunnerIndex=
+
+nnoremap [vimux]c :VimuxCloseRunner<CR>
+nnoremap [vimux]d :VimuxScrollDownInspect<CR>
+nnoremap [vimux]i :VimuxInspectRunner<CR>
+nnoremap [vimux]l :VimuxRunLastCommand<CR>
+nnoremap [vimux]p :VimuxPromptCommand<CR>
+nnoremap [vimux]q :VimuxCloseRunner<CR>
+nnoremap [vimux]r :VimuxRunCommand ''<left>
+nnoremap [vimux]u :VimuxScrollUpInspect<CR>
+nnoremap [vimux]x :VimuxInterruptRunner<CR>
+nnoremap [vimux]z :VimuxZoomRunner<CR>
 
 function! VimuxSlime()
  call VimuxSendText(@v)
@@ -707,16 +769,6 @@ endfunction
 vmap [vimux]s "vy :call VimuxSlime()<CR>
 nmap [vimux]s vip[vimux]s<CR>
 
-nnoremap [vimux] :Unite mapping -input=[vimux]<CR>
-
-nnoremap [vimux]<leader> :let g:VimuxRunnerIndex=
-nnoremap [vimux]i :VimuxInspectRunner<CR>
-nnoremap [vimux]l :VimuxRunLastCommand<CR>
-nnoremap [vimux]p :VimuxPromptCommand<CR>
-nnoremap [vimux]q :VimuxCloseRunner<CR>
-nnoremap [vimux]r :VimuxRunCommand ''<left>
-nnoremap [vimux]x :VimuxInterruptRunner<CR>
-nnoremap [vimux]z :call VimuxZoomRunner()<CR>
 
 """""""""""
 """ autocmd
@@ -752,5 +804,5 @@ let g:neomake_clojure_enabled_makers = ['kibit']
 """""""""""""""
 """ colorscheme
 
-set background=dark
+set background=light
 colorscheme base16-default
