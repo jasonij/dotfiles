@@ -1,5 +1,7 @@
 *.json
-.git
+.ensime/*
+.ensime_cache/*
+.git/
 bower_components
 coverage
 dev-server
