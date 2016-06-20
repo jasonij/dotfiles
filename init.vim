@@ -30,8 +30,6 @@
 "
 " Can I unite git diff master files?
 "
-" Can I unite grep through just the open buffers?
-"
 " Don't toggle paste, just use yo and yO
 "
 " The main things about editing:
@@ -47,8 +45,6 @@
 "   - Type taxonomy exploration
 "
 " aucommand to change wildignore based on project type
-"
-" Markdown headings to tagbar
 "
 " C-; is unused
 "
@@ -72,7 +68,7 @@
 "
 " Unite menu could be used for dotfile editing, etc
 "
-" Find instances of tag in file (not across files)
+" Find instances of tag in file (not across files) (UniteWithCursorWord tag/include)
 "
 " Add buffer names to each of the unite buffers possibly?
 "
@@ -86,27 +82,12 @@
 "
 " Can I get a jobstart that doesn't close when I close vim?
 "
-" Other unites (e.g. cursorword tag) may want a non-selecta-rank sorter as well.
-" Possibly mapping would be better with literal match or something
-" TODO: Identify ideal sorts for unites
-"
-" Learn Fugitive much better, it's very powerful
-"
-" May need to write custom unite to get git modified files into unite. Why so difficult?
-"
 " Wait, do I want :Unite filelist ... :Git! diff-tree --no-commit-id --name-only -r head~1
 "
-" Remember also :Unite history/unite
+" VimFiler and Fugitive interact badly
 "
-" The three super plugins:
-" * Unite / VimFiler
-" * Fugitive
-" * Vimux
+" Can I get tags to show up on the vim help files?
 "
-" Consider: put Unite at the bottom or at the left, see how you like it.
-"
-" Consider: actually remap C-l so you can get out of CVmFiler
-
 """"""""
 """ Plug
 
@@ -115,6 +96,10 @@
 call plug#begin('~/.config/nvim/bundle')
 
 " About 70 plugins, that's probably too many (right Spacemacs?)
+
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
 
 " C/C++
 Plug 'justmao945/vim-clang'
@@ -175,11 +160,14 @@ Plug 'sunaku/vim-ruby-minitest'
 Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
 
+" Rust
+Plug 'rust-lang/rust.vim'
+
 " Scala
 " Q: Could we get autocompletion without Ensime? It's so janky.
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
-Plug 'ensime/ensime-vim'
+Plug 'ensime/ensime-vim', { 'do': function('DoRemote') }
 
 " Tmux
 Plug 'benmills/vimux'
@@ -203,7 +191,7 @@ Plug 'tpope/vim-unimpaired'
 
 "" Shougo misc
 Plug 'Shougo/context_filetype.vim'
-Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'Shougo/echodoc.vim'
 Plug 'Shougo/neoinclude.vim'
 Plug 'Shougo/neomru.vim'
@@ -225,6 +213,7 @@ Plug 'junegunn/fzf', { 'do': 'yes \| ./install' }
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'majutsushi/tagbar'
+Plug 'mbbill/undotree'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'tsukkee/unite-tag'
 Plug 'vim-airline/vim-airline'
@@ -272,18 +261,6 @@ endif
 let g:unite_enable_start_insert = 1
 let g:unite_source_history_yank_enable = 1
 
-let g:unite_source_menu_menus = {}
-
-let g:unite_source_menu_menus.zsh = {
-      \ 'description' : 'zsh files',
-      \ }
-let g:unite_source_menu_menus.zsh.file_candidates = [
-      \ ['zshenv'    , '~/.zshenv'],
-      \ ['zshrc'     , '~/.zshrc'],
-      \ ['zplug'     , '~/.zplug']
-      \ ]
-
-
 " From http://bleibinha.us/blog/2013/08/my-vim-setup-for-scala
 " Wildmenu completion: use for file exclusions
 set wildmenu
@@ -307,9 +284,9 @@ set wildignore+=/bower_components/
 set wildignore+=/dev-server/
 set wildignore+=/karma/
 
+" file_rec/git should hit everything under git with a few exceptions
 call unite#custom#source('file, file/async, file/new, file_include, file_list, file_mru, file_point, file_rec, file_rec/async, file_rec/neovim', 'ignore_globs', split(&wildignore, ','))
 call unite#custom#source('file_mru', 'sorters', 'ftime')
-" file_rec/git should hit everything under git with a few exceptions
 call unite#custom#source('file_rec/git', 'ignore_globs', ['/bower_components/', '/dev-server/', '/karma/'])
 call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
 
@@ -324,9 +301,6 @@ let base16colorspace=256
 
 let g:VimuxRunnerIndex = 2
 
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#left_alt_sep = '|'
-" let g:airline#extensions#tabline#left_sep = ' '
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'base16'
 
@@ -337,17 +311,14 @@ let g:deoplete#auto_completion_start_length = 2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 
-let g:deoplete#omni#input_patterns = {}
+" let g:deoplete#sources._=['buffer', 'member', 'tag', 'file', 'omni', 'ultisnips']<Paste>
 
 " see https://github.com/ensime/ensime-vim/pull/259
+let g:deoplete#omni#input_patterns = {}
+let g:deoplete#omni#input_patterns.java = '[^. *\t]\.\w*'
 let g:deoplete#omni#input_patterns.scala = '[^. *\t]\.\w*'
-
-" These may make some trouble, have a second look
-" let g:deoplete#omni#input_patterns.java = '[^. *\t]\.\w*'
-" let g:deoplete#omni#input_patterns.scala = '[^. *\t]\.\w*'
 " let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
 
-" or maybe we need let g:deoplete#omni_patterns.tex =
 let g:deoplete#omni#input_patterns.tex =
       \ '\v\\%('
       \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
@@ -375,10 +346,16 @@ let g:python3_host_prog = 'python3'
 
 let g:rainbow_active = 1
 
-let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|procrustes\|rammstein\).*'
+let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|procrustes\|rammstein\|\unobtanium).*'
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
+" Double the defaults
+let g:unite_source_tag_max_name_length = 50
+let g:unite_source_tag_max_kind_length = 16
+let g:unite_source_tag_max_fname_length = 40
+let g:unite_source_tag_name_footer_length = 20
+let g:unite_source_tag_fname_footer_length = 30
 
 """"""""
 " Tagbar
@@ -463,6 +440,7 @@ let g:tagbar_type_scala = {
     \ ]
 \ }
 
+let g:undotree_SplitWidth = 40
 
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_ignore_filters = ['matcher_ignore_pattern', 'matcher_ignore_wildignore']
@@ -528,68 +506,57 @@ set undoreload=10000
 
 " Leaders
 " This way, you can use , as local leader and still have , work for reverse last command
+" NOTE: This may no longer be necessary, and it would free up \
 let mapleader=" "
 let maplocalleader="\\"
 nmap , <localleader>
-" nmap <leader>m <localleader>
 
+
+"""""""""""""""""""
+" Configs and Notes
+nnoremap <leader>sn :sp notes.md<CR>
+nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
+
+
+"""""""""""""""""""""
 " Saving and Quitting
-"nnoremap <leader><ESC> :qa<cr>
 
-nnoremap <leader>Q :qa<cr>
-nnoremap <leader>q :q<cr>
+nnoremap <leader>Q :qa<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>W :wa<CR>
+nnoremap <leader>w :w<CR>
+nnoremap <leader>X :xa<CR>
+nnoremap <leader>x :x<CR>
+nnoremap <leader>c :close<CR>
+nnoremap <leader>d :bd<CR>
+nnoremap <leader>z :w<CR>:bd<CR>
+nnoremap <leader>Z :xa!<CR>
 
-nnoremap <leader>W :wa<cr>
-nnoremap <leader>w :w<cr>
-
-nnoremap <leader>X :xa<cr>
-nnoremap <leader>x :x<cr>
-
-nnoremap <leader>c :close<cr>
-
-nnoremap <leader>d :bd<cr>
-
-nnoremap <leader>z :w<cr>:bd<cr>
-nnoremap <leader>Z :xa!<cr>
-
+"""""""""
 " Windows
 
-" And then use C-i instead of Tab
 nnoremap <C-Tab> <C-w>w
 nnoremap <C-S-Tab> <C-w>W
 
 nnoremap <leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <leader>= <C-w>=
-nnoremap <leader>o :only<cr>
-nnoremap <leader>ss :split<cr>
-nnoremap <leader>vv :vsplit<cr>
-
-nnoremap <leader>~ :UniteWithInputDirectory file<CR>$HOME<CR>
-nnoremap <leader>` :UniteWithInputDirectory file<CR>$HOME/notes/<CR>
-
-" Edit Files
-" TODO: Replace these with Unite menu(s) except possibly notes.md
-nnoremap <leader>ed :e ~/notes/TODO.md<cr>
-nnoremap <leader>em :e ~/notes/menu.md<cr>
-nnoremap <leader>en :e notes.md<cr>
-nnoremap <leader>er :e ~/notes/RETRO_NOTES.md<cr>
-nnoremap <leader>et :e ~/dotfiles/.tmux.conf<cr>
-nnoremap <leader>ev :e ~/dotfiles/init.vim<cr>
-nnoremap <leader>ez :e ~/.zshrc<cr>
-
-" Consider: <leader> for ~/<file> and <localleader> for ./<file>
-nnoremap <leader>sd :sp ~/notes/TODO.md<cr>
-nnoremap <leader>sm :sp ~/notes/menu.md<cr>
-nnoremap <leader>sn :sp notes.md<cr>
-nnoremap <leader>sr :sp ~/notes/RETRO_NOTES.md<cr>
-nnoremap <leader>st :sp ~/dotfiles/.tmux.conf<cr>
-nnoremap <leader>sv :sp ~/dotfiles/init.vim<cr>
-nnoremap <leader>sz :sp ~/.zshrc<cr>
+nnoremap <leader>o :only<CR>
+nnoremap <leader>ss :split<CR>
+nnoremap <leader>vv :vsplit<CR>
 
 
 """"""""""
+" Comments
+noremap <leader>; :Commentary<CR>
+
+""""""""""
 " Fugitive
+"
+" Remember gitgutter's <leader>h bindings
+" nmap <Leader>hs <Plug>GitGutterStageHunk
+" nmap <Leader>hr <Plug>GitGutterRevertHunk
+" nmap <Leader>hp <Plug>GitGutterPreviewHunk
 
 nnoremap [fugitive] <Nop>
 nmap <leader>g [fugitive]
@@ -600,8 +567,6 @@ nnoremap [fugitive]a :Gcommit --amend<CR>
 nnoremap [fugitive]b :Gblame<CR>
 nnoremap [fugitive]B :Git branch<Space>
 nnoremap [fugitive]c :Gcommit -v -q<CR>
-" nnoremap [fugitive]c :Gcommit<CR>
-" nnoremap [fugitive]d :Gdiff<CR>
 nnoremap [fugitive]d :Gdiff origin/master<CR>
 nnoremap [fugitive]e :Gedit<CR>
 nnoremap [fugitive]f :Git! diff --name-only origin/master<CR>
@@ -619,92 +584,79 @@ nnoremap [fugitive]t :Gcommit -v -q %<CR>
 nnoremap [fugitive]w :Gwrite<CR><CR>
 nnoremap [fugitive]x :Gbrowse<CR>
 
-" Misc
-" Remember gitgutter's <leader>h bindings
-" nmap <Leader>hs <Plug>GitGutterStageHunk
-" nmap <Leader>hr <Plug>GitGutterRevertHunk
-" nmap <Leader>hp <Plug>GitGutterPreviewHunk
-nnoremap <leader>hh :let @/ = ""<cr>
-nnoremap <leader>k :let @/ = ""<cr>
-noremap <leader>; :Commentary<cr>
 
-" Tags
-" See also Unite tags
-" split open key binding is not quite right
-nnoremap <C-M-]> :sp <CR>:exec("tag ".expand("<cword>"))<CR>
-nnoremap <leader>T :call jobstart('ctags --exclude=@$HOME/.ctagsignore -RV -f tags-regenerating . && mv tags-regenerating tags')<cr>
-nnoremap <leader>t :TagbarToggle<CR>
+""""""""""""""
+" Highlighting
 
+nnoremap <leader>hh :let @/ = ""<CR>
+
+
+""""""""""
 " Terminal
-" <leader>' for :terminal ?
 " Q: How to send <Esc> inside terminal?
+
 tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>' :split \| terminal<CR>
 
+""""""
+" Undo
+
+nnoremap <leader>U :UndotreeToggle<CR>
 
 """""""
 " Unite
 
 nnoremap [unite] <Nop>
 nmap <leader>u [unite]
-
 nnoremap [unite] :Unite<CR>
-nnoremap <leader>U :Unite -buffer-name=resume resume<CR>
 
-" buffers
-nnoremap <leader>b :Unite buffer bookmark<cr>
+nnoremap <leader><leader> :Unite -buffer-name=commands command<CR>
+nnoremap <leader><BS> :Unite -buffer-name=resume-unite resume<CR>
+nnoremap <leader><C-h> :Unite -buffer-name=resume-unite resume<CR>
 
-" command
-nnoremap <leader>: :Unite command<cr>
+nnoremap <leader># :UniteWithCursorWord -buffer-name=grep-cursor-word grep:.<CR>
+nnoremap <leader>& :UniteWithCursorWord -buffer-name=cursor-word-files file_rec/git:.<CR>
+nnoremap <leader>* :UniteWithCursorWord -buffer-name=git-grep-cursor-word grep/git:.<CR>
+nnoremap <leader>/ :Unite -buffer-name=git-grep grep/git:.<CR>
+nnoremap <leader>: :Unite -buffer-name=commands command<CR>
+nnoremap <leader>? :Unite -buffer-name=grep grep:.<CR>
+nnoremap <leader>@ :UniteWithCursorWord -buffer-name=cursor-word-files file_rec/async:.<CR>
+nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<CR>
+nnoremap <leader>^ :Unite menu<CR>
+nnoremap <leader>` :UniteWithInputDirectory file<CR>$HOME/notes/<CR>
+nnoremap <leader>~ :UniteWithInputDirectory file<CR>$HOME<CR>
 
-" files
-" nnoremap <leader>f :Unite file<cr>
+nnoremap <leader>C :Unite -unique change<CR>
+nnoremap <leader>D :UniteWithInputDirectory -buffer-name=dotfiles file<CR>$HOME/dotfiles<CR>
+nnoremap <leader>N :UniteWithInputDirectory -buffer-name=notes file<CR>$HOME/notes<CR>
+nnoremap <leader>O :Unite -buffer-name=outline outline<CR>
 
-" files most recently used
-nnoremap <leader>m :UniteWithProjectDir file_mru<cr>
-nnoremap <leader>M :Unite file_mru<cr>
+" These tend to be across-buffers or within-project-directory
+nnoremap <leader>B :Unite -buffer-name=bookmarks bookmark<CR>
+nnoremap <leader>F :Unite -buffer-name=all-files -resume file_rec/async -input=<CR>
+nnoremap <leader>I :Unite -buffer-name=project-tags -resume tag -input=<CR>
+nnoremap <leader>K :Unite -buffer-name=key-mappings mapping<CR>
+nnoremap <leader>L :Unite -buffer-name=buffer-lines line:buffers<CR>
+nnoremap <leader>M :Unite tmuxcomplete/lines<CR>
+nnoremap <leader>N :UniteLast<CR>
+nnoremap <leader>P :UniteFirst<CR>
+nnoremap <leader>R :Unite -buffer-name=all-recent-files file_mru<CR>
+nnoremap <leader>S :Unite -buffer-name=scripts script<CR>
+nnoremap <leader>Y :Unite register<CR>
 
-" files recursive
-nnoremap <leader>r :Unite file_rec/git:--cached:--others:--exclude-standard<CR>
-nnoremap <leader>R :Unite file_rec/async<cr>
-nnoremap <leader>& :UniteWithCursorWord file_rec/git:.<cr>
-nnoremap <leader>@ :UniteWithCursorWord file_rec/async:.<cr>
-
-" grep
-nnoremap <leader>/ :Unite grep/git:.<cr>
-nnoremap <leader>? :Unite grep:.<cr>
-nnoremap <leader>* :UniteWithCursorWord grep/git:.<cr>
-nnoremap <leader># :UniteWithCursorWord grep:.<cr>
-
-" jump
-nnoremap <leader>j :Unite jump<cr>
-nnoremap <leader>J :Unite jump_point<cr>
-
-" lines
-nnoremap <leader>l :Unite line:all<cr>
-
-" menus
-nnoremap <leader>^ :Unite menu<cr>
-
-" tags
-" TODO: reorganize tag bindings!!! including generation and tagbar
-nnoremap <leader>a :Unite tag/file<cr>
-nnoremap <leader>A :Unite tag<cr>
-
-nnoremap <leader>i :Unite tag/include<cr>
-nnoremap <leader>I :Unite tag:%<cr>
-
-nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<cr>
-
-" yank
-nnoremap <leader>y :Unite history/yank<cr>
-nnoremap <leader>y :Unite register<cr>
-
-" first, prev, next, last
-nnoremap <leader>P :UniteFirst<cr>
-nnoremap <leader>p :UnitePrevious<cr>
-nnoremap <leader>n :UniteNext<cr>
-nnoremap <leader>N UniteLast<cr>
+" These tend to be within-buffer or within-project-source-control
+nnoremap <leader>b :Unite -buffer-name=buffers buffer<CR>
+nnoremap <leader>f :Unite -buffer-name=git-files file_rec/git -input=<CR>
+nnoremap <leader>i :Unite -buffer-name=buffer-tags tag/include<CR>
+nnoremap <leader>j :Unite -buffer-name=jumps jump jump_point<CR>
+nnoremap <leader>k :Unite -unique change<CR>
+nnoremap <leader>l :Unite -buffer-name=buffer-lines line:all<CR>
+nnoremap <leader>m :Unite tmuxcomplete<CR>
+nnoremap <leader>n :UniteNext<CR>
+nnoremap <leader>p :UnitePrevious<CR>
+nnoremap <leader>r :UniteWithProjectDir -buffer-name=project-recent-files file_mru<CR>
+nnoremap <leader>s :Unite -buffer-name=sources source<CR>
+nnoremap <leader>y :Unite history/yank<CR>
 
 " Unite splits
 autocmd FileType unite call s:unite_my_settings()
@@ -716,16 +668,20 @@ function! s:unite_my_settings()
 endfunction
 
 
+""""""
+" Tags
+
+nnoremap <leader>t :TagbarToggle<CR>
+nnoremap <leader>T :call jobstart('ctags --exclude=@$HOME/.ctagsignore -RV -f tags-regenerating . && mv tags-regenerating tags')<CR>
+
+
 """"""""""
 " VimFiler
 
 nnoremap [vimfiler] <Nop>
 nmap <leader>vf [vimfiler]
 
-" TODO: add :Unite mapping on timeouts
-
 nnoremap [vimfiler] :Unite mapping -input=[vimfiler]<CR>
-" nnoremap [vimfiler] :VimFiler<CR>
 nnoremap [vimfiler]b :VimFilerBufferDir<CR>
 nnoremap [vimfiler]c :VimFilerCurrentDir<CR>
 nnoremap [vimfiler]d :VimFilerDouble<CR>
@@ -736,12 +692,14 @@ nnoremap [vimfiler]t :VimFilerTab<CR>
 
 nnoremap - :VimFilerBufferDir<CR>
 nnoremap \| :VimFilerSplit<CR>
-nnoremap <leader>f :VimFilerExplorer<CR>
-nnoremap <leader>F :VimFilerExplorer -find<CR>
+nnoremap <leader>e :VimFilerExplorer<CR>
+nnoremap <leader>E :VimFilerExplorer -find<CR>
 
 
 """""""
 " Vimux
+"
+" TODO: send region, selection, line to pane n
 
 nnoremap [vimux] <Nop>
 nmap <leader>v [vimux]
