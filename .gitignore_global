@@ -23,6 +23,8 @@ tags
 
 /notes.*
 
+coverage/
+karma/coverage-reports/
 karma-test/
 
 damn-it-sbt-plugins/
