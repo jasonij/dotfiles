@@ -5,9 +5,7 @@
 " Get NeoMake listing next and previous to work (they aren't relative to cursor position)
 " Sort quickfix window by line number, can it be done?
 "
-" Gdiff should have $BASE, $LOCAL, $REMOTE, $MERGED or something like that
 " gggqG (is there something shorter?)
-" <leader>gf should support the usual master, origin, merged, etc. (it's broken now anyway)
 "
 " Q: How best to store favorite regexes?
 " A: Likely you'll want some leader-key bindings or named fns for common calls
@@ -68,26 +66,44 @@
 "
 " Unite menu could be used for dotfile editing, etc
 "
-" Find instances of tag in file (not across files) (UniteWithCursorWord tag/include)
-"
 " Add buffer names to each of the unite buffers possibly?
 "
 " Remember to use vis instead of this other goofy stuff
 "
-" Tags shortcut should do a mv at the end
-"
 " More git diff viewers and file finders (possibly through Unite) for head~1, master, origin, etc.
 "
-" Can I scroll back through previous things I typed into a unite buffer when I reopen a buffer?
+" Q: Can I scroll back through previous things I typed into a unite buffer when I reopen a buffer?
+" A: You can use Unite history/unite but not
 "
 " Can I get a jobstart that doesn't close when I close vim?
 "
 " Wait, do I want :Unite filelist ... :Git! diff-tree --no-commit-id --name-only -r head~1
 "
+" Unite my git changes in a file
+"
 " VimFiler and Fugitive interact badly
 "
 " Can I get tags to show up on the vim help files?
 "
+" Perhaps ensime needs another highlight that is more visible
+"
+" When I C-g out of UniteResume I lose my position in my current buffer
+"
+" How to make .nvim-python logs go somewhere not stupid?
+"
+" For Unite: IF there is a project, use project, otherwise use CurrentDir
+"
+" OmniCompletion with deoplete and R
+"
+" Can I get relative addressing for neomru when it's just local files?
+" Can I use relative directories for files recent?
+"
+" I need at ]C and [C to go along with ]c and [c
+"
+" For Clj I'd like to use omni complete always(?)
+"
+" K is help, so <leader>K should be helpy, and maybe <leader>k too
+
 """"""""
 """ Plug
 
@@ -109,7 +125,9 @@ Plug 'justmao945/vim-clang'
 Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'guns/vim-sexp'
 Plug 'luochen1990/rainbow'
+Plug 'tpope/vim-classpath'
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'tpope/vim-salve'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Data Formats
@@ -125,6 +143,7 @@ Plug 'jimenezrick/vimerl'
 Plug 'thinca/vim-ref'
 
 " Git
+" NOTE: If you have to use something other that git, Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
@@ -206,6 +225,7 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 "" et al
 Plug 'Konfekt/FastFold'
+Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
 Plug 'godlygeek/tabular'
@@ -297,12 +317,21 @@ call unite#filters#sorter_default#use(['sorter_selecta'])
 """""""
 """ let
 
-let base16colorspace=256
+" let base16colorspace=256
 
 let g:VimuxRunnerIndex = 2
 
+" let g:airline#extensions#tabline#left_alt_sep = '|'
+" let g:airline#extensions#tabline#left_sep = ' '
+" let g:airline_left_alt_sep = '\'
+" let g:airline_left_sep = ' '
+" let g:airline_right_alt_sep = '/'
+" let g:airline_right_sep = ' '
+
+let g:airline_theme = 'solarized'
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'base16'
+
+let g:airline#extensions#tabline#enabled = 1
 
 " TODO: Some of these copy ignorecase and smart_case, set those instead
 " autocomplete delay is necessary because tmux-complete slows down insertion too much
@@ -332,6 +361,7 @@ let g:deoplete#omni#input_patterns.tex =
       \ . ')'
 
 let g:gitgutter_grep_command = 'ag --nogroup --nocolor --hidden'
+
 let g:haddock_browser = "firefox"
 let g:haddock_docdir="/usr/local/share/doc/ghc/html/"
 
@@ -342,11 +372,13 @@ let g:pymode_run_bind = '<localleader>r'
 " Neomake runs pylama
 let g:pymode_lint = 0
 
+let g:python_host_prog = 'python'
 let g:python3_host_prog = 'python3'
+
 
 let g:rainbow_active = 1
 
-let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|procrustes\|rammstein\|\unobtanium).*'
+let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|procrustes\|rammstein\|\unobtanium\).*'
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
@@ -357,10 +389,11 @@ let g:unite_source_tag_max_fname_length = 40
 let g:unite_source_tag_name_footer_length = 20
 let g:unite_source_tag_fname_footer_length = 30
 
+
 """"""""
 " Tagbar
 
-let g:tagbar_sort = 0
+" let g:tagbar_sort = 0
 
 let g:tagbar_type_elixir = {
     \ 'ctagstype' : 'elixir',
@@ -440,6 +473,8 @@ let g:tagbar_type_scala = {
     \ ]
 \ }
 
+" let g:tmuxline_powerline_separators = 0
+
 let g:undotree_SplitWidth = 40
 
 let g:vimfiler_as_default_explorer = 1
@@ -501,8 +536,7 @@ set undoreload=10000
 
 """"""""""""
 """ MAPPINGS
-"
-" Inspired by Spacemacs, but semantically vimmish
+""" Inspired by Spacemacs, but semantically vimmish
 
 " Leaders
 " This way, you can use , as local leader and still have , work for reverse last command
@@ -512,14 +546,8 @@ let maplocalleader="\\"
 nmap , <localleader>
 
 
-"""""""""""""""""""
-" Configs and Notes
-nnoremap <leader>sn :sp notes.md<CR>
-nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
-
-
-"""""""""""""""""""""
-" Saving and Quitting
+"""""
+" Vim
 
 nnoremap <leader>Q :qa<CR>
 nnoremap <leader>q :q<CR>
@@ -532,23 +560,19 @@ nnoremap <leader>d :bd<CR>
 nnoremap <leader>z :w<CR>:bd<CR>
 nnoremap <leader>Z :xa!<CR>
 
-"""""""""
-" Windows
-
-nnoremap <C-Tab> <C-w>w
-nnoremap <C-S-Tab> <C-w>W
-
-nnoremap <leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
 nnoremap <leader>= <C-w>=
 nnoremap <leader>o :only<CR>
 nnoremap <leader>ss :split<CR>
 nnoremap <leader>vv :vsplit<CR>
 
+" Why are these broken?
+nnoremap <C-Tab> <C-w>w
+nnoremap <C-S-Tab> <C-w>W
 
-""""""""""
-" Comments
-noremap <leader>; :Commentary<CR>
+" Do you use these at all?
+nnoremap <leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
+
 
 """"""""""
 " Fugitive
@@ -585,23 +609,26 @@ nnoremap [fugitive]w :Gwrite<CR><CR>
 nnoremap [fugitive]x :Gbrowse<CR>
 
 
-""""""""""""""
-" Highlighting
+""""""
+" Misc
 
-nnoremap <leader>hh :let @/ = ""<CR>
+noremap <leader>; :Commentary<CR>
 
-
-""""""""""
-" Terminal
 " Q: How to send <Esc> inside terminal?
-
 tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>' :split \| terminal<CR>
 
-""""""
-" Undo
+nnoremap <leader>T :call jobstart('ctags --exclude=@$HOME/.ctagsignore -RV -f tags-regenerating . && mv tags-regenerating tags')<CR>
+nnoremap <leader>t :TagbarToggle<CR>
 
 nnoremap <leader>U :UndotreeToggle<CR>
+
+nnoremap <leader>hh :let @/ = ""<CR>
+nnoremap <leader>k :let @/ = ""<CR>
+
+nnoremap <leader>sn :sp notes.md<CR>
+nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
+
 
 """""""
 " Unite
@@ -610,32 +637,43 @@ nnoremap [unite] <Nop>
 nmap <leader>u [unite]
 nnoremap [unite] :Unite<CR>
 
-nnoremap <leader><leader> :Unite -buffer-name=commands command<CR>
-nnoremap <leader><BS> :Unite -buffer-name=resume-unite resume<CR>
-nnoremap <leader><C-h> :Unite -buffer-name=resume-unite resume<CR>
+" What should <SPC><SPC> do?
+" nnoremap <leader><leader> :Unite -buffer-name=commands command<CR>
 
-nnoremap <leader># :UniteWithCursorWord -buffer-name=grep-cursor-word grep:.<CR>
-nnoremap <leader>& :UniteWithCursorWord -buffer-name=cursor-word-files file_rec/git:.<CR>
-nnoremap <leader>* :UniteWithCursorWord -buffer-name=git-grep-cursor-word grep/git:.<CR>
-nnoremap <leader>/ :Unite -buffer-name=git-grep grep/git:.<CR>
+" NOTE: :Unite resume hasn't been working regularly
+" nnoremap <leader><BS> :Unite -buffer-name=resume-unite resume<CR>
+" nnoremap <leader><C-h> :Unite -buffer-name=resume-unite resume<CR>
+" TODO: sort out these bindings
+nnoremap <leader><BS> :UniteResume<CR>
+nnoremap <leader><C-h> :UniteResume<CR>
+nnoremap <leader><C-H> :Unite resume<CR>
+nnoremap <leader><S-BS> :Unite resume<CR>
+
+" I kind like having a grep/git binding too, but where to put it?
+nnoremap <leader>/ :Unite -buffer-name=grep grep:.<CR>
 nnoremap <leader>: :Unite -buffer-name=commands command<CR>
-nnoremap <leader>? :Unite -buffer-name=grep grep:.<CR>
-nnoremap <leader>@ :UniteWithCursorWord -buffer-name=cursor-word-files file_rec/async:.<CR>
-nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<CR>
+nnoremap <leader>? :Unite -buffer-name=key-mappings mapping<CR>
 nnoremap <leader>^ :Unite menu<CR>
 nnoremap <leader>` :UniteWithInputDirectory file<CR>$HOME/notes/<CR>
 nnoremap <leader>~ :UniteWithInputDirectory file<CR>$HOME<CR>
 
-nnoremap <leader>C :Unite -unique change<CR>
+nnoremap <leader>& :UniteWithCursorWord -buffer-name=cursor-word-files file_rec/git:.<CR>
+nnoremap <leader>* :UniteWithCursorWord -buffer-name=cursor-word grep:.<CR>
+nnoremap <leader>@ :UniteWithCursorWord -buffer-name=cursor-word-files file_rec/async:.<CR>
+nnoremap <leader>% :UniteWithCursorWord tag<CR>
+nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<CR>
+
 nnoremap <leader>D :UniteWithInputDirectory -buffer-name=dotfiles file<CR>$HOME/dotfiles<CR>
 nnoremap <leader>N :UniteWithInputDirectory -buffer-name=notes file<CR>$HOME/notes<CR>
+
+" These are within buffer but capitalized, which annoys me some
+nnoremap <leader>C :Unite -unique change<CR>
 nnoremap <leader>O :Unite -buffer-name=outline outline<CR>
 
 " These tend to be across-buffers or within-project-directory
 nnoremap <leader>B :Unite -buffer-name=bookmarks bookmark<CR>
 nnoremap <leader>F :Unite -buffer-name=all-files -resume file_rec/async -input=<CR>
 nnoremap <leader>I :Unite -buffer-name=project-tags -resume tag -input=<CR>
-nnoremap <leader>K :Unite -buffer-name=key-mappings mapping<CR>
 nnoremap <leader>L :Unite -buffer-name=buffer-lines line:buffers<CR>
 nnoremap <leader>M :Unite tmuxcomplete/lines<CR>
 nnoremap <leader>N :UniteLast<CR>
@@ -648,8 +686,7 @@ nnoremap <leader>Y :Unite register<CR>
 nnoremap <leader>b :Unite -buffer-name=buffers buffer<CR>
 nnoremap <leader>f :Unite -buffer-name=git-files file_rec/git -input=<CR>
 nnoremap <leader>i :Unite -buffer-name=buffer-tags tag/include<CR>
-nnoremap <leader>j :Unite -buffer-name=jumps jump jump_point<CR>
-nnoremap <leader>k :Unite -unique change<CR>
+nnoremap <leader>j :Unite -buffer-name=jumps jump_point jump<CR>
 nnoremap <leader>l :Unite -buffer-name=buffer-lines line:all<CR>
 nnoremap <leader>m :Unite tmuxcomplete<CR>
 nnoremap <leader>n :UniteNext<CR>
@@ -658,21 +695,19 @@ nnoremap <leader>r :UniteWithProjectDir -buffer-name=project-recent-files file_m
 nnoremap <leader>s :Unite -buffer-name=sources source<CR>
 nnoremap <leader>y :Unite history/yank<CR>
 
+" What are the outsanding keymap issues?
+
 " Unite splits
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
   "{{{
   inoremap <silent><buffer><expr> <C-s> unite#do_action('split')
   inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+
+  nnoremap <silent><buffer><expr> <C-s> unite#do_action('split')
+  nnoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
   "}}}
 endfunction
-
-
-""""""
-" Tags
-
-nnoremap <leader>t :TagbarToggle<CR>
-nnoremap <leader>T :call jobstart('ctags --exclude=@$HOME/.ctagsignore -RV -f tags-regenerating . && mv tags-regenerating tags')<CR>
 
 
 """"""""""
@@ -685,15 +720,15 @@ nnoremap [vimfiler] :Unite mapping -input=[vimfiler]<CR>
 nnoremap [vimfiler]b :VimFilerBufferDir<CR>
 nnoremap [vimfiler]c :VimFilerCurrentDir<CR>
 nnoremap [vimfiler]d :VimFilerDouble<CR>
-nnoremap [vimfiler]e :VimFilerExplorer<CR>
-nnoremap [vimfiler]f :VimFilerExplorer -find<CR>
+nnoremap [vimfiler]e :VimFilerExplorer -winwidth=40<CR>
+nnoremap [vimfiler]f :VimFilerExplorer -find -winwidth=40<CR>
 nnoremap [vimfiler]s :VimFilerSplit<CR>
 nnoremap [vimfiler]t :VimFilerTab<CR>
 
-nnoremap - :VimFilerBufferDir<CR>
-nnoremap \| :VimFilerSplit<CR>
-nnoremap <leader>e :VimFilerExplorer<CR>
-nnoremap <leader>E :VimFilerExplorer -find<CR>
+nmap - [vimfiler]b
+nmap \| [vimfiler]s
+nmap <leader>e [vimfiler]e
+nmap <leader>E [vimfiler]f
 
 
 """""""
@@ -705,6 +740,7 @@ nnoremap [vimux] <Nop>
 nmap <leader>v [vimux]
 vmap <leader>v [vimux]
 nnoremap [vimux] :Unite mapping -input=[vimux]<CR>
+nmap [vimux]f [vimfiler]
 
 nnoremap [vimux]<leader> :let g:VimuxRunnerIndex=
 
@@ -720,8 +756,8 @@ nnoremap [vimux]x :VimuxInterruptRunner<CR>
 nnoremap [vimux]z :VimuxZoomRunner<CR>
 
 function! VimuxSlime()
- call VimuxSendText(@v)
- call VimuxSendKeys("Enter")
+  call VimuxSendText(@v)
+  call VimuxSendKeys("Enter")
 endfunction
 
 vmap [vimux]s "vy :call VimuxSlime()<CR>
@@ -762,5 +798,7 @@ let g:neomake_clojure_enabled_makers = ['kibit']
 """""""""""""""
 """ colorscheme
 
+" base16 is broken AGAIN!!!
+" solarized is a bit too low contrast, but good enough
 set background=light
-colorscheme base16-default
+colorscheme solarized
