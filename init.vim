@@ -103,6 +103,12 @@
 " For Clj I'd like to use omni complete always(?)
 "
 " K is help, so <leader>K should be helpy, and maybe <leader>k too
+"
+" How can I get the name of the current file for the : command line?
+"
+" Automatically clear search highlighting after executing s/
+"
+" I need a quick key for bumping everything down a line like O but without inserting
 
 """"""""
 """ Plug
@@ -121,7 +127,6 @@ endfunction
 Plug 'justmao945/vim-clang'
 
 " Clojure
-" salve?
 Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'guns/vim-sexp'
 Plug 'luochen1990/rainbow'
@@ -169,7 +174,7 @@ Plug 'xolox/vim-lua-inspect'
 Plug 'xolox/vim-misc'
 
 " Python
-Plug 'klen/python-mode'
+Plug 'klen/python-mode', { 'branch': 'develop' }
 
 " R
 Plug 'jalvesaq/Nvim-R'
@@ -321,15 +326,11 @@ call unite#filters#sorter_default#use(['sorter_selecta'])
 
 let g:VimuxRunnerIndex = 2
 
-" let g:airline#extensions#tabline#left_alt_sep = '|'
-" let g:airline#extensions#tabline#left_sep = ' '
-" let g:airline_left_alt_sep = '\'
-" let g:airline_left_sep = ' '
-" let g:airline_right_alt_sep = '/'
-" let g:airline_right_sep = ' '
-
 let g:airline_theme = 'solarized'
 let g:airline_powerline_fonts = 1
+
+let g:tmuxline_powerline_separators = 1
+let g:tmuxline_preset = 'powerline'
 
 let g:airline#extensions#tabline#enabled = 1
 
@@ -360,6 +361,7 @@ let g:deoplete#omni#input_patterns.tex =
       \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
       \ . ')'
 
+" Remember to install ag! GitGutter doesn't give you a warning if it's not there
 let g:gitgutter_grep_command = 'ag --nogroup --nocolor --hidden'
 
 let g:haddock_browser = "firefox"
@@ -375,8 +377,8 @@ let g:pymode_lint = 0
 let g:python_host_prog = 'python'
 let g:python3_host_prog = 'python3'
 
-
-let g:rainbow_active = 1
+" Rainbow parens don't work well with light colorschemes
+let g:rainbow_active = 0
 
 let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|procrustes\|rammstein\|\unobtanium\).*'
 let g:scala_sort_across_groups=1
@@ -472,8 +474,6 @@ let g:tagbar_type_scala = {
       \ 'v:variables:1'
     \ ]
 \ }
-
-" let g:tmuxline_powerline_separators = 0
 
 let g:undotree_SplitWidth = 40
 
@@ -625,6 +625,8 @@ nnoremap <leader>U :UndotreeToggle<CR>
 
 nnoremap <leader>hh :let @/ = ""<CR>
 nnoremap <leader>k :let @/ = ""<CR>
+" should k have to do with keys or help or something instead?
+" Why do I have to keep typing hh or k anyway?
 
 nnoremap <leader>sn :sp notes.md<CR>
 nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
@@ -644,6 +646,8 @@ nnoremap [unite] :Unite<CR>
 " nnoremap <leader><BS> :Unite -buffer-name=resume-unite resume<CR>
 " nnoremap <leader><C-h> :Unite -buffer-name=resume-unite resume<CR>
 " TODO: sort out these bindings
+"
+" TODO: remove the ones you aren't using or aren't using often
 nnoremap <leader><BS> :UniteResume<CR>
 nnoremap <leader><C-h> :UniteResume<CR>
 nnoremap <leader><C-H> :Unite resume<CR>
@@ -664,14 +668,14 @@ nnoremap <leader>% :UniteWithCursorWord tag<CR>
 nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<CR>
 
 nnoremap <leader>D :UniteWithInputDirectory -buffer-name=dotfiles file<CR>$HOME/dotfiles<CR>
-nnoremap <leader>N :UniteWithInputDirectory -buffer-name=notes file<CR>$HOME/notes<CR>
+" TODO: N is overloaded
+" nnoremap <leader>N :UniteWithInputDirectory -buffer-name=notes file<CR>$HOME/notes<CR>
 
 " These are within buffer but capitalized, which annoys me some
 nnoremap <leader>C :Unite -unique change<CR>
 nnoremap <leader>O :Unite -buffer-name=outline outline<CR>
 
 " These tend to be across-buffers or within-project-directory
-nnoremap <leader>B :Unite -buffer-name=bookmarks bookmark<CR>
 nnoremap <leader>F :Unite -buffer-name=all-files -resume file_rec/async -input=<CR>
 nnoremap <leader>I :Unite -buffer-name=project-tags -resume tag -input=<CR>
 nnoremap <leader>L :Unite -buffer-name=buffer-lines line:buffers<CR>
@@ -685,6 +689,7 @@ nnoremap <leader>Y :Unite register<CR>
 " These tend to be within-buffer or within-project-source-control
 nnoremap <leader>b :Unite -buffer-name=buffers buffer<CR>
 nnoremap <leader>f :Unite -buffer-name=git-files file_rec/git -input=<CR>
+" nnoremap <leader>f :UniteWithCurrentDir -buffer-name=files -resume file_rec/async -input=<CR>
 nnoremap <leader>i :Unite -buffer-name=buffer-tags tag/include<CR>
 nnoremap <leader>j :Unite -buffer-name=jumps jump_point jump<CR>
 nnoremap <leader>l :Unite -buffer-name=buffer-lines line:all<CR>
