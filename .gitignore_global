@@ -6,6 +6,7 @@
 
 .cache
 .classpath
+.ensime
 .ensime_cache/
 .project
 .projectile
