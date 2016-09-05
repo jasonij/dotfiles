@@ -20,6 +20,8 @@ ZSH_TMUX_AUTOSTART=true
 # virtualenvwrapper tries to switch env based on project
 DISABLE_VENV_CD=1
 
+NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
 unalias run-help
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
@@ -54,13 +56,13 @@ alias logs="tail -f /usr/local/var/postgres/pg_log/postgresql.log"
 alias meta=met
 alias misc="cd $HOME/Code/misc"
 alias ml=animl
+alias not="cd $HOME/notes"
 alias notes="cd $HOME/notes"
 
 alias pal="cd $HOME/Code/misc/ruby/palindrome"
+alias prog="cd $HOME/Code/scala/progfun1"
 
-
-alias ramm=ram
-
+alias rep="cd $HOME/repos/"
 
 alias space="cd $HOME/.emacs.d"
 
@@ -81,7 +83,9 @@ alias gfp="git fetch --prune"
 alias grh1="git reset HEAD~1"
 
 alias nv="nvim"
+alias nvc="nvim ~/notes/COMPANIES.md"
 alias nvd="nvim ~/notes/TODO.md"
+alias nve="nvim ~/.zshenv"
 alias nvn="nvim notes.md"
 alias nvo="nvim ~/ON_CALL_HOW_TO_NOTES.md"
 alias nvr="nvim ~/notes/RETRO_NOTES.md"
@@ -92,9 +96,7 @@ alias nvz="nvim ~/.zshrc"
 alias sbaa="sbt \~assembly"
 alias sbca="sbt clean assembly"
 alias sbcc="sbt \~compile"
-alias sbge="jenv exec sbt gen-ensime"
-alias sbgem="jenv exec sbt gen-ensime-meta"
-alias sbgep="jenv exec sbt gen-ensime-project"
+alias sbec="jenv exec sbt ensimeConfig"
 alias sbq="sbt test-quick"
 alias sbqq="sbt \~test-quick"
 alias sbs="sbt scalastyle"
@@ -117,9 +119,5 @@ if which jenv > /dev/null; then eval "$(jenv init -)"; fi
 # # Ruby Environment Manager
 # if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 # if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash)"; fi
-
-# # Source Socrata configuration (I must come after rbenv)
-# # TODO: figure how how to get this happening
-# #source ~/.config/base16-shell/base16-default.dark.sh
 
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
