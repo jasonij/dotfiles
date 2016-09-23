@@ -26,12 +26,10 @@
 " Copy current filename into system clipboard
 " And/or Vimux start populated with filename (if possible)
 "
-" Can I unite git diff master files?
-"
 " Don't toggle paste, just use yo and yO
 "
 " The main things about editing:
-" * Navigation -> Unite, VimFiler, ctags
+" * Navigation -> Denite, VimFiler, ctags
 " * SCM interaction -> Fugitive
 " * REPL (Tmux integration) -> Vimux
 " * Autocompletion -> Deoplete (with #input_patterns for special omni)
@@ -46,9 +44,6 @@
 "
 " C-; is unused
 "
-" VimFiler interacts with Fugitive (git blame) badly
-" VimFiler choose, how to open new split from there?
-"
 " M-p and M-n in normal more for [b and ]b ?
 "
 " What if you have too many leader key mappings?
@@ -62,26 +57,17 @@
 "
 " Can I change some visual state to indicate that leader or local leader has been pressed?
 "
-" VimFiler jumps in, Tagbar does not. Inconsistent!
-"
 " Unite menu could be used for dotfile editing, etc
-"
-" Add buffer names to each of the unite buffers possibly?
 "
 " Remember to use vis instead of this other goofy stuff
 "
 " More git diff viewers and file finders (possibly through Unite) for head~1, master, origin, etc.
-"
-" Q: Can I scroll back through previous things I typed into a unite buffer when I reopen a buffer?
-" A: You can use Unite history/unite but not
 "
 " Can I get a jobstart that doesn't close when I close vim?
 "
 " Wait, do I want :Unite filelist ... :Git! diff-tree --no-commit-id --name-only -r head~1
 "
 " Unite my git changes in a file
-"
-" VimFiler and Fugitive interact badly
 "
 " Can I get tags to show up on the vim help files?
 "
@@ -215,6 +201,7 @@ Plug 'tpope/vim-unimpaired'
 
 "" Shougo misc
 Plug 'Shougo/context_filetype.vim'
+Plug 'Shougo/denite.nvim'
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'Shougo/echodoc.vim'
 Plug 'Shougo/neoinclude.vim'
@@ -223,9 +210,6 @@ Plug 'Shougo/neopairs.vim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoyank.vim'
-Plug 'Shougo/unite-outline'
-Plug 'Shougo/unite.vim'
-Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 "" et al
@@ -240,7 +224,6 @@ Plug 'justinmk/vim-sneak'
 Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'tsukkee/unite-tag'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -272,20 +255,6 @@ if has('conceal')
 endif
 
 
-"""""""""""""
-""" Unite.vim
-
-if executable('ag')
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column --hidden'
-  let g:unite_source_grep_recursive_opt = ''
-  let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', '']
-  " let g:unite_source_rec_async_command = ['git', 'diff', '--name-only', 'head~1']
-endif
-
-let g:unite_enable_start_insert = 1
-let g:unite_source_history_yank_enable = 1
-
 " From http://bleibinha.us/blog/2013/08/my-vim-setup-for-scala
 " Wildmenu completion: use for file exclusions
 set wildmenu
@@ -308,15 +277,6 @@ set wildignore+=*/target/* "sbt target directory"
 set wildignore+=/bower_components/
 set wildignore+=/dev-server/
 set wildignore+=/karma/
-
-" file_rec/git should hit everything under git with a few exceptions
-call unite#custom#source('file, file/async, file/new, file_include, file_list, file_mru, file_point, file_rec, file_rec/async, file_rec/neovim', 'ignore_globs', split(&wildignore, ','))
-call unite#custom#source('file_mru', 'sorters', 'ftime')
-call unite#custom#source('file_rec/git', 'ignore_globs', ['/bower_components/', '/dev-server/', '/karma/'])
-call unite#custom#source('grep', 'matchers', 'matcher_fuzzy')
-
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_selecta'])
 
 
 """""""
@@ -383,13 +343,6 @@ let g:rainbow_active = 0
 let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|procrustes\|rammstein\|\unobtanium\).*'
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
-
-" Double the defaults
-let g:unite_source_tag_max_name_length = 50
-let g:unite_source_tag_max_kind_length = 16
-let g:unite_source_tag_max_fname_length = 40
-let g:unite_source_tag_name_footer_length = 20
-let g:unite_source_tag_fname_footer_length = 30
 
 
 """"""""
@@ -477,9 +430,6 @@ let g:tagbar_type_scala = {
 
 let g:undotree_SplitWidth = 40
 
-let g:vimfiler_as_default_explorer = 1
-let g:vimfiler_ignore_filters = ['matcher_ignore_pattern', 'matcher_ignore_wildignore']
-
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_folding_disabled = 1
 
@@ -562,8 +512,6 @@ nnoremap <leader>Z :xa!<CR>
 
 nnoremap <leader>= <C-w>=
 nnoremap <leader>o :only<CR>
-nnoremap <leader>ss :split<CR>
-nnoremap <leader>vv :vsplit<CR>
 
 " Why are these broken?
 nnoremap <C-Tab> <C-w>w
@@ -584,8 +532,6 @@ nnoremap <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
 
 nnoremap [fugitive] <Nop>
 nmap <leader>g [fugitive]
-
-nnoremap [fugitive] :Unite mapping -input=[fugitive]<CR>
 
 nnoremap [fugitive]a :Gcommit --amend<CR>
 nnoremap [fugitive]b :Gblame<CR>
@@ -632,108 +578,17 @@ nnoremap <leader>sn :sp notes.md<CR>
 nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
 
 
-"""""""
-" Unite
+""""""""
+" Denite
 
-nnoremap [unite] <Nop>
-nmap <leader>u [unite]
-nnoremap [unite] :Unite<CR>
-
-" What should <SPC><SPC> do?
-" nnoremap <leader><leader> :Unite -buffer-name=commands command<CR>
-
-" NOTE: :Unite resume hasn't been working regularly
-" nnoremap <leader><BS> :Unite -buffer-name=resume-unite resume<CR>
-" nnoremap <leader><C-h> :Unite -buffer-name=resume-unite resume<CR>
-" TODO: sort out these bindings
-"
-" TODO: remove the ones you aren't using or aren't using often
-nnoremap <leader><BS> :UniteResume<CR>
-nnoremap <leader><C-h> :UniteResume<CR>
-nnoremap <leader><C-H> :Unite resume<CR>
-nnoremap <leader><S-BS> :Unite resume<CR>
-
-" I kind like having a grep/git binding too, but where to put it?
-nnoremap <leader>/ :Unite -buffer-name=grep grep:.<CR>
-nnoremap <leader>: :Unite -buffer-name=commands command<CR>
-nnoremap <leader>? :Unite -buffer-name=key-mappings mapping<CR>
-nnoremap <leader>^ :Unite menu<CR>
-nnoremap <leader>` :UniteWithInputDirectory file<CR>$HOME/notes/<CR>
-nnoremap <leader>~ :UniteWithInputDirectory file<CR>$HOME<CR>
-
-nnoremap <leader>& :UniteWithCursorWord -buffer-name=cursor-word-files file_rec/git:.<CR>
-nnoremap <leader>* :UniteWithCursorWord -buffer-name=cursor-word grep:.<CR>
-nnoremap <leader>@ :UniteWithCursorWord -buffer-name=cursor-word-files file_rec/async:.<CR>
-nnoremap <leader>% :UniteWithCursorWord tag<CR>
-nnoremap <leader>] :UniteWithCursorWord tag:/^.:.<CR>
-
-nnoremap <leader>D :UniteWithInputDirectory -buffer-name=dotfiles file<CR>$HOME/dotfiles<CR>
-" TODO: N is overloaded
-" nnoremap <leader>N :UniteWithInputDirectory -buffer-name=notes file<CR>$HOME/notes<CR>
-
-" These are within buffer but capitalized, which annoys me some
-nnoremap <leader>C :Unite -unique change<CR>
-nnoremap <leader>O :Unite -buffer-name=outline outline<CR>
-
-" These tend to be across-buffers or within-project-directory
-nnoremap <leader>F :Unite -buffer-name=all-files -resume file_rec/async -input=<CR>
-nnoremap <leader>I :Unite -buffer-name=project-tags -resume tag -input=<CR>
-nnoremap <leader>L :Unite -buffer-name=buffer-lines line:buffers<CR>
-nnoremap <leader>M :Unite tmuxcomplete/lines<CR>
-nnoremap <leader>N :UniteLast<CR>
-nnoremap <leader>P :UniteFirst<CR>
-nnoremap <leader>R :Unite -buffer-name=all-recent-files file_mru<CR>
-nnoremap <leader>S :Unite -buffer-name=scripts script<CR>
-nnoremap <leader>Y :Unite register<CR>
-
-" These tend to be within-buffer or within-project-source-control
-nnoremap <leader>b :Unite -buffer-name=buffers buffer<CR>
-nnoremap <leader>f :Unite -buffer-name=git-files file_rec/git -input=<CR>
-" nnoremap <leader>f :UniteWithCurrentDir -buffer-name=files -resume file_rec/async -input=<CR>
-nnoremap <leader>i :Unite -buffer-name=buffer-tags tag/include<CR>
-nnoremap <leader>j :Unite -buffer-name=jumps jump_point jump<CR>
-nnoremap <leader>l :Unite -buffer-name=buffer-lines line:all<CR>
-nnoremap <leader>m :Unite tmuxcomplete<CR>
-nnoremap <leader>n :UniteNext<CR>
-nnoremap <leader>p :UnitePrevious<CR>
-nnoremap <leader>r :UniteWithProjectDir -buffer-name=project-recent-files file_mru<CR>
-nnoremap <leader>s :Unite -buffer-name=sources source<CR>
-nnoremap <leader>y :Unite history/yank<CR>
-
-" What are the outsanding keymap issues?
-
-" Unite splits
-autocmd FileType unite call s:unite_my_settings()
-function! s:unite_my_settings()
-  "{{{
-  inoremap <silent><buffer><expr> <C-s> unite#do_action('split')
-  inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-
-  nnoremap <silent><buffer><expr> <C-s> unite#do_action('split')
-  nnoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-  "}}}
-endfunction
-
-
-""""""""""
-" VimFiler
-
-nnoremap [vimfiler] <Nop>
-nmap <leader>vf [vimfiler]
-
-nnoremap [vimfiler] :Unite mapping -input=[vimfiler]<CR>
-nnoremap [vimfiler]b :VimFilerBufferDir<CR>
-nnoremap [vimfiler]c :VimFilerCurrentDir<CR>
-nnoremap [vimfiler]d :VimFilerDouble<CR>
-nnoremap [vimfiler]e :VimFilerExplorer -winwidth=40<CR>
-nnoremap [vimfiler]f :VimFilerExplorer -find -winwidth=40<CR>
-nnoremap [vimfiler]s :VimFilerSplit<CR>
-nnoremap [vimfiler]t :VimFilerTab<CR>
-
-nmap - [vimfiler]b
-nmap \| [vimfiler]s
-nmap <leader>e [vimfiler]e
-nmap <leader>E [vimfiler]f
+nnoremap <leader>b :Denite base<CR>
+nnoremap <leader>f :Denite file_rec<CR>
+nnoremap <leader>g :Denite grep<CR>
+nnoremap <leader>j :Denite jump_point<CR>
+nnoremap <leader>l :Denite <CR>
+nnoremap <leader>l :Denite line<CR>
+nnoremap <leader>r :Denite file_mru<CR>
+nnoremap <leader>y :Denite neoyank<CR>
 
 
 """""""
@@ -744,8 +599,6 @@ nmap <leader>E [vimfiler]f
 nnoremap [vimux] <Nop>
 nmap <leader>v [vimux]
 vmap <leader>v [vimux]
-nnoremap [vimux] :Unite mapping -input=[vimux]<CR>
-nmap [vimux]f [vimfiler]
 
 nnoremap [vimux]<leader> :let g:VimuxRunnerIndex=
 
