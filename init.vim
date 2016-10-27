@@ -1,6 +1,8 @@
 " Vim is a player's racquet
 "
-" C-h broken? See https://github.com/neovim/neovim/issues/2048
+" C-h broken? See https://github.com/neovim/neovim/wiki/FAQ#my-ctrl-h-mapping-doesnt-work
+"
+" TODO: Split this up into bare-bones (no plugins) and with-plugins
 "
 " Get NeoMake listing next and previous to work (they aren't relative to cursor position)
 " Sort quickfix window by line number, can it be done?
@@ -28,30 +30,15 @@
 "
 " Don't toggle paste, just use yo and yO
 "
-" The main things about editing:
-" * Navigation -> Denite, VimFiler, ctags
-" * SCM interaction -> Fugitive
-" * REPL (Tmux integration) -> Vimux
-" * Autocompletion -> Deoplete (with #input_patterns for special omni)
-" * Code comprehension -> Problematic
-"   - Docs
-"   - Find uses of (refactoring)
-"   - Semantic completion -> Omni + 3rd party services
-"   - Syntax checking -> NeoMake
-"   - Type taxonomy exploration
-"
 " aucommand to change wildignore based on project type
 "
 " C-; is unused
 "
 " M-p and M-n in normal more for [b and ]b ?
 "
-" What if you have too many leader key mappings?
-" Maybe tpope's approach of unused key seqs is better?
-"
 " Can I trigger deoplete with tab when it's in timeout mode?
 "
-" Good idea: binding for 'send this selection to tmux pane x'
+" Binding for 'send this selection to tmux pane x'
 "
 " Markdown mode O has a funny indentation and I'm not sure why
 "
@@ -71,15 +58,9 @@
 "
 " Can I get tags to show up on the vim help files?
 "
-" Perhaps ensime needs another highlight that is more visible
-"
 " When I C-g out of UniteResume I lose my position in my current buffer
 "
 " How to make .nvim-python logs go somewhere not stupid?
-"
-" For Unite: IF there is a project, use project, otherwise use CurrentDir
-"
-" OmniCompletion with deoplete and R
 "
 " Can I get relative addressing for neomru when it's just local files?
 " Can I use relative directories for files recent?
@@ -159,6 +140,9 @@ Plug 'xolox/vim-lua-ftplugin'
 Plug 'xolox/vim-lua-inspect'
 Plug 'xolox/vim-misc'
 
+" Org
+Plug 'jceb/vim-orgmode'
+
 " Python
 Plug 'klen/python-mode', { 'branch': 'develop' }
 
@@ -177,7 +161,7 @@ Plug 'rust-lang/rust.vim'
 " Q: Could we get autocompletion without Ensime? It's so janky.
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
-Plug 'ensime/ensime-vim', { 'do': function('DoRemote') }
+" Plug 'ensime/ensime-vim', { 'do': function('DoRemote') }
 
 " Tmux
 Plug 'benmills/vimux'
@@ -198,6 +182,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar'
 
 "" Shougo misc
 Plug 'Shougo/context_filetype.vim'
@@ -216,13 +201,13 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'Konfekt/FastFold'
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
-Plug 'chriskempson/base16-vim'
 Plug 'godlygeek/tabular'
-Plug 'junegunn/fzf', { 'do': 'yes \| ./install' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
+Plug 'scrooloose/nerdtree'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -273,35 +258,22 @@ set wildignore+=*.orig "Merge resolution files"
 set wildignore+=*.class "java/scala class files"
 set wildignore+=*/target/* "sbt target directory"
 
-" ignores necessary for my various projects
-set wildignore+=/bower_components/
-set wildignore+=/dev-server/
-set wildignore+=/karma/
-
 
 """""""
 """ let
-
-" let base16colorspace=256
 
 let g:VimuxRunnerIndex = 2
 
 let g:airline_theme = 'solarized'
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
 let g:tmuxline_powerline_separators = 1
 let g:tmuxline_preset = 'powerline'
 
-let g:airline#extensions#tabline#enabled = 1
-
 " TODO: Some of these copy ignorecase and smart_case, set those instead
-" autocomplete delay is necessary because tmux-complete slows down insertion too much
-let g:deoplete#auto_complete_delay = 100
-let g:deoplete#auto_completion_start_length = 2
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
-
-" let g:deoplete#sources._=['buffer', 'member', 'tag', 'file', 'omni', 'ultisnips']<Paste>
 
 " see https://github.com/ensime/ensime-vim/pull/259
 let g:deoplete#omni#input_patterns = {}
@@ -327,6 +299,8 @@ let g:gitgutter_grep_command = 'ag --nogroup --nocolor --hidden'
 let g:haddock_browser = "firefox"
 let g:haddock_docdir="/usr/local/share/doc/ghc/html/"
 
+let NERDTreeWinSize = 45
+
 " pymode should not use global leader, omg srsly.
 let g:pymode_breakpoint_bind = '<localleader>b'
 let g:pymode_run_bind = '<localleader>r'
@@ -349,6 +323,7 @@ let g:scala_use_builtin_tagbar_defs = 0
 " Tagbar
 
 " let g:tagbar_sort = 0
+let g:tagbar_autofocus = 1
 
 let g:tagbar_type_elixir = {
     \ 'ctagstype' : 'elixir',
@@ -477,7 +452,7 @@ set shell=zsh
 set shiftwidth=2
 set t_Co=256
 set tabstop=2
-set tags=tags,.tags;
+set tags=./tags;
 set textwidth=100
 set undofile
 set undolevels=1000
@@ -517,10 +492,6 @@ nnoremap <leader>o :only<CR>
 nnoremap <C-Tab> <C-w>w
 nnoremap <C-S-Tab> <C-w>W
 
-" Do you use these at all?
-nnoremap <leader>+ :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <leader>- :exe "resize " . (winheight(0) * 2/3)<CR>
-
 
 """"""""""
 " Fugitive
@@ -558,6 +529,8 @@ nnoremap [fugitive]x :Gbrowse<CR>
 """"""
 " Misc
 
+nnoremap <leader>E :NERDTreeFind<CR>
+nnoremap <leader>e :NERDTreeToggle<CR>
 noremap <leader>; :Commentary<CR>
 
 " Q: How to send <Esc> inside terminal?
@@ -569,8 +542,8 @@ nnoremap <leader>t :TagbarToggle<CR>
 
 nnoremap <leader>U :UndotreeToggle<CR>
 
+nnoremap <leader>h :let @/ = ""<CR>
 nnoremap <leader>hh :let @/ = ""<CR>
-nnoremap <leader>k :let @/ = ""<CR>
 " should k have to do with keys or help or something instead?
 " Why do I have to keep typing hh or k anyway?
 
@@ -581,13 +554,34 @@ nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
 """"""""
 " Denite
 
-nnoremap <leader>b :Denite base<CR>
+
+" Change file_rec command.
+call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
+
+" Ag for grep
+call denite#custom#var('grep', 'command', ['ag'])
+call denite#custom#var('grep', 'default_opts', ['--nogroup', '--nocolor', '--column', '--hidden'])
+call denite#custom#var('grep', 'final_opts', [])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'separator', [])
+
+" Change mappings.
+call denite#custom#map('_', "\<C-j>", 'move_to_next_line')
+call denite#custom#map('_', "\<C-k>", 'move_to_prev_line')
+call denite#custom#map('_', "\<C-n>", 'move_to_next_line')
+call denite#custom#map('_', "\<C-p>", 'move_to_prev_line')
+
+nnoremap <leader>* :DeniteCursorWord grep<CR><CR>
+nnoremap <leader>/ :Denite grep<CR>
+nnoremap <leader>B :Denite buffer !<CR>
+nnoremap <leader>b :Denite buffer<CR>
 nnoremap <leader>f :Denite file_rec<CR>
-nnoremap <leader>g :Denite grep<CR>
+nnoremap <leader>k :Denite help<CR>
+nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>j :Denite jump_point<CR>
-nnoremap <leader>l :Denite <CR>
 nnoremap <leader>l :Denite line<CR>
-nnoremap <leader>r :Denite file_mru<CR>
+nnoremap <leader>r :DeniteBufferDir file_mru<CR>
+nnoremap <leader>R :Denite file_mru<CR>
 nnoremap <leader>y :Denite neoyank<CR>
 
 
@@ -656,7 +650,5 @@ let g:neomake_clojure_enabled_makers = ['kibit']
 """""""""""""""
 """ colorscheme
 
-" base16 is broken AGAIN!!!
-" solarized is a bit too low contrast, but good enough
-set background=light
+set background=dark
 colorscheme solarized
