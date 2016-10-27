@@ -1,12 +1,12 @@
 [user]
-  name = Jason Kroll
   email = jkroll@alumni.tufts.edu
+  name = Jason Kroll
+[color]
+  ui = auto
 [core]
   editor = nvim
   excludesfile = ~/.gitignore_global
-[alias]
-[push]
-  default = simple
+  pager = less -FMRiX
 [diff]
   tool = vimdiff
 [filter "media"]
@@ -22,3 +22,5 @@
   cmd = nvim -d $LOCAL $REMOTE -c '$wincmd w' -c '$wincmd l'
   # cmd = nvim -d $REMOTE $LOCAL $MERGED -c '$wincmd w' -c '$wincmd J'
   # cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[push]
+  default = simple
