@@ -5,11 +5,16 @@ These are my dotfiles.
 
 Implicitly a list of favorites.
 
+## Installation Notes
+* .zshenv should be copied, not symlinked. It's too environment-sensitive.
+* most of the other things you can symlink `ln -s ~/dotfiles/<filename> ~/<filename` or however
+* TODO: use [GNU Stow](http://brandon.invergo.net/news/2012-05-26-using-gnu-stow-to-manage-your-dotfiles.html)
+
 ## Components
+* [Spacemacs](https://github.com/syl20bnr/spacemacs)
 * [Neovim](https://neovim.io/)
-* [Tmux](https://tmux.github.io/)
+* [tmux](https://tmux.github.io/)
 * [Zsh](http://www.zsh.org/)
-* (big fan of [Spacemacs](https://github.com/syl20bnr/spacemacs) but it's not quite stable enough.)
 
 If on Linux:
 * [Arch Linux](https://www.archlinux.org/)
@@ -19,41 +24,36 @@ If on Linux:
 If on Mac:
 * [Homebrew](http://brew.sh/)
 * [iTerm2](https://www.iterm2.com/)
-* [Divvy](http://mizage.com/divvy/) (or something similar)
+* [Spectacle](https://www.spectacleapp.com/)
+* TODO [Hammerspoon](http://www.hammerspoon.org/) (fork of mjolnir)
 
 ### Neovim plugins
-I rely heavily on a few major plugins:
-* [Unite.vim](https://github.com/Shougo/unite.vim)
-* [deoplete](https://github.com/Shougo/deoplete.nvim)
-* [fugitive.vim](https://github.com/tpope/vim-fugitive)
-* [vimfiler](https://github.com/Shougo/vimfiler.vim)
-* [vimux](https://github.com/benmills/vimux)
+I rely heavily on a few plugins:
+* [denite.vim](https://github.com/Shougo/denite.nvim) a bit like helm
+* [deoplete](https://github.com/Shougo/deoplete.nvim) completion
+* [fugitive.vim](https://github.com/tpope/vim-fugitive) magit quality
+* [vimux](https://github.com/benmills/vimux) integrates with tmux
+* [NERD tree](https://github.com/scrooloose/nerdtree) Until VimFiler works with denite
 
 ## Languages
 
-### Fun
-* [Ruby]
-* [Clojure]
-* [Elixir]
-* [Lua]
+### Production
+* [Ruby](https://www.ruby-lang.org/en/)
+* [Scala](http://www.scala-lang.org/)
+* [Python](https://www.python.org/)
+* [Java](https://www.oracle.com/java/index.html)
+* [JavaScript](https://www.destroyallsoftware.com/talks/wat)
 
-### Work
-* [Scala]
-* [Python]
-* [JavaScript]
+### Hobby
+* [Clojure](http://clojure.org/)
+* [Elixir](http://elixir-lang.org/)
+* [Lua](https://www.lua.org/)
 
 ### Stats
-* Julia (promising)
-* Octave (slower than you'd think)
-* R (not so excellent as a language)
-
-I have mixed feelings about Scala; it is orders of magnitude preferable to Java, but I think Clojure is the way to go on the JVM.
-
-I'm pretty much on the dynamic side of the fence insofar as that's tenable these days.
+* [Julia](http://julialang.org/)
+* [R](https://www.r-project.org/)
 
 Immutability is a bigger game changer than strong type systems.
-
-I use a MBP at work and an Arch Linux ThinkPad at home.
 
 Usability Essentials:
 * Remap caps lock to control
