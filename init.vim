@@ -66,12 +66,15 @@
 " Can I get help to open in a vertical split?
 "
 " Neomake could open :lw automatically if any errors are detected?
+"
+" Use FZF more often, it's pretty good for finding files
 
 " LEARN: (in more depth)
 " Python-mode (ins and outs)
 " Fugitive
 " Tmux itself
 " Markdown (it should be an adequate org with less tapping)
+" FZF
 
 
 """"""""
@@ -198,6 +201,7 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'Konfekt/FastFold'
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
+Plug 'chriskempson/base16-vim'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
@@ -260,9 +264,12 @@ set wildignore+=*/target/* "sbt target directory"
 
 let g:VimuxRunnerIndex = 2
 
-let g:airline_theme = 'solarized'
-let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+" let g:airline#themes#base16#constant = 1
+let g:airline_base16_improved_contrast = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'base16'
+
 " TODO: Some of these copy ignorecase and smart_case, set those instead
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
@@ -317,9 +324,6 @@ let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
 let g:tmux_navigator_save_on_switch = 1
-
-let g:tmuxline_powerline_separators = 1
-let g:tmuxline_preset = 'powerline'
 
 
 """"""""
@@ -680,5 +684,11 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 """""""""""""""
 """ colorscheme
 
-set background=light
-colorscheme solarized
+" let g:airline#themes#base16#constant = 1
+let g:airline_base16_improved_contrast = 1
+
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+
