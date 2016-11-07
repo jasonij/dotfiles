@@ -34,6 +34,8 @@ I rely heavily on a few plugins:
 * [fugitive.vim](https://github.com/tpope/vim-fugitive) magit quality
 * [vimux](https://github.com/benmills/vimux) integrates with tmux
 * [NERD tree](https://github.com/scrooloose/nerdtree) Until VimFiler works with denite
+    [Ed: actually, NERDTree is *really* good at what it does, given how difficult it is to emulsify
+    a project drawer with split windows.]
 
 ## Languages
 
@@ -53,10 +55,14 @@ I rely heavily on a few plugins:
 * [Julia](http://julialang.org/)
 * [R](https://www.r-project.org/)
 
+## Random Thoughts
+
 Immutability is a bigger game changer than strong type systems.
 
 Usability Essentials:
 * Remap caps lock to control
 * Set Mac's option to Meta
+
+## TODO
 
 One of these days I ought to document my thoughts on tooling.
