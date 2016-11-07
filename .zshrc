@@ -7,9 +7,6 @@ ZSH_TMUX_AUTOCONNECT=false
 ZSH_TMUX_AUTOQUIT=false
 ZSH_TMUX_AUTOSTART=true
 
-# Python
-DISABLE_VENV_CD=1
-
 unalias run-help
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
@@ -18,8 +15,7 @@ plugins=(
 # SLOW:
 # aws # this one is just awful
 # pyenv
-# rbenv
-# virtualenvwrapper
+# rbenv # you may very well need this one
 brew
 bundler
 colorize
@@ -34,13 +30,18 @@ ruby
 sbt
 scala
 tmux
+virtualenv
 )
 
 fpath=(/usr/local/share/zsh-completions $fpath)
 
 ### Directories
-alias bbtlp="cd $HOME/workplace/BigBirdThrottleLogProcessor"
-alias bbtlps="cd $HOME/workplace/BigBirdThrottleLogProcessor/src/BigBirdThrottleLogProcessor"
+
+# Where I'm working the most often
+# (set in .zshenv)
+alias src="cd $SRC_DIR"
+alias s=src
+
 alias bun="cd $HOME/.config/nvim/bundle"
 alias dot="cd ~/dotfiles"
 alias misc="cd $HOME/Code/misc"
@@ -71,15 +72,25 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 # if which jenv > /dev/null; then eval "$(jenv init -)"; fi
 
 ### Neovim
-alias n="nvim"
-alias nv="nvim"
-alias nvd="nvim ~/TODO.md"
-alias nve="nvim ~/.zshenv"
-alias nvn="nvim notes.md"
-alias nvt="nvim ~/dotfiles/.tmux.conf"
-alias nvv="nvim ~/dotfiles/init.vim"
-alias nvz="nvim ~/dotfiles/.zshrc"
 alias v="nvim"
+alias vd="nvim ~/TODO.md"
+alias ve="nvim ~/.zshenv"
+alias vn="nvim notes.md"
+alias vs="nvim ~/SCRUM.org"
+alias vt="nvim ~/dotfiles/.tmux.conf"
+alias vv="nvim ~/dotfiles/init.vim"
+alias vz="nvim ~/dotfiles/.zshrc"
+
+export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
+### Python
+# export DISABLE_VENV_CD=1
+# export WORKON_HOME=~/Envs
+
+# WARN: this may not work on linux
+if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+source /usr/local/bin/virtualenvwrapper_lazy.sh
 
 ### Scala
 alias sbaa="sbt \~assembly"
@@ -98,8 +109,9 @@ alias tag="/usr/local/bin/ctags --exclude=@$HOME/.ctagsignore -RV ."
 ### Tmux
 alias tlp="tmux list-panes"
 
-### Neovim
-export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+### z is the new j, yo
+. `brew --prefix`/etc/profile.d/z.sh
+
 
 # NOTE: Put environment-specific things in ~/.zshenv which is unique per environment
 #       and should probably not be included at all in my dotfiles
