@@ -2,13 +2,13 @@
 "
 " C-h broken? See https://github.com/neovim/neovim/wiki/FAQ#my-ctrl-h-mapping-doesnt-work
 "
+" If deoplete breaks after PlugUpdate, remember to pip install --upgrade neovim
+"
 " TODO:
 "
 " Get NeoMake listing next and previous to work (they aren't relative to cursor position)
 " (This is okay if you wrap your checkers with something like Pylama)
-"
 " Sort quickfix window by line number, can it be done?
-"
 " Can I get the quickfix window to follow my cursor position (so next is relative to cursor?)
 "
 " gggqG (is there something shorter?)
@@ -35,8 +35,6 @@
 "
 " Binding for 'send this selection to tmux pane x'
 "
-" Can I change some visual state to indicate that leader or local leader has been pressed?
-"
 " Denite menu could be used for dotfile editing, etc
 "
 " More git diff viewers and file finders (possibly through Unite) for head~1, master, origin, etc.
@@ -47,13 +45,13 @@
 "
 " Can I get tags to show up on the vim help files?
 "
-" How to make .nvim-python logs go somewhere not stupid?
-"
 " I would like ]C and [C to go along with ]c and [c (add to git-gutter?)
 "
 " For Clj I'd like to use omni complete always(?)
+" There are many deoplete external sources now
 "
 " How can I get the name of the current file for the : command line?
+" I feel like there's a tpope plugin for this
 "
 " Automatically clear search highlighting after executing s/
 " Unbind <leader>h bindings and use <leader>h to clear highlights
@@ -61,18 +59,52 @@
 "
 " C-M-hjkl or C-HJKL for resizing panes (if vim supports this kind of resizing)
 "
-" Use [e and ]e instead of M-jk like in org
-"
 " Can I get help to open in a vertical split?
 "
 " Neomake could open :lw automatically if any errors are detected?
 "
 " Use FZF more often, it's pretty good for finding files
+"
+" Disable (or differently able) cob (if using base16)
+"
+" What is going on with base16 highlight / reverse? It's not readable.
+"
+" Look into g:tmuxcomplete#capture_args
+"           g:tmuxcomplete#list_args
+"
+" Project: use actual commands instead of hotkeys for a while
+" Useful: some kind of command exposer like Spacemacs has
+"         I think the power of Spacemacs comes from exposing what's already there.
+"
+" Fix denite highlighting w/ base16 or you can't use it at all
+"
+" DeniteSelection
+"
+" Execute action in split, close new split if action fails
+"
+" Git revert visual selection (GitGutterUndoHunk is close-ish)
+"
+" Still really want a Denite buffer of files differing between branches
+"
+" Tagbar for YAML files?
+"
+" Denite split open
+"
+" Pylama should give relative paths please!
+"
+" How do I turn on fill-mode in vim?
+"
+" :sp and :vs on C-] or wherever
+"
+" What can I do about tagging methods inside of bins without extensions
+"
+" Trim the arsenal. Stop loading plugins you aren't actively using right month.
 
 " LEARN: (in more depth)
-" Python-mode (ins and outs)
 " Fugitive
+" Either Jedi or Python-mode or Rope or something
 " Tmux itself
+" Zsh
 " Markdown (it should be an adequate org with less tapping)
 " FZF
 
@@ -84,7 +116,7 @@
 "" TODO: rename to plug or whatever is the norm or look into Shougo's new project
 call plug#begin('~/.config/nvim/bundle')
 
-" About 70 plugins, that's probably too many (right Spacemacs?)
+" About 80 plugins, that's probably too many (right Spacemacs?)
 
 function! DoRemote(arg)
   UpdateRemotePlugins
@@ -140,18 +172,14 @@ Plug 'xolox/vim-lua-ftplugin'
 Plug 'xolox/vim-lua-inspect'
 Plug 'xolox/vim-misc'
 
-" Org
-Plug 'jceb/vim-orgmode'
-
 " Python
-Plug 'klen/python-mode', { 'branch': 'develop' }
 Plug 'zchee/deoplete-jedi'
 
 " R
 Plug 'jalvesaq/Nvim-R'
 
 " Ruby
-Plug 'tpope/vim-rails'
+" Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
 
 " Rust
@@ -159,17 +187,15 @@ Plug 'rust-lang/rust.vim'
 
 " Scala
 " Q: Could we get autocompletion without Ensime? It's so janky.
+" Plug 'ensime/ensime-vim', { 'do': function('DoRemote') }
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
-" Plug 'ensime/ensime-vim', { 'do': function('DoRemote') }
 
 " Tmux
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
-
-" TODO: submit PR to tmuxline for adding optional window status?
 Plug 'edkolev/tmuxline.vim'
-Plug 'wellle/tmux-complete.vim'
+Plug 'wellle/tmux-complete.vim' " Bad interaction w/ deoplete overwrites tmux buffer
 
 " Vim
 
@@ -183,6 +209,7 @@ Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar'
 
 "" Shougo misc
 Plug 'Shougo/context_filetype.vim'
@@ -198,7 +225,9 @@ Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 "" et al
+Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Konfekt/FastFold'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
@@ -211,7 +240,6 @@ Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -264,11 +292,12 @@ set wildignore+=*/target/* "sbt target directory"
 
 let g:VimuxRunnerIndex = 2
 
+" let g:airline_theme = 'base16'
+let g:airline_theme = 'solarized'
+
 let g:airline#extensions#tabline#enabled = 1
-" let g:airline#themes#base16#constant = 1
 let g:airline_base16_improved_contrast = 1
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'base16'
 
 " TODO: Some of these copy ignorecase and smart_case, set those instead
 let g:deoplete#enable_at_startup = 1
@@ -295,21 +324,28 @@ let g:deoplete#omni#input_patterns.tex =
 " Remember to install ag! GitGutter doesn't give you a warning if it's not there
 let g:gitgutter_grep_command = 'ag --nogroup --nocolor --hidden'
 
+let g:haddock_browser = 'firefox'
+
+let NERDTreeHijackNetrw = 0
 let NERDTreeWinSize = 45
+
+" let g:netrw_liststyle = 3
 
 " pymode should not use global leader, omg srsly.
 let g:pymode_breakpoint_bind = '<localleader>b'
 let g:pymode_run_bind = '<localleader>r'
 let g:pymode_options_max_line_length = 99
-" that obnoxious bar can be turned off!
 let g:pymode_options_colorcolumn = 0
 
 " Legacy codebases have too many whitespaces
 let g:pymode_trim_whitespaces = 0
 
-" Neomake runs pylama
-let g:pymode_lint = 0
-" let g:neomake_python_enabled_makers = ['isort', 'mccabe', 'pep257', 'pep8', 'pycodestyle', 'pydocstyle', 'pyflakes']
+" Neomake runs pylama; but not if you don't have .py in the filename
+let g:pymode_lint = 1
+let g:pymode_rope_complete_on_dot = 0
+
+" Jedi seems to do better than rope
+let g:pymode_rope_completion = 0
 
 let g:python_host_prog = '/Users/jkroll/.pyenv/versions/neovim2/bin/python'
 let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/neovim3/bin/python'
@@ -319,11 +355,13 @@ let g:rainbow_active = 0
 
 let g:ranger_map_keys = 0
 
-let g:scala_first_party_namespaces='.*\(cetera\|phidippides\|procrustes\|rammstein\|\unobtanium\).*'
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
+" Ha, this doesn't work so well
 let g:tmux_navigator_save_on_switch = 1
+
+let g:tmuxline_preset = 'full'
 
 
 """"""""
@@ -413,7 +451,6 @@ let g:tagbar_type_scala = {
 let g:undotree_SplitWidth = 40
 
 let g:vim_markdown_conceal = 0
-" let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_folding_style_pythonic = 1
 
 ""replace 'f' with 1-char Sneak
@@ -458,10 +495,11 @@ set previewheight=17
 set relativenumber
 set shell=zsh
 set shiftwidth=2
+set showcmd
 set t_Co=256
 set tabstop=2
 set tags=./tags;
-set textwidth=100
+set textwidth=99
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -472,95 +510,35 @@ set undoreload=10000
 """ Inspired by Spacemacs, but semantically vimmish
 
 " Leaders
-" This way, you can use , as local leader and still have , work for reverse last command
-" NOTE: This may no longer be necessary, and it would free up \
 let mapleader=" "
-let maplocalleader="\\"
-nmap , <localleader>
+let maplocalleader=","
 
 
 """""
 " Vim
 
-nnoremap <leader>Q :qa<CR>
-nnoremap <leader>q :q<CR>
-nnoremap <leader>W :wa<CR>
-nnoremap <leader>w :w<CR>
-nnoremap <leader>X :xa<CR>
-nnoremap <leader>x :x<CR>
-nnoremap <leader>c :close<CR>
-" nnoremap <leader>d :bd<CR>
-nnoremap <leader>d :Bclose<CR>
-nnoremap <leader>z :w<CR>:bd<CR>
-nnoremap <leader>Z :xa!<CR>
-
 nnoremap <leader>= <C-w>=
 nnoremap <leader>o :only<CR>
 
-" Why are these broken?
+nnoremap <leader>c :close<CR>
+nnoremap <leader>d :Bclose<CR>
+
+nnoremap <leader>Q :qa<CR>
+nnoremap <leader>q :q<CR>
+
+nnoremap <leader>W :wa<CR>
+nnoremap <leader>w :w<CR>
+
+nnoremap <leader>X :xa<CR>
+nnoremap <leader>x :x<CR>
+
+" Review what x and X and ZZ and ZQ actually do, then be sensible
+nnoremap <leader>Z :xa!<CR>
+nnoremap <leader>z :w<CR>:Bclose<CR>
+
+" Why are these broken? Because iTerm2
 nnoremap <C-Tab> <C-w>w
 nnoremap <C-S-Tab> <C-w>W
-
-
-""""""""""
-" Fugitive
-"
-" Remember gitgutter's <leader>h bindings
-" nmap <Leader>hs <Plug>GitGutterStageHunk
-" nmap <Leader>hr <Plug>GitGutterRevertHunk
-" nmap <Leader>hp <Plug>GitGutterPreviewHunk
-
-nnoremap [fugitive] <Nop>
-nmap <leader>g [fugitive]
-
-nnoremap [fugitive]a :Gcommit --amend<CR>
-nnoremap [fugitive]b :Gblame<CR>
-nnoremap [fugitive]B :Git branch<Space>
-nnoremap [fugitive]c :Gcommit -v -q<CR>
-nnoremap [fugitive]d :Gdiff origin/master<CR>
-nnoremap [fugitive]e :Gedit<CR>
-nnoremap [fugitive]f :Git! diff --name-only origin/master<CR>
-nnoremap [fugitive]F :Git diff --name-only origin/master<CR>
-nnoremap [fugitive]g :copen<CR>:Ggrep 
-nnoremap [fugitive]l :silent! Glog<CR>
-nnoremap [fugitive]m :Gmove<Space>
-nnoremap [fugitive]o :Git checkout<Space>
-nnoremap [fugitive]p :Ggrep<Space>
-nnoremap [fugitive]pl :Dispatch! git pull<CR>
-nnoremap [fugitive]ps :Dispatch! git push<CR>
-nnoremap [fugitive]r :Gread<CR>
-nnoremap [fugitive]s :Gstatus<CR>
-nnoremap [fugitive]t :Gcommit -v -q %<CR>
-nnoremap [fugitive]w :Gwrite<CR><CR>
-nnoremap [fugitive]x :Gbrowse<CR>
-
-
-""""""
-" Misc
-
-
-nnoremap - :Ranger<CR>
-
-nnoremap <leader>E :NERDTreeFind<CR>
-nnoremap <leader>e :NERDTreeToggle<CR>
-
-noremap <leader>; :Commentary<CR>
-
-" Q: How to send <Esc> inside terminal?
-tnoremap <Esc> <C-\><C-n>
-nnoremap <leader>' :split \| terminal<CR>
-
-nnoremap <leader>T :call jobstart('ctags --exclude=@$HOME/.ctagsignore -RV -f tags-regenerating . && mv tags-regenerating tags')<CR>
-nnoremap <leader>t :TagbarToggle<CR>
-
-nnoremap <leader>u :UndotreeToggle<CR>
-
-nnoremap <leader>h :let @/ = ""<CR>
-nnoremap <leader>hh :let @/ = ""<CR>
-" Why do I have to keep clearing highlights anyway?
-
-nnoremap <leader>sn :sp notes.md<CR>
-nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
 
 
 """"""""
@@ -582,23 +560,35 @@ call denite#custom#map('_', "\<C-k>", 'move_to_prev_line')
 call denite#custom#map('_', "\<C-n>", 'move_to_next_line')
 call denite#custom#map('_', "\<C-p>", 'move_to_prev_line')
 
+nnoremap <leader><BS> :Denite -resume<CR>
+nnoremap <leader><C-h> :Denite -resume<CR>
+nnoremap <leader><C-p> :Denite -resume -select=-1 -immediately<CR>
+nnoremap <leader><C-n> :Denite -resume -select=+1 -immediately<CR>
+
 nnoremap <leader>* :DeniteCursorWord grep<CR><CR>
 nnoremap <leader>/ :Denite grep<CR>
 
-nnoremap <leader>B :Denite buffer !<CR>
-nnoremap <leader>b :Denite buffer<CR>
+" This breaks [vimux] send so goodbye <leader>:
+" nnoremap <leader>: :Denite command<CR>
 
-" TODO: Figure out these mappings (they're not consistent with the others)
-nnoremap <leader>$ :Denite directory_rec<CR>
-nnoremap <leader>% :DeniteCursorWord directory_rec<CR>
+" TODO: Let's see if we can use <leader>C-x and <leader>M-x style bindings
+" Capital letters always mean DeniteCursorWord
+" C-S across the board?
+" How to handle resume?
+
+nnoremap <leader><C-b> :Denite buffer!<CR>
+nnoremap <leader>B :DeniteCursorWord buffer<CR>
+nnoremap <leader>b :Denite buffer<CR>
 
 nnoremap <leader>F :DeniteCursorWord file_rec<CR>
 nnoremap <leader>f :Denite file_rec<CR>
 
+" I know, I know, it's FZF instead of Denite
+nnoremap <leader>J :Tags<CR>
+nnoremap <leader>j :BTags<CR>
+
 nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>k :Denite help<CR>
-
-nnoremap <leader>j :Denite jump_point<CR>
 
 nnoremap <leader>L :DeniteCursorWord line<CR>
 nnoremap <leader>l :Denite line<CR>
@@ -606,13 +596,102 @@ nnoremap <leader>l :Denite line<CR>
 nnoremap <leader>M :DeniteCursorWord filetype<CR>
 nnoremap <leader>m :Denite filetype<CR>
 
-" These currently make no difference
 " TODO: see if there's an option to file_mru possibly
-nnoremap <leader>R :Denite file_mru<CR>
-nnoremap <leader>r :DeniteBufferDir file_mru<CR>
+nnoremap <leader>R :DeniteCursorWord file_mru<CR>
+nnoremap <leader>r :Denite file_mru<CR>
 
+nnoremap <leader>Y :DeniteCursorWord neoyank<CR>
 nnoremap <leader>y :Denite neoyank<CR>
 
+
+""""""""""
+" Fugitive
+"
+" Remember gitgutter's <leader>h bindings
+" nmap <Leader>hs <Plug>GitGutterStageHunk
+" nmap <Leader>hr <Plug>GitGutterRevertHunk
+" nmap <Leader>hp <Plug>GitGutterPreviewHunk
+
+nnoremap [fugitive] <Nop>
+nmap <leader>g [fugitive]
+
+nnoremap [fugitive]a :Gcommit --amend<CR>
+nnoremap [fugitive]b :Gblame<CR>
+nnoremap [fugitive]B :Git branch<Space>
+nnoremap [fugitive]c :Gcommit -v -q<CR>
+nnoremap [fugitive]d :Gdiff<CR>
+nnoremap [fugitive]e :Gedit<CR>
+" nnoremap [fugitive]f :Git! diff --name-only origin/master<CR>
+" nnoremap [fugitive]F :Git diff --name-only origin/master<CR>
+nnoremap [fugitive]g :copen<CR>:Ggrep 
+nnoremap [fugitive]l :silent! Glog<CR>
+nnoremap [fugitive]m :Gmove<Space>
+nnoremap [fugitive]o :Git checkout<Space>
+nnoremap [fugitive]p :Ggrep<Space>
+nnoremap [fugitive]pl :Dispatch! git pull<CR>
+nnoremap [fugitive]ps :Dispatch! git push<CR>
+nnoremap [fugitive]r :Gread<CR>
+nnoremap [fugitive]s :Gstatus<CR>
+nnoremap [fugitive]t :Gcommit -v -q %<CR>
+nnoremap [fugitive]w :Gwrite<CR><CR>
+nnoremap [fugitive]x :Gbrowse<CR>
+
+
+""""""
+" Misc
+
+
+nnoremap <leader>$ :Ranger<CR>
+
+nnoremap <leader>E :NERDTreeFind<CR>
+nnoremap <leader>e :NERDTreeToggle<CR>
+
+noremap <leader>; :Commentary<CR>
+
+" Q: How to send <Esc> inside terminal?
+tnoremap <Esc> <C-\><C-n>
+nnoremap <leader>' :split \| terminal<CR>
+
+nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
+nnoremap <leader>t :TagbarToggle<CR>
+
+nnoremap <leader>u :UndotreeToggle<CR>
+
+" This is okay because the filetype determines the maker
+nnoremap <leader>M :Denite filetype<CR>
+nnoremap <leader>m :Neomake<CR>
+
+" I have to type this all the bloomin' time
+" Why do I have to keep clearing highlights anyway?
+nnoremap <leader>N :let @/ = ""<CR>
+nnoremap <leader>n :noh<CR>
+
+" These really belong in a Denite menu
+nnoremap <leader>sd :sp $HOME/TODO.md<CR>
+nnoremap <leader>sn :sp notes.md<CR>
+nnoremap <leader>sr :sp $HOME/RETRO.md<CR>
+nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
+
+
+"""""
+" FZF
+
+" Q: Worth setting up M-p and M-n instead of C-p and C-n ?
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
+
+" Advanced customization using autoload functions
+" inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
 
 """""""
 " Vimux
@@ -643,6 +722,7 @@ function! VimuxSlime()
   call VimuxSendKeys("Enter")
 endfunction
 
+" These have stopped working since whenever
 vmap [vimux]s "vy :call VimuxSlime()<CR>
 nmap [vimux]s vip[vimux]s<CR>
 
@@ -673,9 +753,11 @@ let g:neomake_clojure_kibit_maker = {
       \ }
 let g:neomake_clojure_enabled_makers = ['kibit']
 
-" Open NERDTree if no files are specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" I want to run pylama on Python scripts that don't end in .py
+let g:neomake_python_pylama_maker = {
+      \ 'args': ['--force', '--format', 'pep8', '--ignore', 'E501']
+      \ }
+
 
 " Quit if NERDTree is the only window left open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -684,11 +766,10 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 """""""""""""""
 """ colorscheme
 
-" let g:airline#themes#base16#constant = 1
-let g:airline_base16_improved_contrast = 1
+" if filereadable(expand("~/.vimrc_background"))
+"   let base16colorspace=256
+"   source ~/.vimrc_background
+" endif
 
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
-
+set background=dark
+colorscheme solarized
