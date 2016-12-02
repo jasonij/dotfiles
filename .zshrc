@@ -7,6 +7,9 @@ ZSH_TMUX_AUTOCONNECT=false
 ZSH_TMUX_AUTOQUIT=false
 ZSH_TMUX_AUTOSTART=true
 
+# Don't rename tmux windows automatically
+DISABLE_AUTO_TITLE="true"
+
 unalias run-help
 autoload run-help
 HELPDIR=/usr/local/share/zsh/help
@@ -14,8 +17,7 @@ HELPDIR=/usr/local/share/zsh/help
 plugins=(
 # SLOW:
 # aws # this one is just awful
-# pyenv
-# rbenv # you may very well need this one
+# rbenv # you may very well need this one but not right now
 brew
 bundler
 colorize
@@ -54,8 +56,8 @@ alias tp="cd $HOME/third-party"
 alias wk="cd $HOME/workplace"
 
 ### Base16
-BASE16_SHELL=$HOME/.config/base16-shell/
-[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+# BASE16_SHELL=$HOME/.config/base16-shell/
+# [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
 ### Emacs
 if [ -n "$INSIDE_EMACS" ]
@@ -66,7 +68,7 @@ fi
 
 # alias e='emacsclient -t'
 # alias ec='emacsclient -c'
-alias e="emacs -Q -nw"
+alias e="emacs -nw"
 alias realias="alias | sed -E \"s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;\" > ~/.emacs.d/.cache/eshell/new_alias"
 alias newrealis="alias | sed -E \"s/^(.*)='?(.*)/alias \1 \2/\" | sed -E \"s/'$//\" > ~/.emacs.d/.cache/eshell/alias"
 
@@ -79,7 +81,9 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 alias v="nvim"
 alias vd="nvim ~/TODO.md"
 alias ve="nvim ~/.zshenv"
+alias vf="nvim \$(fzf)"
 alias vn="nvim notes.md"
+alias vr="nvim ~/RETRO.md"
 alias vs="nvim ~/SCRUM.org"
 alias vt="nvim ~/dotfiles/.tmux.conf"
 alias vv="nvim ~/dotfiles/init.vim"
@@ -87,11 +91,14 @@ alias vz="nvim ~/dotfiles/.zshrc"
 
 export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
+export EDITOR=nvim
+
 ### Python
 # export DISABLE_VENV_CD=1
 # export WORKON_HOME=~/Envs
 
 # WARN: this may not work on linux
+# NOTE: Also, you might prefer just using local venvs and a system Python
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 source /usr/local/bin/virtualenvwrapper_lazy.sh
@@ -108,10 +115,13 @@ alias sbss="sbt \~scalastyle"
 alias sbxx="sbt \~test"
 
 ### Tags
-alias tag="/usr/local/bin/ctags --exclude=@$HOME/.ctagsignore -RV ."
+alias tag="/usr/local/bin/ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags"
+
 
 ### Tmux
 alias tlp="tmux list-panes"
+
+compctl -g '~/.teamocil/*(:t:r)' teamocil
 
 ### z is the new j, yo
 . `brew --prefix`/etc/profile.d/z.sh
@@ -119,6 +129,9 @@ alias tlp="tmux list-panes"
 
 # NOTE: Put environment-specific things in ~/.zshenv which is unique per environment
 #       and should probably not be included at all in my dotfiles
+
+# TODO: Add reference-branch to zshenv and Gdiff use that, defaulting to master if unset
+
 
 ### Oh My Zsh
 source $ZSH/oh-my-zsh.sh
