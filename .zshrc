@@ -49,11 +49,12 @@ alias dot="cd ~/dotfiles"
 alias misc="cd $HOME/Code/misc"
 alias not="cd $HOME/notes"
 alias notes="cd $HOME/notes"
+alias nv="cd $HOME/third-party/neovim"
 alias prog="cd $HOME/Code/scala/progfun1"
 alias rep="cd $HOME/repos/"
 alias space="cd $HOME/.emacs.d"
 alias tp="cd $HOME/third-party"
-alias wk="cd $HOME/workplace"
+alias wk="cd $HOME/workspaces"
 
 ### Base16
 # BASE16_SHELL=$HOME/.config/base16-shell/
@@ -72,6 +73,9 @@ alias e="emacs -nw"
 alias realias="alias | sed -E \"s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;\" > ~/.emacs.d/.cache/eshell/new_alias"
 alias newrealis="alias | sed -E \"s/^(.*)='?(.*)/alias \1 \2/\" | sed -E \"s/'$//\" > ~/.emacs.d/.cache/eshell/alias"
 
+# Git
+alias gall='ls -d */ | xargs -P12 -I{} git -C {} '
+
 ### Java
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 # To enable shims and autocompletion add to your profile:
@@ -83,8 +87,9 @@ alias vd="nvim ~/TODO.md"
 alias ve="nvim ~/.zshenv"
 alias vf="nvim \$(fzf)"
 alias vn="nvim notes.md"
+alias vq="nvim ~/QUESTIONS.md"
 alias vr="nvim ~/RETRO.md"
-alias vs="nvim ~/SCRUM.org"
+alias vs="nvim ~/SCRUM.md"
 alias vt="nvim ~/dotfiles/.tmux.conf"
 alias vv="nvim ~/dotfiles/init.vim"
 alias vz="nvim ~/dotfiles/.zshrc"
