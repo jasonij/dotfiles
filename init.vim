@@ -18,6 +18,7 @@
 " A: You could also plug this into a denite menu (possibly?)
 " Essential ruby regex: s/:\(\w\+\)=>/\1: /g
 " Essential python call: !python -m json.tool
+" For orgish timestamps: :put =strftime('<%Y-%m-%d %a>')
 "
 " Can I let vim "steal" open files from other vim sessions?
 " Can I then auto-update from the changed file on disk?
@@ -30,18 +31,16 @@
 "
 " Copy current filename into system clipboard
 " And/or Vimux start populated with filename (if possible)
+" How can I get the name of the current file for the : command line?
+" I feel like there's a tpope plugin for this
 "
 " aucommand to change wildignore based on project type
-"
-" Binding for 'send this selection to tmux pane x'
-"
-" Denite menu could be used for dotfile editing, etc
 "
 " More git diff viewers and file finders (possibly through Unite) for head~1, master, origin, etc.
 "
 " Can I get a jobstart that doesn't close when I close vim?
 "
-" Wait, do I want :Unite filelist ... :Git! diff-tree --no-commit-id --name-only -r head~1
+" Need some kind of `gdt` or `gdt HEAD` shortcut (ideally in fugitive)
 "
 " Can I get tags to show up on the vim help files?
 "
@@ -50,33 +49,22 @@
 " For Clj I'd like to use omni complete always(?)
 " There are many deoplete external sources now
 "
-" How can I get the name of the current file for the : command line?
-" I feel like there's a tpope plugin for this
-"
-" Automatically clear search highlighting after executing s/
-" Unbind <leader>h bindings and use <leader>h to clear highlights
-" (But what happens to the hunk bindings?)
-"
 " C-M-hjkl or C-HJKL for resizing panes (if vim supports this kind of resizing)
 "
 " Can I get help to open in a vertical split?
 "
 " Neomake could open :lw automatically if any errors are detected?
 "
-" Use FZF more often, it's pretty good for finding files
-"
-" Disable (or differently able) cob (if using base16)
+" Use FZF more often, it's pretty good for finding things
 "
 " What is going on with base16 highlight / reverse? It's not readable.
+" Fix denite highlighting w/ base16 or you can't use them together
 "
 " Look into g:tmuxcomplete#capture_args
 "           g:tmuxcomplete#list_args
 "
 " Project: use actual commands instead of hotkeys for a while
 " Useful: some kind of command exposer like Spacemacs has
-"         I think the power of Spacemacs comes from exposing what's already there.
-"
-" Fix denite highlighting w/ base16 or you can't use it at all
 "
 " DeniteSelection
 "
@@ -98,7 +86,24 @@
 "
 " What can I do about tagging methods inside of bins without extensions
 "
-" Trim the arsenal. Stop loading plugins you aren't actively using right month.
+" Trim the arsenal. Stop loading plugins you aren't actively using right this month.
+"
+" :GitGutterLineHighlightsEnable ?
+"
+" Can I get autocorrect for vim just for note-taking?
+"
+" airline (and tmuxline) are problematic on smaller windows (e.g. split screen laptop)
+"
+" Denite with region
+"
+" Some solution for looking up sources, either Jedi or Python-Mode or something else (??)
+"
+" The Denite matcher should favor end-of-string sequences or at least after-the-/ seqs
+"
+" Figure out how to fix Denite's CursorLine highlighting with non-solarized
+" ]B and [B for hidden buffers?
+"
+" vim-readline like vim-rsi but all the bindings!
 
 " LEARN: (in more depth)
 " Fugitive
@@ -135,16 +140,11 @@ Plug 'tpope/vim-salve'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Data Formats
+" Q: What about better YAML support?
 Plug 'cespare/vim-toml', { 'for': 'toml' }
 Plug 'chrisbra/csv.vim', { 'for': 'csv' }
 Plug 'elzr/vim-json', { 'for': 'json' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-
-" Elixir
-Plug 'awetzel/elixir.nvim', { 'do': 'yes \| ./install.sh' }
-Plug 'elixir-lang/vim-elixir'
-Plug 'jimenezrick/vimerl'
-Plug 'thinca/vim-ref'
 
 " Git
 " NOTE: If you have to use something other that git, Plug 'mhinz/vim-signify'
@@ -173,6 +173,7 @@ Plug 'xolox/vim-lua-inspect'
 Plug 'xolox/vim-misc'
 
 " Python
+" Plug 'davidhalter/jedi-vim'
 Plug 'zchee/deoplete-jedi'
 
 " R
@@ -187,6 +188,10 @@ Plug 'rust-lang/rust.vim'
 
 " Scala
 " Q: Could we get autocompletion without Ensime? It's so janky.
+" A: Yes, if you run IntelliJ IDEA in the background.
+"    https://github.com/vhakulinen/neovim-intellij-complete
+"    https://github.com/vhakulinen/neovim-intellij-complete-deoplete
+
 " Plug 'ensime/ensime-vim', { 'do': function('DoRemote') }
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
@@ -233,6 +238,7 @@ Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
+Plug 'honza/vim-snippets'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-sneak'
@@ -248,6 +254,12 @@ call plug#end()
 
 """"""""""""""""""
 """ neosnippet.vim
+
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.config/nvim/bundle/vim-snippets/snippets'
 
 " Plugin key-mappings.
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
@@ -293,7 +305,7 @@ set wildignore+=*/target/* "sbt target directory"
 let g:VimuxRunnerIndex = 2
 
 " let g:airline_theme = 'base16'
-let g:airline_theme = 'solarized'
+" let g:airline_theme = 'cool'
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_base16_improved_contrast = 1
@@ -321,37 +333,17 @@ let g:deoplete#omni#input_patterns.tex =
       \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
       \ . ')'
 
+let g:deoplete#sources#jedi#show_docstring = 1
+
+
 " Remember to install ag! GitGutter doesn't give you a warning if it's not there
 let g:gitgutter_grep_command = 'ag --nogroup --nocolor --hidden'
-
-let g:haddock_browser = 'firefox'
 
 let NERDTreeHijackNetrw = 0
 let NERDTreeWinSize = 45
 
-" let g:netrw_liststyle = 3
-
-" pymode should not use global leader, omg srsly.
-let g:pymode_breakpoint_bind = '<localleader>b'
-let g:pymode_run_bind = '<localleader>r'
-let g:pymode_options_max_line_length = 99
-let g:pymode_options_colorcolumn = 0
-
-" Legacy codebases have too many whitespaces
-let g:pymode_trim_whitespaces = 0
-
-" Neomake runs pylama; but not if you don't have .py in the filename
-let g:pymode_lint = 1
-let g:pymode_rope_complete_on_dot = 0
-
-" Jedi seems to do better than rope
-let g:pymode_rope_completion = 0
-
 let g:python_host_prog = '/Users/jkroll/.pyenv/versions/neovim2/bin/python'
 let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/neovim3/bin/python'
-
-" Rainbow parens don't work well with light colorschemes
-let g:rainbow_active = 0
 
 let g:ranger_map_keys = 0
 
@@ -453,6 +445,10 @@ let g:undotree_SplitWidth = 40
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_folding_style_pythonic = 1
 
+""" Sneak
+
+let g:sneak#label = 1
+
 ""replace 'f' with 1-char Sneak
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
@@ -490,16 +486,14 @@ set guioptions=0
 set hidden
 set list
 set nolazyredraw
-set number
 set previewheight=17
-set relativenumber
 set shell=zsh
 set shiftwidth=2
 set showcmd
 set t_Co=256
 set tabstop=2
 set tags=./tags;
-set textwidth=99
+set textwidth=119
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -519,9 +513,18 @@ let maplocalleader=","
 
 nnoremap <leader>= <C-w>=
 nnoremap <leader>o :only<CR>
+" nnoremap <leader>O close all other buffers but this one<CR>
 
+
+" Q: What about <leader>a/A ? What makes sense
+
+" TODO: <leader>C
+" Q: Should Bclose possibly live here? If not, what else?
+nnoremap <leader>C :Bclose<CR>
 nnoremap <leader>c :close<CR>
-nnoremap <leader>d :Bclose<CR>
+
+nnoremap <leader>D :Bclose<CR>
+nnoremap <leader>d :bd<CR>
 
 nnoremap <leader>Q :qa<CR>
 nnoremap <leader>q :q<CR>
@@ -532,33 +535,40 @@ nnoremap <leader>w :w<CR>
 nnoremap <leader>X :xa<CR>
 nnoremap <leader>x :x<CR>
 
-" Review what x and X and ZZ and ZQ actually do, then be sensible
-nnoremap <leader>Z :xa!<CR>
-nnoremap <leader>z :w<CR>:Bclose<CR>
+nnoremap <leader>Z :w<CR>:Bclose<CR>
+nnoremap <leader>z :w<CR>:bd<CR>
 
 " Why are these broken? Because iTerm2
 nnoremap <C-Tab> <C-w>w
 nnoremap <C-S-Tab> <C-w>W
 
+" Q: What about C-; for consistency w/ tmux?
 
 """"""""
 " Denite
 
 " Ag for file_rec
-call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
+call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+" call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
 
-" Ag for grep
-call denite#custom#var('grep', 'command', ['ag'])
-call denite#custom#var('grep', 'default_opts', ['--nogroup', '--nocolor', '--column', '--hidden'])
-call denite#custom#var('grep', 'final_opts', [])
+" Ripgrep command on grep source (awesome!)
+call denite#custom#var('grep', 'command', ['rg'])
 call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'separator', [])
+call denite#custom#var('grep', 'final_opts', [])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'default_opts', ['--vimgrep', '--no-heading'])
+
+" file_mru takes some work
+call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
+call denite#custom#source('file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
+
+call denite#custom#alias('source', 'file_mru/all', 'file_mru')
+" call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
+call denite#custom#source('file_mru/all', 'matchers', ['matcher_fuzzy'])
 
 " Change mappings.
-call denite#custom#map('_', "\<C-j>", 'move_to_next_line')
-call denite#custom#map('_', "\<C-k>", 'move_to_prev_line')
-call denite#custom#map('_', "\<C-n>", 'move_to_next_line')
-call denite#custom#map('_', "\<C-p>", 'move_to_prev_line')
+call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
+call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
 
 nnoremap <leader><BS> :Denite -resume<CR>
 nnoremap <leader><C-h> :Denite -resume<CR>
@@ -572,12 +582,12 @@ nnoremap <leader>/ :Denite grep<CR>
 " nnoremap <leader>: :Denite command<CR>
 
 " TODO: Let's see if we can use <leader>C-x and <leader>M-x style bindings
-" Capital letters always mean DeniteCursorWord
+" Capital letters always mean DeniteCursorWord ?? Is that even useful?
 " C-S across the board?
 " How to handle resume?
 
-nnoremap <leader><C-b> :Denite buffer!<CR>
-nnoremap <leader>B :DeniteCursorWord buffer<CR>
+" nnoremap <leader><C-b> :Denite buffer:!<CR>
+nnoremap <leader>B :Denite buffer:!<CR>
 nnoremap <leader>b :Denite buffer<CR>
 
 nnoremap <leader>F :DeniteCursorWord file_rec<CR>
@@ -593,11 +603,13 @@ nnoremap <leader>k :Denite help<CR>
 nnoremap <leader>L :DeniteCursorWord line<CR>
 nnoremap <leader>l :Denite line<CR>
 
+" Possibly we want different mappings for filetype stuff
+" This feels like maybe it should be tmux or localleader
 nnoremap <leader>M :DeniteCursorWord filetype<CR>
 nnoremap <leader>m :Denite filetype<CR>
 
 " TODO: see if there's an option to file_mru possibly
-nnoremap <leader>R :DeniteCursorWord file_mru<CR>
+nnoremap <leader>R :Denite file_mru/all<CR>
 nnoremap <leader>r :Denite file_mru<CR>
 
 nnoremap <leader>Y :DeniteCursorWord neoyank<CR>
@@ -611,6 +623,7 @@ nnoremap <leader>y :Denite neoyank<CR>
 " nmap <Leader>hs <Plug>GitGutterStageHunk
 " nmap <Leader>hr <Plug>GitGutterRevertHunk
 " nmap <Leader>hp <Plug>GitGutterPreviewHunk
+nnoremap <leader>ht <Plug>GitGutterLineHighlightsToggle
 
 nnoremap [fugitive] <Nop>
 nmap <leader>g [fugitive]
@@ -646,6 +659,7 @@ nnoremap <leader>$ :Ranger<CR>
 nnoremap <leader>E :NERDTreeFind<CR>
 nnoremap <leader>e :NERDTreeToggle<CR>
 
+" Is this a problem with tmux?
 noremap <leader>; :Commentary<CR>
 
 " Q: How to send <Esc> inside terminal?
@@ -663,14 +677,19 @@ nnoremap <leader>m :Neomake<CR>
 
 " I have to type this all the bloomin' time
 " Why do I have to keep clearing highlights anyway?
+" Q: Can't I set a timeout and clear after the timeout?
 nnoremap <leader>N :let @/ = ""<CR>
 nnoremap <leader>n :noh<CR>
 
 " These really belong in a Denite menu
+nnoremap <leader>sd :sp $HOME/QUESTIONS.md<CR>
 nnoremap <leader>sd :sp $HOME/TODO.md<CR>
 nnoremap <leader>sn :sp notes.md<CR>
 nnoremap <leader>sr :sp $HOME/RETRO.md<CR>
+nnoremap <leader>ss :sp $HOME/SCRUM.md<CR>
+nnoremap <leader>st :sp $HOME/dotfiles/.tmux.conf<CR>
 nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
+
 
 
 """""
@@ -771,5 +790,12 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "   source ~/.vimrc_background
 " endif
 
-set background=dark
+
+let g:solarized_contrast = "high"
+" let g:solarized_visibility = "high"
+set background=light
 colorscheme solarized
+
+" Cursor         xxx ctermfg=15 ctermbg=11
+" For when you aren't in the solarized mood
+" hi CursorLine cterm=NONE ctermbg=24
