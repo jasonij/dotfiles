@@ -104,6 +104,10 @@
 " ]B and [B for hidden buffers?
 "
 " vim-readline like vim-rsi but all the bindings!
+"
+" Denite line match should be fuzzy or something
+"
+" BIG TODO: Make sure this works with Vim8 (just in case)
 
 " LEARN: (in more depth)
 " Fugitive
@@ -242,6 +246,7 @@ Plug 'honza/vim-snippets'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-sneak'
+Plug 'kassio/neoterm'
 Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
 Plug 'rbgrouleff/bclose.vim'
@@ -341,6 +346,8 @@ let g:gitgutter_grep_command = 'ag --nogroup --nocolor --hidden'
 
 let NERDTreeHijackNetrw = 0
 let NERDTreeWinSize = 45
+
+let g:neoterm_repl_ruby = 'pry'
 
 let g:python_host_prog = '/Users/jkroll/.pyenv/versions/neovim2/bin/python'
 let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/neovim3/bin/python'
@@ -659,6 +666,10 @@ nnoremap <leader>$ :Ranger<CR>
 nnoremap <leader>E :NERDTreeFind<CR>
 nnoremap <leader>e :NERDTreeToggle<CR>
 
+" netrw (maybe not really a huge gain over :Se and :Ve)
+nnoremap <leader>S :Sexplore<CR>
+nnoremap <leader>V :Vexplore<CR>
+
 " Is this a problem with tmux?
 noremap <leader>; :Commentary<CR>
 
@@ -666,7 +677,8 @@ noremap <leader>; :Commentary<CR>
 tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>' :split \| terminal<CR>
 
-nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
+" nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
+nnoremap <leader>T :call jobstart("ctags")<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 nnoremap <leader>u :UndotreeToggle<CR>
@@ -790,12 +802,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "   source ~/.vimrc_background
 " endif
 
-
 let g:solarized_contrast = "high"
-" let g:solarized_visibility = "high"
-set background=light
 colorscheme solarized
-
-" Cursor         xxx ctermfg=15 ctermbg=11
-" For when you aren't in the solarized mood
-" hi CursorLine cterm=NONE ctermbg=24
+set background=light
