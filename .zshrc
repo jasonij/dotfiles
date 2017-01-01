@@ -69,12 +69,14 @@ fi
 
 # alias e='emacsclient -t'
 # alias ec='emacsclient -c'
-alias e="emacs -nw"
+alias e="emacs -Q -nw"
 alias realias="alias | sed -E \"s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;\" > ~/.emacs.d/.cache/eshell/new_alias"
 alias newrealis="alias | sed -E \"s/^(.*)='?(.*)/alias \1 \2/\" | sed -E \"s/'$//\" > ~/.emacs.d/.cache/eshell/alias"
 
 # Git
+alias fetch_all="ls -d */ | xargs -P12 -I{} git -C {} fetch --all --prune"
 alias gall='ls -d */ | xargs -P12 -I{} git -C {} '
+alias pull_all="ls -d */ | xargs -P12 -I{} git -C {} pull"
 
 ### Java
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
