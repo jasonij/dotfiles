@@ -14,8 +14,7 @@
 " gggqG (is there something shorter?)
 "
 " Q: How best to store favorite regexes?
-" A: Likely you'll want some leader-key bindings or named fns for common calls
-" A: You could also plug this into a denite menu (possibly?)
+" A: Maybe a denite menu for regexes, or full-file operations?
 " Essential ruby regex: s/:\(\w\+\)=>/\1: /g
 " Essential python call: !python -m json.tool
 " For orgish timestamps: :put =strftime('<%Y-%m-%d %a>')
@@ -54,11 +53,6 @@
 " Can I get help to open in a vertical split?
 "
 " Neomake could open :lw automatically if any errors are detected?
-"
-" Use FZF more often, it's pretty good for finding things
-"
-" What is going on with base16 highlight / reverse? It's not readable.
-" Fix denite highlighting w/ base16 or you can't use them together
 "
 " Look into g:tmuxcomplete#capture_args
 "           g:tmuxcomplete#list_args
@@ -366,9 +360,6 @@ let g:tmuxline_preset = 'full'
 """"""""
 " Tagbar
 
-" let g:tagbar_sort = 0
-let g:tagbar_autofocus = 1
-
 let g:tagbar_type_elixir = {
     \ 'ctagstype' : 'elixir',
     \ 'kinds' : [
@@ -488,8 +479,13 @@ set cmdheight=1
 set cursorline
 set encoding=utf-8
 set expandtab
-set grepprg=ag
-set guioptions=0
+
+if executable("rg")
+    set grepprg=rg\ --vimgrep\ --no-heading
+    set grepformat=%f:%l:%c:%m,%f:%l:%m
+    let g:ackprg = 'rg --vimgrep --no-heading'
+endif
+
 set hidden
 set list
 set nolazyredraw
@@ -500,7 +496,7 @@ set showcmd
 set t_Co=256
 set tabstop=2
 set tags=./tags;
-set textwidth=119
+set textwidth=99
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -560,17 +556,18 @@ call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '-
 
 " Ripgrep command on grep source (awesome!)
 call denite#custom#var('grep', 'command', ['rg'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'final_opts', [])
-call denite#custom#var('grep', 'separator', ['--'])
 call denite#custom#var('grep', 'default_opts', ['--vimgrep', '--no-heading'])
+call denite#custom#var('grep', 'final_opts', [])
+call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'separator', ['--'])
 
 " file_mru takes some work
 call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
 call denite#custom#source('file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
 
 call denite#custom#alias('source', 'file_mru/all', 'file_mru')
-" call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
+call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
 call denite#custom#source('file_mru/all', 'matchers', ['matcher_fuzzy'])
 
 " Change mappings.
@@ -582,16 +579,13 @@ nnoremap <leader><C-h> :Denite -resume<CR>
 nnoremap <leader><C-p> :Denite -resume -select=-1 -immediately<CR>
 nnoremap <leader><C-n> :Denite -resume -select=+1 -immediately<CR>
 
-nnoremap <leader>* :DeniteCursorWord grep<CR><CR>
+" nnoremap <leader>* :DeniteCursorWord grep<CR><CR>
+nnoremap <leader>* :Denite grep<CR><C-R><C-W><CR>
 nnoremap <leader>/ :Denite grep<CR>
 
-" This breaks [vimux] send so goodbye <leader>:
-" nnoremap <leader>: :Denite command<CR>
+" Q: How to handle resume?
 
-" TODO: Let's see if we can use <leader>C-x and <leader>M-x style bindings
-" Capital letters always mean DeniteCursorWord ?? Is that even useful?
-" C-S across the board?
-" How to handle resume?
+nnoremap <leader><leader> :Denite command<CR>
 
 " nnoremap <leader><C-b> :Denite buffer:!<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
@@ -602,7 +596,7 @@ nnoremap <leader>f :Denite file_rec<CR>
 
 " I know, I know, it's FZF instead of Denite
 nnoremap <leader>J :Tags<CR>
-nnoremap <leader>j :BTags<CR>
+nnoremap <leader>j :Denite outline<CR>
 
 nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>k :Denite help<CR>
@@ -660,7 +654,6 @@ nnoremap [fugitive]x :Gbrowse<CR>
 """"""
 " Misc
 
-
 nnoremap <leader>$ :Ranger<CR>
 
 nnoremap <leader>E :NERDTreeFind<CR>
@@ -678,7 +671,7 @@ tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>' :split \| terminal<CR>
 
 " nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
-nnoremap <leader>T :call jobstart("ctags")<CR>
+nnoremap <leader>T :call jobstart("ctags &")<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 nnoremap <leader>u :UndotreeToggle<CR>
@@ -764,6 +757,8 @@ nmap [vimux]s vip[vimux]s<CR>
 " OS X and crontabs. moan. sigh. groan.
 autocmd filetype crontab setlocal nobackup nowritebackup
 
+au bufenter *.ipynb set filetype=json
+
 "" Neomake
 autocmd! BufWritePost * Neomake
 
@@ -801,6 +796,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "   let base16colorspace=256
 "   source ~/.vimrc_background
 " endif
+
+" hi CursorLine cterm=NONE ctermbg=darkgray
 
 let g:solarized_contrast = "high"
 colorscheme solarized
