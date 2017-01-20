@@ -6,6 +6,7 @@
 
 .cache
 .classpath
+.dir-local.el/
 .ensime
 .ensime_cache/
 .project
