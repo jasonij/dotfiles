@@ -42,7 +42,6 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 # Where I'm working the most often
 # (set in .zshenv)
 alias src="cd $SRC_DIR"
-alias s=src
 
 alias bun="cd $HOME/.config/nvim/bundle"
 alias dot="cd ~/dotfiles"
@@ -59,6 +58,9 @@ alias wk="cd $HOME/workspaces"
 ### Base16
 # BASE16_SHELL=$HOME/.config/base16-shell/
 # [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
+### Ctags
+alias tag="ctags --exclude=@$HOME/.ctagsignore -R -f tags"
 
 ### Emacs
 if [ -n "$INSIDE_EMACS" ]
@@ -85,13 +87,12 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 
 ### Neovim
 alias v="nvim"
-alias vd="nvim ~/TODO.md"
-alias ve="nvim ~/.zshenv"
-alias vf="nvim \$(fzf)"
+alias vd="nvim ~/Notes/TODO.md"
+alias ve="nvim ~/Notes/.zshenv"
 alias vn="nvim notes.md"
-alias vq="nvim ~/QUESTIONS.md"
-alias vr="nvim ~/RETRO.md"
-alias vs="nvim ~/SCRUM.md"
+alias vq="nvim ~/Notes/QUESTIONS.md"
+alias vr="nvim ~/Notes/RETRO.md"
+alias vs="nvim ~/Notes/SCRUM.md"
 alias vt="nvim ~/dotfiles/.tmux.conf"
 alias vv="nvim ~/dotfiles/init.vim"
 alias vz="nvim ~/dotfiles/.zshrc"
@@ -121,10 +122,6 @@ alias sbs="sbt scalastyle"
 alias sbss="sbt \~scalastyle"
 alias sbxx="sbt \~test"
 
-### Tags
-alias tag="/usr/local/bin/ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags"
-
-
 ### Tmux
 alias tlp="tmux list-panes"
 
@@ -138,9 +135,17 @@ compctl -g '~/.teamocil/*(:t:r)' teamocil
 #       and should probably not be included at all in my dotfiles
 
 # TODO: Add reference-branch to zshenv and Gdiff use that, defaulting to master if unset
+# Is there some analog to unimpaired for the console? e.g., jumping through sibling directories
 
 
 ### Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# export PATH="/Users/jkroll/anaconda2/bin:$PATH"
+
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"
+export RUST_SRC_PATH=$HOME/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src
+
