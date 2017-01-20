@@ -1,9 +1,5 @@
 " Vim is a player's racquet
 "
-" C-h broken? See https://github.com/neovim/neovim/wiki/FAQ#my-ctrl-h-mapping-doesnt-work
-"
-" If deoplete breaks after PlugUpdate, remember to pip install --upgrade neovim
-"
 " TODO:
 "
 " Get NeoMake listing next and previous to work (they aren't relative to cursor position)
@@ -37,8 +33,6 @@
 "
 " More git diff viewers and file finders (possibly through Unite) for head~1, master, origin, etc.
 "
-" Can I get a jobstart that doesn't close when I close vim?
-"
 " Need some kind of `gdt` or `gdt HEAD` shortcut (ideally in fugitive)
 "
 " Can I get tags to show up on the vim help files?
@@ -48,9 +42,9 @@
 " For Clj I'd like to use omni complete always(?)
 " There are many deoplete external sources now
 "
-" C-M-hjkl or C-HJKL for resizing panes (if vim supports this kind of resizing)
+" C-M-hjkl or C-HJKL for resizing panes (e.g., 5 C-w >)
 "
-" Can I get help to open in a vertical split?
+" Can I get help to open in a vertical split instead of horizontal?
 "
 " Neomake could open :lw automatically if any errors are detected?
 "
@@ -102,14 +96,14 @@
 " Denite line match should be fuzzy or something
 "
 " BIG TODO: Make sure this works with Vim8 (just in case)
+"
+" Check out Dirvish (and eunuch et al)
 
 " LEARN: (in more depth)
 " Fugitive
 " Either Jedi or Python-mode or Rope or something
-" Tmux itself
 " Zsh
-" Markdown (it should be an adequate org with less tapping)
-" FZF
+" Tmux itself
 
 
 """"""""
@@ -170,27 +164,26 @@ Plug 'xolox/vim-lua-ftplugin'
 Plug 'xolox/vim-lua-inspect'
 Plug 'xolox/vim-misc'
 
-" Python
 " Plug 'davidhalter/jedi-vim'
+" Python
+Plug 'tmhedberg/SimpylFold'
 Plug 'zchee/deoplete-jedi'
 
 " R
 Plug 'jalvesaq/Nvim-R'
 
 " Ruby
-" Plug 'tpope/vim-rails'
 Plug 'vim-ruby/vim-ruby'
 
 " Rust
 Plug 'rust-lang/rust.vim'
+Plug 'sebastianmarkow/deoplete-rust'
 
 " Scala
 " Q: Could we get autocompletion without Ensime? It's so janky.
 " A: Yes, if you run IntelliJ IDEA in the background.
 "    https://github.com/vhakulinen/neovim-intellij-complete
 "    https://github.com/vhakulinen/neovim-intellij-complete-deoplete
-
-" Plug 'ensime/ensime-vim', { 'do': function('DoRemote') }
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
 
@@ -239,6 +232,7 @@ Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
 Plug 'kassio/neoterm'
 Plug 'majutsushi/tagbar'
@@ -301,6 +295,9 @@ set wildignore+=*/target/* "sbt target directory"
 """""""
 """ let
 
+let g:deoplete#sources#rust#racer_binary="/Users/jkroll/.cargo/bin/racer"
+let g:deoplete#sources#rust#rust_source_path="/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
+
 let g:VimuxRunnerIndex = 2
 
 " let g:airline_theme = 'base16'
@@ -351,14 +348,15 @@ let g:ranger_map_keys = 0
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
-" Ha, this doesn't work so well
-let g:tmux_navigator_save_on_switch = 1
+" 2 is wall, 1 doesn't work consistently
+let g:tmux_navigator_save_on_switch = 2
 
 let g:tmuxline_preset = 'full'
 
 
 """"""""
 " Tagbar
+" NOTE: Keep an eye on universal-ctags; it may eventually add support for these
 
 let g:tagbar_type_elixir = {
     \ 'ctagstype' : 'elixir',
@@ -383,58 +381,6 @@ let g:tagbar_type_markdown = {
         \ 'h:Heading_L1',
         \ 'i:Heading_L2',
         \ 'k:Heading_L3'
-    \ ]
-\ }
-
-let g:tagbar_type_r = {
-    \ 'ctagstype' : 'r',
-    \ 'kinds'     : [
-        \ 'f:Functions',
-        \ 'g:GlobalVariables',
-        \ 'v:FunctionVariables',
-    \ ]
-\ }
-
-let g:tagbar_type_ruby = {
-    \ 'ctagstype' : 'ruby',
-    \ 'kinds' : [
-        \ 'm:modules',
-        \ 'c:classes',
-        \ 'd:describes',
-        \ 'C:contexts',
-        \ 'f:methods',
-        \ 'F:singleton methods'
-    \ ]
-\ }
-
-let g:tagbar_type_rust = {
-    \ 'ctagstype' : 'rust',
-    \ 'kinds' : [
-        \'T:types,type definitions',
-        \'f:functions,function definitions',
-        \'g:enum,enumeration names',
-        \'s:structure names',
-        \'m:modules,module names',
-        \'c:consts,static constants',
-        \'t:traits,traits',
-        \'i:impls,trait implementations',
-    \ ]
-\ }
-
-let g:tagbar_type_scala = {
-    \ 'ctagstype' : 'scala',
-    \ 'sro'       : '.',
-    \ 'kinds'     : [
-      \ 'p:packages',
-      \ 'T:types:1',
-      \ 't:traits',
-      \ 'o:objects',
-      \ 'O:case objects',
-      \ 'c:classes',
-      \ 'C:case classes',
-      \ 'm:methods',
-      \ 'V:values:1',
-      \ 'v:variables:1'
     \ ]
 \ }
 
@@ -468,6 +414,9 @@ let g:vim_json_syntax_conceal = 0
 
 """""""
 """ set
+
+set autoread
+" au CursorHold * checktime
 
 " mkdir -p ~/.config/nvim/backup ~/.config/nvim/swap ~/.config/nvim/undo
 set backupdir=~/.config/nvim/backup
@@ -538,6 +487,7 @@ nnoremap <leader>w :w<CR>
 nnoremap <leader>X :xa<CR>
 nnoremap <leader>x :x<CR>
 
+" these don't really make a ton of sense
 nnoremap <leader>Z :w<CR>:Bclose<CR>
 nnoremap <leader>z :w<CR>:bd<CR>
 
@@ -671,7 +621,8 @@ tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>' :split \| terminal<CR>
 
 " nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
-nnoremap <leader>T :call jobstart("ctags &")<CR>
+nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags &")<CR>
+" nnoremap <leader>T :call jobstart("ctags &")<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 nnoremap <leader>u :UndotreeToggle<CR>
@@ -687,11 +638,13 @@ nnoremap <leader>N :let @/ = ""<CR>
 nnoremap <leader>n :noh<CR>
 
 " These really belong in a Denite menu
-nnoremap <leader>sd :sp $HOME/QUESTIONS.md<CR>
-nnoremap <leader>sd :sp $HOME/TODO.md<CR>
 nnoremap <leader>sn :sp notes.md<CR>
-nnoremap <leader>sr :sp $HOME/RETRO.md<CR>
-nnoremap <leader>ss :sp $HOME/SCRUM.md<CR>
+
+nnoremap <leader>sd :sp $HOME/Notes/QUESTIONS.md<CR>
+nnoremap <leader>sd :sp $HOME/Notes/TODO.md<CR>
+nnoremap <leader>sr :sp $HOME/Notes/RETRO.md<CR>
+nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
+
 nnoremap <leader>st :sp $HOME/dotfiles/.tmux.conf<CR>
 nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
 
@@ -746,9 +699,17 @@ function! VimuxSlime()
   call VimuxSendKeys("Enter")
 endfunction
 
+function! VimuxLine()
+  call VimuxSendText(getline('.'))
+  call VimuxSendKeys("Enter")
+endfunction
+
 " These have stopped working since whenever
+" Basically, a <CR> in @v will end VimuxSendText
 vmap [vimux]s "vy :call VimuxSlime()<CR>
 nmap [vimux]s vip[vimux]s<CR>
+
+" nnoremap <CR> :call VimuxLine()<CR><CR>
 
 
 """""""""""
@@ -797,7 +758,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "   source ~/.vimrc_background
 " endif
 
-" hi CursorLine cterm=NONE ctermbg=darkgray
+hi CursorLine cterm=NONE ctermbg=darkgray
 
 let g:solarized_contrast = "high"
 colorscheme solarized
