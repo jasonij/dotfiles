@@ -15,9 +15,7 @@ autoload run-help
 HELPDIR=/usr/local/share/zsh/help
 
 plugins=(
-# SLOW:
-# aws # this one is just awful
-# rbenv # you may very well need this one but not right now
+# aws  # this is slow so only enable when you're using it, which is all the time I suppose
 brew
 bundler
 colorize
@@ -45,6 +43,7 @@ alias src="cd $SRC_DIR"
 
 alias bun="cd $HOME/.config/nvim/bundle"
 alias dot="cd ~/dotfiles"
+alias hn="hostname"
 alias misc="cd $HOME/Code/misc"
 alias not="cd $HOME/notes"
 alias notes="cd $HOME/notes"
@@ -61,6 +60,7 @@ alias wk="cd $HOME/workspaces"
 
 ### Ctags
 alias tag="ctags --exclude=@$HOME/.ctagsignore -R -f tags"
+alias etag=tag -e
 
 ### Emacs
 if [ -n "$INSIDE_EMACS" ]
@@ -88,7 +88,7 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 ### Neovim
 alias v="nvim"
 alias vd="nvim ~/Notes/TODO.md"
-alias ve="nvim ~/Notes/.zshenv"
+alias ve="nvim ~/.zshenv"
 alias vn="nvim notes.md"
 alias vq="nvim ~/Notes/QUESTIONS.md"
 alias vr="nvim ~/Notes/RETRO.md"
