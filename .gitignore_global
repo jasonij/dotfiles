@@ -31,3 +31,6 @@ karma-test/
 
 damn-it-sbt-plugins/
 
+; These are really just to make rg ignore them
+*.sql
+*.com
