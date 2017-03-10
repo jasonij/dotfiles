@@ -1,4 +1,9 @@
+*.csv
 *.json
+*.log
+*.sql
+*.tsv
+
 .ensime/*
 .ensime_cache/*
 .git/
