@@ -42,7 +42,7 @@
 " For Clj I'd like to use omni complete always(?)
 " There are many deoplete external sources now
 "
-" C-M-hjkl or C-HJKL for resizing panes (e.g., 5 C-w >)
+" C-HJKL for resizing panes (e.g., 5 C-w >) ?
 "
 " Can I get help to open in a vertical split instead of horizontal?
 "
@@ -74,8 +74,6 @@
 "
 " What can I do about tagging methods inside of bins without extensions
 "
-" Trim the arsenal. Stop loading plugins you aren't actively using right this month.
-"
 " :GitGutterLineHighlightsEnable ?
 "
 " Can I get autocorrect for vim just for note-taking?
@@ -88,20 +86,22 @@
 "
 " The Denite matcher should favor end-of-string sequences or at least after-the-/ seqs
 "
-" Figure out how to fix Denite's CursorLine highlighting with non-solarized
-" ]B and [B for hidden buffers?
-"
-" vim-readline like vim-rsi but all the bindings!
-"
 " Denite line match should be fuzzy or something
+" Actually, precise regex matching may be much more efficient (like default Ivy)
 "
 " BIG TODO: Make sure this works with Vim8 (just in case)
 "
 " Check out Dirvish (and eunuch et al)
+"
+" Q: Can I highlight the lines that changed in the last commit (or change to file) without seeing a diff?
+"
+" BUG: GitGutter and NeoMake are not playing nice right now. GitGutter gets clobbered and must be
+" toggled. (Seems to be fixed by removing 
+"
+" Set wordwrap (or whatever it's called) to 74 for gitcommit
 
 " LEARN: (in more depth)
-" Fugitive
-" Either Jedi or Python-mode or Rope or something
+" Fugitive / git
 " Zsh
 " Tmux itself
 
@@ -136,7 +136,9 @@ Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'cespare/vim-toml', { 'for': 'toml' }
 Plug 'chrisbra/csv.vim', { 'for': 'csv' }
 Plug 'elzr/vim-json', { 'for': 'json' }
+Plug 'pearofducks/ansible-vim'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+Plug 'tmux-plugins/vim-tmux'
 
 " Git
 " NOTE: If you have to use something other that git, Plug 'mhinz/vim-signify'
@@ -164,8 +166,10 @@ Plug 'xolox/vim-lua-ftplugin'
 Plug 'xolox/vim-lua-inspect'
 Plug 'xolox/vim-misc'
 
-" Plug 'davidhalter/jedi-vim'
 " Python
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'bfredl/nvim-ipy'
+Plug 'davidhalter/jedi-vim'
 Plug 'tmhedberg/SimpylFold'
 Plug 'zchee/deoplete-jedi'
 
@@ -191,7 +195,11 @@ Plug 'derekwyatt/vim-scala'
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
-Plug 'wellle/tmux-complete.vim' " Bad interaction w/ deoplete overwrites tmux buffer
+
+" BUG: Tmux-complete overwrites the tmux copy paste buffer with a full-pane text grab
+" REPRO: Copy something reasonable into tmux buffer, paste it in vim, then trigger tmux-complete,
+" and now try pasting from the tmux buffer.
+" Plug 'wellle/tmux-complete.vim'
 
 " Vim
 
@@ -227,9 +235,11 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
+Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
+Plug 'jnurmine/Zenburn'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-dirvish'
@@ -331,15 +341,21 @@ let g:deoplete#omni#input_patterns.tex =
 
 let g:deoplete#sources#jedi#show_docstring = 1
 
-
-" Remember to install ag! GitGutter doesn't give you a warning if it's not there
-let g:gitgutter_grep_command = 'ag --nogroup --nocolor --hidden'
+let g:jedi#goto_command = "<localleader>d"
+let g:jedi#goto_assignments_command = "<localleader>g"
+let g:jedi#goto_definitions_command = ""
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<localleader>n"
+let g:jedi#completions_command = ""
+let g:jedi#rename_command = "<localleader>r"
 
 let NERDTreeHijackNetrw = 0
 let NERDTreeWinSize = 45
 
 let g:neoterm_repl_ruby = 'pry'
 
+" Q: Should we use /Users/jkroll/.pyenv/versions/2.7.12/bin/python instead?
+" I'm wondering because that's where we try to load the neovim lib from anyway
 let g:python_host_prog = '/Users/jkroll/.pyenv/versions/neovim2/bin/python'
 let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/neovim3/bin/python'
 
@@ -348,8 +364,7 @@ let g:ranger_map_keys = 0
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
-" 2 is wall, 1 doesn't work consistently
-let g:tmux_navigator_save_on_switch = 2
+let g:tmuxcomplete#trigger = ''
 
 let g:tmuxline_preset = 'full'
 
@@ -487,13 +502,16 @@ nnoremap <leader>w :w<CR>
 nnoremap <leader>X :xa<CR>
 nnoremap <leader>x :x<CR>
 
-" these don't really make a ton of sense
+" these don't really make a ton of sense, especially the first one
 nnoremap <leader>Z :w<CR>:Bclose<CR>
 nnoremap <leader>z :w<CR>:bd<CR>
 
 " Why are these broken? Because iTerm2
 nnoremap <C-Tab> <C-w>w
 nnoremap <C-S-Tab> <C-w>W
+
+map <C-S-]> <C-w>s<C-]>
+map <C-}> <C-w>s<C-]>
 
 " Q: What about C-; for consistency w/ tmux?
 
@@ -507,10 +525,10 @@ call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '-
 " Ripgrep command on grep source (awesome!)
 call denite#custom#var('grep', 'command', ['rg'])
 call denite#custom#var('grep', 'default_opts', ['--vimgrep', '--no-heading'])
-call denite#custom#var('grep', 'final_opts', [])
-call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
 call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
 call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
 
 " file_mru takes some work
 call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
@@ -529,8 +547,8 @@ nnoremap <leader><C-h> :Denite -resume<CR>
 nnoremap <leader><C-p> :Denite -resume -select=-1 -immediately<CR>
 nnoremap <leader><C-n> :Denite -resume -select=+1 -immediately<CR>
 
-" nnoremap <leader>* :DeniteCursorWord grep<CR><CR>
-nnoremap <leader>* :Denite grep<CR><C-R><C-W><CR>
+" NOTE: Something is very broken here
+nnoremap <leader>* :DeniteCursorWord grep<CR>
 nnoremap <leader>/ :Denite grep<CR>
 
 " Q: How to handle resume?
@@ -545,8 +563,10 @@ nnoremap <leader>F :DeniteCursorWord file_rec<CR>
 nnoremap <leader>f :Denite file_rec<CR>
 
 " I know, I know, it's FZF instead of Denite
+" TODO: Fix up Denite outline so it supports Markdown etc
 nnoremap <leader>J :Tags<CR>
-nnoremap <leader>j :Denite outline<CR>
+nnoremap <leader>j :BTags<CR>
+" nnoremap <leader>j :Denite outline<CR>
 
 nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>k :Denite help<CR>
@@ -640,14 +660,13 @@ nnoremap <leader>n :noh<CR>
 " These really belong in a Denite menu
 nnoremap <leader>sn :sp notes.md<CR>
 
-nnoremap <leader>sd :sp $HOME/Notes/QUESTIONS.md<CR>
-nnoremap <leader>sd :sp $HOME/Notes/TODO.md<CR>
-nnoremap <leader>sr :sp $HOME/Notes/RETRO.md<CR>
-nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
-
 nnoremap <leader>st :sp $HOME/dotfiles/.tmux.conf<CR>
 nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
 
+nnoremap <leader>sd :sp $HOME/Notes/TODO.md<CR>
+nnoremap <leader>sq :sp $HOME/Notes/QUESTIONS.md<CR>
+nnoremap <leader>sr :sp $HOME/Notes/RETRO.md<CR>
+nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
 
 
 """""
@@ -709,7 +728,9 @@ endfunction
 vmap [vimux]s "vy :call VimuxSlime()<CR>
 nmap [vimux]s vip[vimux]s<CR>
 
-" nnoremap <CR> :call VimuxLine()<CR><CR>
+augroup filetype_python
+  nnoremap <CR> :call VimuxLine()<CR><CR>
+augroup END
 
 
 """""""""""
@@ -758,8 +779,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "   source ~/.vimrc_background
 " endif
 
-hi CursorLine cterm=NONE ctermbg=darkgray
-
 let g:solarized_contrast = "high"
 colorscheme solarized
-set background=light
+set background=dark
