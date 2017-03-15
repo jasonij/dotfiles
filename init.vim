@@ -15,9 +15,6 @@
 " Essential python call: !python -m json.tool
 " For orgish timestamps: :put =strftime('<%Y-%m-%d %a>')
 "
-" Can I let vim "steal" open files from other vim sessions?
-" Can I then auto-update from the changed file on disk?
-"
 " Binding for subvert?
 " Subvert more often! e.g., :'<,'>Subvert/categor{y,ies}/tag{,s}/g
 " The plural case is so common maybe have a fn or hotkey around it
@@ -99,6 +96,8 @@
 " toggled. (Seems to be fixed by removing 
 "
 " Set wordwrap (or whatever it's called) to 74 for gitcommit
+"
+" cob cob loses the nice color of NeoMake's indicator
 
 " LEARN: (in more depth)
 " Fugitive / git
@@ -123,12 +122,13 @@ endfunction
 Plug 'justmao945/vim-clang'
 
 " Clojure
+Plug 'clojure-vim/async-clj-omni'
 Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'guns/vim-sexp'
 Plug 'luochen1990/rainbow'
 Plug 'tpope/vim-classpath'
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-Plug 'tpope/vim-salve'
+Plug 'tpope/vim-salve', { 'for': 'clojure' }
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Data Formats
@@ -314,12 +314,16 @@ let g:VimuxRunnerIndex = 2
 " let g:airline_theme = 'cool'
 
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_base16_improved_contrast = 1
-let g:airline_powerline_fonts = 1
+" let g:airline_base16_improved_contrast = 1
+let g:airline_powerline_fonts = 0
+let g:tmuxline_powerline_separators = 0
 
 " TODO: Some of these copy ignorecase and smart_case, set those instead
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
+
+let g:deoplete#keyword_patterns = {}
+let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
 
 " see https://github.com/ensime/ensime-vim/pull/259
 let g:deoplete#omni#input_patterns = {}
@@ -460,7 +464,7 @@ set showcmd
 set t_Co=256
 set tabstop=2
 set tags=./tags;
-set textwidth=99
+set textwidth=100
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -728,28 +732,11 @@ endfunction
 vmap [vimux]s "vy :call VimuxSlime()<CR>
 nmap [vimux]s vip[vimux]s<CR>
 
-augroup filetype_python
-  nnoremap <CR> :call VimuxLine()<CR><CR>
-augroup END
-
 
 """""""""""
 """ autocmd
 
-" OS X and crontabs. moan. sigh. groan.
-autocmd filetype crontab setlocal nobackup nowritebackup
-
-au bufenter *.ipynb set filetype=json
-
-"" Neomake
-autocmd! BufWritePost * Neomake
-
-" Lua has : in keywords
-augroup filetype_lua
-  autocmd!
-  autocmd FileType lua setlocal iskeyword+=:
-augroup END
-
+" Clojure
 " See https://github.com/benekastah/neomake/issues/15
 au FileType clojure setlocal makeprg=lein\ kibit\ %
 au FileType clojure setlocal errorformat=%IAt\ %f:%l:,%C%m,%Z,%-G%.%#
@@ -761,14 +748,28 @@ let g:neomake_clojure_kibit_maker = {
       \ }
 let g:neomake_clojure_enabled_makers = ['kibit']
 
-" I want to run pylama on Python scripts that don't end in .py
+" Lua has : in keywords
+augroup filetype_lua
+  autocmd!
+  autocmd FileType lua setlocal iskeyword+=:
+augroup END
+
+" NERDTree quit if only window left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" Neomake
+autocmd! BufWritePost * Neomake
+
+" OS X and crontabs. moan. sigh. groan.
+autocmd filetype crontab setlocal nobackup nowritebackup
+
+" Python
+au bufenter *.ipynb set filetype=json
+autocmd FileType python nnoremap <buffer> <CR> :call VimuxLine()<CR><CR>
 let g:neomake_python_pylama_maker = {
       \ 'args': ['--force', '--format', 'pep8', '--ignore', 'E501']
-      \ }
+      \ } " run pylama on Python scripts that don't end in .py
 
-
-" Quit if NERDTree is the only window left open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 
 """""""""""""""
@@ -780,5 +781,6 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " endif
 
 let g:solarized_contrast = "high"
+let g:solarized_termtrans = 0
 colorscheme solarized
 set background=dark
