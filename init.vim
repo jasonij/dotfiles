@@ -546,6 +546,16 @@ call denite#custom#source('file_mru/all', 'matchers', ['matcher_fuzzy'])
 call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
 call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
 
+call denite#custom#map('insert', '<C-d>', '<denite:scroll_window_downwards>', 'noremap')
+call denite#custom#map('insert', '<C-u>', '<denite:scroll_window_upwards>', 'noremap')
+
+call denite#custom#map('insert', '<C-b>', '<denite:scroll_page_backwards>', 'noremap')
+call denite#custom#map('insert', '<C-f>', '<denite:scroll_page_forwards>', 'noremap')
+
+" These two don't really work (invalid int() '' or something)
+call denite#custom#map('insert', '<C-e>', '<denite:scroll_down>', 'noremap')
+call denite#custom#map('insert', '<C-y>', '<denite:scroll_up>', 'noremap')
+
 nnoremap <leader><BS> :Denite -resume<CR>
 nnoremap <leader><C-h> :Denite -resume<CR>
 nnoremap <leader><C-p> :Denite -resume -select=-1 -immediately<CR>
@@ -567,10 +577,8 @@ nnoremap <leader>F :DeniteCursorWord file_rec<CR>
 nnoremap <leader>f :Denite file_rec<CR>
 
 " I know, I know, it's FZF instead of Denite
-" TODO: Fix up Denite outline so it supports Markdown etc
 nnoremap <leader>J :Tags<CR>
-nnoremap <leader>j :BTags<CR>
-" nnoremap <leader>j :Denite outline<CR>
+nnoremap <leader>j :Denite outline<CR>
 
 nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>k :Denite help<CR>
