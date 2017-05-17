@@ -3,34 +3,26 @@
 " TODO:
 "
 " Get NeoMake listing next and previous to work (they aren't relative to cursor position)
-" (This is okay if you wrap your checkers with something like Pylama)
-" Sort quickfix window by line number, can it be done?
 " Can I get the quickfix window to follow my cursor position (so next is relative to cursor?)
 "
 " gggqG (is there something shorter?)
 "
-" Q: How best to store favorite regexes?
-" A: Maybe a denite menu for regexes, or full-file operations?
-" Essential ruby regex: s/:\(\w\+\)=>/\1: /g
-" Essential python call: !python -m json.tool
 " For orgish timestamps: :put =strftime('<%Y-%m-%d %a>')
 "
-" Binding for subvert?
+" Binding for subvert? The plural case is so common maybe have a fn or hotkey around it
 " Subvert more often! e.g., :'<,'>Subvert/categor{y,ies}/tag{,s}/g
-" The plural case is so common maybe have a fn or hotkey around it
 "
 " Make use of marks! ''
 "
-" Copy current filename into system clipboard
-" And/or Vimux start populated with filename (if possible)
-" How can I get the name of the current file for the : command line?
-" I feel like there's a tpope plugin for this
+" Copy current filename into system clipboard (it's already in register %)
+" And/or Vimux start populated with filename (add C-r % somewhere)
 "
 " aucommand to change wildignore based on project type
 "
 " More git diff viewers and file finders (possibly through Unite) for head~1, master, origin, etc.
 "
 " Need some kind of `gdt` or `gdt HEAD` shortcut (ideally in fugitive)
+" (I feel like we could pop this into Dirvish or something)
 "
 " Can I get tags to show up on the vim help files?
 "
@@ -43,13 +35,14 @@
 "
 " Can I get help to open in a vertical split instead of horizontal?
 "
-" Neomake could open :lw automatically if any errors are detected?
+" Neomake could open :lw automatically?
 "
 " Look into g:tmuxcomplete#capture_args
 "           g:tmuxcomplete#list_args
 "
 " Project: use actual commands instead of hotkeys for a while
-" Useful: some kind of command exposer like Spacemacs has
+" Useful: some kind of command exposer like Spacemacs has (Denite commands)
+" Q: why is Denite slowing down suddenly?
 "
 " DeniteSelection
 "
@@ -77,9 +70,7 @@
 "
 " airline (and tmuxline) are problematic on smaller windows (e.g. split screen laptop)
 "
-" Denite with region
-"
-" Some solution for looking up sources, either Jedi or Python-Mode or something else (??)
+" Python binding for import pdb; pdb.set_trace()
 "
 " The Denite matcher should favor end-of-string sequences or at least after-the-/ seqs
 "
@@ -88,21 +79,34 @@
 "
 " BIG TODO: Make sure this works with Vim8 (just in case)
 "
-" Check out Dirvish (and eunuch et al)
-"
 " Q: Can I highlight the lines that changed in the last commit (or change to file) without seeing a diff?
 "
 " BUG: GitGutter and NeoMake are not playing nice right now. GitGutter gets clobbered and must be
 " toggled. (Seems to be fixed by removing 
 "
-" Set wordwrap (or whatever it's called) to 74 for gitcommit
-"
 " cob cob loses the nice color of NeoMake's indicator
+"
+" guicursor seems to make the cursor lag on C-w hjkl
+"
+" Can I get auto-center on jumps, like zz after any jump?
+"
+" Prefix for \"execute next command in split\"
+"
+" C-S-] or C-} should split and jump to tag (this used to work years ago, what changed?)
+"
+" Regenerate tags should figure out which tags file we're using and regenerate that one
+"
+" Maybe if we can't get tmux to name panes, we can have vim call out and do it
+"
+" Turn folding off by default so zi to turn it back on
+"
+" Consider switching from denite to FZF because the latter is so much faster
 
 " LEARN: (in more depth)
-" Fugitive / git
-" Zsh
-" Tmux itself
+" FZF (it is fast)
+" Fugitive / git (live more in vim or stay console-oriented?)
+" Tmux itself (we know this pretty well)
+" Zsh (mostly wins on autocompletion but let's see what else is there)
 
 
 """"""""
@@ -126,6 +130,7 @@ Plug 'clojure-vim/async-clj-omni'
 Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'guns/vim-sexp'
 Plug 'luochen1990/rainbow'
+Plug 'snoe/clj-refactor.nvim'
 Plug 'tpope/vim-classpath'
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-salve', { 'for': 'clojure' }
@@ -184,10 +189,9 @@ Plug 'rust-lang/rust.vim'
 Plug 'sebastianmarkow/deoplete-rust'
 
 " Scala
-" Q: Could we get autocompletion without Ensime? It's so janky.
-" A: Yes, if you run IntelliJ IDEA in the background.
-"    https://github.com/vhakulinen/neovim-intellij-complete
-"    https://github.com/vhakulinen/neovim-intellij-complete-deoplete
+" See also:
+" * https://github.com/vhakulinen/neovim-intellij-complete
+" * https://github.com/vhakulinen/neovim-intellij-complete-deoplete
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
 
@@ -208,6 +212,7 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-speeddating'
@@ -234,19 +239,18 @@ Plug 'Konfekt/FastFold'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
-Plug 'chriskempson/base16-vim'
-Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
-Plug 'jnurmine/Zenburn'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/seoul256.vim'
 Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
 Plug 'kassio/neoterm'
 Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
+Plug 'morhetz/gruvbox'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
@@ -301,6 +305,8 @@ set wildignore+=*.orig "Merge resolution files"
 set wildignore+=*.class "java/scala class files"
 set wildignore+=*/target/* "sbt target directory"
 
+set wildignore+=.tsv,.sql,.gz "Huge tsv and sql files are slowing down denite
+
 
 """""""
 """ let
@@ -310,11 +316,9 @@ let g:deoplete#sources#rust#rust_source_path="/Users/jkroll/.multirust/toolchain
 
 let g:VimuxRunnerIndex = 2
 
-" let g:airline_theme = 'base16'
 " let g:airline_theme = 'cool'
 
 let g:airline#extensions#tabline#enabled = 1
-" let g:airline_base16_improved_contrast = 1
 let g:airline_powerline_fonts = 0
 let g:tmuxline_powerline_separators = 0
 
@@ -322,13 +326,16 @@ let g:tmuxline_powerline_separators = 0
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_smart_case = 1
 
+" See https://github.com/clojure-vim/async-clj-omni
 let g:deoplete#keyword_patterns = {}
 let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
 
-" see https://github.com/ensime/ensime-vim/pull/259
 let g:deoplete#omni#input_patterns = {}
-let g:deoplete#omni#input_patterns.java = '[^. *\t]\.\w*'
-let g:deoplete#omni#input_patterns.scala = '[^. *\t]\.\w*'
+
+" TODO: re-evaluate approach to supporting Scala in Neovim
+" see https://github.com/ensime/ensime-vim/pull/259
+" let g:deoplete#omni#input_patterns.java = '[^. *\t]\.\w*'
+" let g:deoplete#omni#input_patterns.scala = '[^. *\t]\.\w*'
 " let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
 
 let g:deoplete#omni#input_patterns.tex =
@@ -448,6 +455,9 @@ set cursorline
 set encoding=utf-8
 set expandtab
 
+" Disable water torture
+set guicursor+=a:blinkon0
+
 if executable("rg")
     set grepprg=rg\ --vimgrep\ --no-heading
     set grepformat=%f:%l:%c:%m,%f:%l:%m
@@ -460,7 +470,6 @@ set nolazyredraw
 set previewheight=17
 set shell=zsh
 set shiftwidth=2
-set showcmd
 set t_Co=256
 set tabstop=2
 set tags=./tags;
@@ -487,7 +496,7 @@ nnoremap <leader>o :only<CR>
 " nnoremap <leader>O close all other buffers but this one<CR>
 
 
-" Q: What about <leader>a/A ? What makes sense
+" Q: What about <leader>a/A ? What makes sense, Abolish, Ag?
 
 " TODO: <leader>C
 " Q: Should Bclose possibly live here? If not, what else?
@@ -520,7 +529,7 @@ map <C-}> <C-w>s<C-]>
 " Q: What about C-; for consistency w/ tmux?
 
 """"""""
-" Denite
+" Denite / FZF
 
 " Ag for file_rec
 call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
@@ -556,12 +565,15 @@ call denite#custom#map('insert', '<C-f>', '<denite:scroll_page_forwards>', 'nore
 call denite#custom#map('insert', '<C-e>', '<denite:scroll_down>', 'noremap')
 call denite#custom#map('insert', '<C-y>', '<denite:scroll_up>', 'noremap')
 
+" TODO: Figure out more sensible mappings here
+call denite#custom#map('insert', '<C-t>', '<denite:move_to_first_line>', 'noremap')
+call denite#custom#map('insert', '<C-g>', '<denite:move_to_last_line>', 'noremap')
+
 nnoremap <leader><BS> :Denite -resume<CR>
 nnoremap <leader><C-h> :Denite -resume<CR>
 nnoremap <leader><C-p> :Denite -resume -select=-1 -immediately<CR>
 nnoremap <leader><C-n> :Denite -resume -select=+1 -immediately<CR>
 
-" NOTE: Something is very broken here
 nnoremap <leader>* :DeniteCursorWord grep<CR>
 nnoremap <leader>/ :Denite grep<CR>
 
@@ -573,12 +585,15 @@ nnoremap <leader><leader> :Denite command<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
 nnoremap <leader>b :Denite buffer<CR>
 
-nnoremap <leader>F :DeniteCursorWord file_rec<CR>
-nnoremap <leader>f :Denite file_rec<CR>
+" nnoremap <leader>F :DeniteCursorWord file_rec<CR>
+" nnoremap <leader>f :Denite file_rec<CR>
+nnoremap <leader>F :Files<CR>
+nnoremap <leader>f :GFiles<CR>
 
-" I know, I know, it's FZF instead of Denite
+" nnoremap <leader>j :Denite outline<CR>
+" nnoremap <leader>J :Denite tag<CR>
+nnoremap <leader>j :BTags<CR>
 nnoremap <leader>J :Tags<CR>
-nnoremap <leader>j :Denite outline<CR>
 
 nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>k :Denite help<CR>
@@ -637,6 +652,8 @@ nnoremap [fugitive]x :Gbrowse<CR>
 " Misc
 
 nnoremap <leader>$ :Ranger<CR>
+" Since - is Dirvish, why not _ for Ranger?
+nnoremap _ :Ranger<CR>
 
 nnoremap <leader>E :NERDTreeFind<CR>
 nnoremap <leader>e :NERDTreeToggle<CR>
@@ -676,6 +693,7 @@ nnoremap <leader>st :sp $HOME/dotfiles/.tmux.conf<CR>
 nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
 
 nnoremap <leader>sd :sp $HOME/Notes/TODO.md<CR>
+nnoremap <leader>sm :sp $HOME/Notes/MACHINE-LEARNING.md<CR>
 nnoremap <leader>sq :sp $HOME/Notes/QUESTIONS.md<CR>
 nnoremap <leader>sr :sp $HOME/Notes/RETRO.md<CR>
 nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
@@ -746,6 +764,7 @@ nmap [vimux]s vip[vimux]s<CR>
 
 " Clojure
 " See https://github.com/benekastah/neomake/issues/15
+" Q: Can/should I get Eastwood running too?
 au FileType clojure setlocal makeprg=lein\ kibit\ %
 au FileType clojure setlocal errorformat=%IAt\ %f:%l:,%C%m,%Z,%-G%.%#
 let g:neomake_clojure_kibit_maker = {
@@ -761,6 +780,9 @@ augroup filetype_lua
   autocmd!
   autocmd FileType lua setlocal iskeyword+=:
 augroup END
+
+" as per https://gist.github.com/matthewhudson/1475276
+au FileType gitcommit setlocal textwidth=74
 
 " NERDTree quit if only window left open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -779,16 +801,10 @@ let g:neomake_python_pylama_maker = {
       \ } " run pylama on Python scripts that don't end in .py
 
 
-
 """""""""""""""
 """ colorscheme
 
-" if filereadable(expand("~/.vimrc_background"))
-"   let base16colorspace=256
-"   source ~/.vimrc_background
-" endif
-
 let g:solarized_contrast = "high"
-let g:solarized_termtrans = 0
+let g:solarized_termtrans = 1
 colorscheme solarized
-set background=dark
+set background=light
