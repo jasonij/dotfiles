@@ -36,5 +36,5 @@
 --regex-Scala=/^[ \t]*package[ \t]+([a-zA-Z0-9_.]+)/\1/p,packages/
 
 --langdef=YAML
---langmap=YAML:.YAML
+--langmap=YAML:.YAML.yaml.yml
 --regex-YAML=/^([a-zA-Z0-9_]+):/\1/d,definition/
