@@ -38,3 +38,7 @@
 --langdef=YAML
 --langmap=YAML:.YAML.yaml.yml
 --regex-YAML=/^([a-zA-Z0-9_]+):/\1/d,definition/
+
+--langdef=bib
+--langmap=bib:.bib
+--regex-bib=/^@[A-Za-z]+\{([^,]*)/\1/b,bib/

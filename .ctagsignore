@@ -1,12 +1,11 @@
 *.csv
 *.json
 *.log
+*.p
 *.sql
 *.tsv
 
-.ensime/*
-.ensime_cache/*
-.git/
+.*
 bower_components
 coverage
 dev-server
