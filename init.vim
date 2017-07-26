@@ -9,17 +9,13 @@
 "
 " For orgish timestamps: :put =strftime('<%Y-%m-%d %a>')
 "
-" Binding for subvert? The plural case is so common maybe have a fn or hotkey around it
 " Subvert more often! e.g., :'<,'>Subvert/categor{y,ies}/tag{,s}/g
 "
 " Make use of marks! ''
 "
-" Copy current filename into system clipboard (it's already in register %)
-" And/or Vimux start populated with filename (add C-r % somewhere)
+" Shortcut Copy current filename into system clipboard (it's already in register %)
 "
 " aucommand to change wildignore based on project type
-"
-" More git diff viewers and file finders (possibly through Unite) for head~1, master, origin, etc.
 "
 " Need some kind of `gdt` or `gdt HEAD` shortcut (ideally in fugitive)
 " (I feel like we could pop this into Dirvish or something)
@@ -42,47 +38,22 @@
 "
 " Project: use actual commands instead of hotkeys for a while
 " Useful: some kind of command exposer like Spacemacs has (Denite commands)
-" Q: why is Denite slowing down suddenly?
 "
 " DeniteSelection
 "
-" Execute action in split, close new split if action fails
-"
-" Git revert visual selection (GitGutterUndoHunk is close-ish)
-"
-" Still really want a Denite buffer of files differing between branches
-"
 " Tagbar for YAML files?
 "
-" Denite split open
+" What can I do about tagging methods inside of bin/ scripts without extensions
 "
-" Pylama should give relative paths please!
-"
-" How do I turn on fill-mode in vim?
-"
-" :sp and :vs on C-] or wherever
-"
-" What can I do about tagging methods inside of bins without extensions
-"
-" :GitGutterLineHighlightsEnable ?
-"
-" Can I get autocorrect for vim just for note-taking?
+" Can I get autocomplete on spelling for vim just for note-taking? fzf?
 "
 " airline (and tmuxline) are problematic on smaller windows (e.g. split screen laptop)
 "
 " Python binding for import pdb; pdb.set_trace()
 "
-" The Denite matcher should favor end-of-string sequences or at least after-the-/ seqs
-"
-" Denite line match should be fuzzy or something
-" Actually, precise regex matching may be much more efficient (like default Ivy)
-"
 " BIG TODO: Make sure this works with Vim8 (just in case)
 "
 " Q: Can I highlight the lines that changed in the last commit (or change to file) without seeing a diff?
-"
-" BUG: GitGutter and NeoMake are not playing nice right now. GitGutter gets clobbered and must be
-" toggled. (Seems to be fixed by removing 
 "
 " cob cob loses the nice color of NeoMake's indicator
 "
@@ -98,14 +69,31 @@
 "
 " Maybe if we can't get tmux to name panes, we can have vim call out and do it
 "
-" Turn folding off by default so zi to turn it back on
+" vip and %cpaste on like M-ret or S-ret or something like that
 "
-" Consider switching from denite to FZF because the latter is so much faster
+" Something is monkeyed up with python autocompletion (C-x C-o C-x C-o)
+"
+" Try to get :History to start populated with the current project's directory
+"
+" Consider adding Jumps and possibly Changes to FZF
+" (I really want to keep leader-key bindings very close to vim, e.g., j for jumps, t for tags)
+"
+" What about https://github.com/ludovicchabant/vim-gutentags ???
+"
+" Can I get ci to work for more paired things?
+"
+" I'd like ]* and [* and possibly ]# and [# for last and first search matches
+"
+" Stop tagging logs!!! (not just tagging but aging and rging)
+"
+" Update FZF for Emacs bindings (C-n, C-p, M-n, M-p, unbind C-j and C-k) ???
+"
+" Python folding (fold methods inside of class, but open class)
 
 " LEARN: (in more depth)
-" FZF (it is fast)
+" FZF (it is really fast)
 " Fugitive / git (live more in vim or stay console-oriented?)
-" Tmux itself (we know this pretty well)
+" Tmux itself (a few issues to dig in on, mostly panes into windows)
 " Zsh (mostly wins on autocompletion but let's see what else is there)
 
 
@@ -148,6 +136,7 @@ Plug 'tmux-plugins/vim-tmux'
 " Git
 " NOTE: If you have to use something other that git, Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
+Plug 'gregsexton/gitv'
 Plug 'tpope/vim-fugitive'
 
 " Haskell
@@ -239,6 +228,8 @@ Plug 'Konfekt/FastFold'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
+Plug 'chriskempson/base16-vim'
+Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
@@ -250,11 +241,11 @@ Plug 'justinmk/vim-sneak'
 Plug 'kassio/neoterm'
 Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
-Plug 'morhetz/gruvbox'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-scripts/BufOnly.vim'
 
 call plug#end()
 
@@ -352,13 +343,13 @@ let g:deoplete#omni#input_patterns.tex =
 
 let g:deoplete#sources#jedi#show_docstring = 1
 
-let g:jedi#goto_command = "<localleader>d"
-let g:jedi#goto_assignments_command = "<localleader>g"
-let g:jedi#goto_definitions_command = ""
-let g:jedi#documentation_command = "K"
-let g:jedi#usages_command = "<localleader>n"
 let g:jedi#completions_command = ""
+let g:jedi#completions_enabled = 0  " use deoplete jedi should be faster
+let g:jedi#documentation_command = "K"
+let g:jedi#goto_assignments_command = "<localleader>g"
+let g:jedi#goto_command = "<localleader>d"
 let g:jedi#rename_command = "<localleader>r"
+let g:jedi#usages_command = "<localleader>n"
 
 let NERDTreeHijackNetrw = 0
 let NERDTreeWinSize = 45
@@ -367,18 +358,24 @@ let g:neoterm_repl_ruby = 'pry'
 
 " Q: Should we use /Users/jkroll/.pyenv/versions/2.7.12/bin/python instead?
 " I'm wondering because that's where we try to load the neovim lib from anyway
-let g:python_host_prog = '/Users/jkroll/.pyenv/versions/neovim2/bin/python'
-let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/neovim3/bin/python'
+" let g:python_host_prog = '/Users/jkroll/.pyenv/versions/neovim2/bin/python'
+" let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/neovim3/bin/python'
+let g:python_host_prog = '/Users/jkroll/.pyenv/versions/2.7.12/bin/python'
+let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.5.2/bin/python'
 
 let g:ranger_map_keys = 0
 
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_import = 0
+
 let g:tmuxcomplete#trigger = ''
 
 let g:tmuxline_preset = 'full'
 
+let g:vimtex_fold_enabled = 1
 
 """"""""
 " Tagbar
@@ -466,6 +463,7 @@ endif
 
 set hidden
 set list
+set nofoldenable
 set nolazyredraw
 set previewheight=17
 set shell=zsh
@@ -482,6 +480,7 @@ set undoreload=10000
 """"""""""""
 """ MAPPINGS
 """ Inspired by Spacemacs, but semantically vimmish
+""" HEURISTIC: <leader><key> =~ the command I use most that begins with <key> or sometimes C-w<key>
 
 " Leaders
 let mapleader=" "
@@ -493,8 +492,8 @@ let maplocalleader=","
 
 nnoremap <leader>= <C-w>=
 nnoremap <leader>o :only<CR>
-" nnoremap <leader>O close all other buffers but this one<CR>
-
+nnoremap <leader>O :BufOnly<CR>
+nnoremap <C-w>O :BufOnly<CR>
 
 " Q: What about <leader>a/A ? What makes sense, Abolish, Ag?
 
@@ -526,6 +525,8 @@ nnoremap <C-S-Tab> <C-w>W
 map <C-S-]> <C-w>s<C-]>
 map <C-}> <C-w>s<C-]>
 
+nnoremap <leader><C-w> :Windows<CR>
+
 " Q: What about C-; for consistency w/ tmux?
 
 """"""""
@@ -546,10 +547,6 @@ call denite#custom#var('grep', 'final_opts', [])
 " file_mru takes some work
 call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
 call denite#custom#source('file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
-
-call denite#custom#alias('source', 'file_mru/all', 'file_mru')
-call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
-call denite#custom#source('file_mru/all', 'matchers', ['matcher_fuzzy'])
 
 " Change mappings.
 call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
@@ -574,40 +571,29 @@ nnoremap <leader><C-h> :Denite -resume<CR>
 nnoremap <leader><C-p> :Denite -resume -select=-1 -immediately<CR>
 nnoremap <leader><C-n> :Denite -resume -select=+1 -immediately<CR>
 
-nnoremap <leader>* :DeniteCursorWord grep<CR>
-nnoremap <leader>/ :Denite grep<CR>
+nnoremap <leader>* :Rg <C-r><C-w><CR>
+nnoremap <leader>/ :Ag<CR>
 
 " Q: How to handle resume?
 
-nnoremap <leader><leader> :Denite command<CR>
+nnoremap <leader><leader> :Commands<CR>
 
-" nnoremap <leader><C-b> :Denite buffer:!<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
-nnoremap <leader>b :Denite buffer<CR>
+nnoremap <leader>b :Buffers<CR>
 
-" nnoremap <leader>F :DeniteCursorWord file_rec<CR>
-" nnoremap <leader>f :Denite file_rec<CR>
 nnoremap <leader>F :Files<CR>
 nnoremap <leader>f :GFiles<CR>
 
-" nnoremap <leader>j :Denite outline<CR>
-" nnoremap <leader>J :Denite tag<CR>
 nnoremap <leader>j :BTags<CR>
 nnoremap <leader>J :Tags<CR>
 
 nnoremap <leader>K :DeniteCursorWord help<CR>
-nnoremap <leader>k :Denite help<CR>
+nnoremap <leader>k :Helptags<CR>
 
-nnoremap <leader>L :DeniteCursorWord line<CR>
-nnoremap <leader>l :Denite line<CR>
+nnoremap <leader>L :Lines<CR>
+nnoremap <leader>l :BLines<CR>
 
-" Possibly we want different mappings for filetype stuff
-" This feels like maybe it should be tmux or localleader
-nnoremap <leader>M :DeniteCursorWord filetype<CR>
-nnoremap <leader>m :Denite filetype<CR>
-
-" TODO: see if there's an option to file_mru possibly
-nnoremap <leader>R :Denite file_mru/all<CR>
+nnoremap <leader>R :History<CR>
 nnoremap <leader>r :Denite file_mru<CR>
 
 nnoremap <leader>Y :DeniteCursorWord neoyank<CR>
@@ -619,7 +605,7 @@ nnoremap <leader>y :Denite neoyank<CR>
 "
 " Remember gitgutter's <leader>h bindings
 " nmap <Leader>hs <Plug>GitGutterStageHunk
-" nmap <Leader>hr <Plug>GitGutterRevertHunk
+" nmap <Leader>hu <Plug>GitGutterUndoHunk
 " nmap <Leader>hp <Plug>GitGutterPreviewHunk
 nnoremap <leader>ht <Plug>GitGutterLineHighlightsToggle
 
@@ -667,18 +653,19 @@ noremap <leader>; :Commentary<CR>
 
 " Q: How to send <Esc> inside terminal?
 tnoremap <Esc> <C-\><C-n>
+" TODO: possibly ' is better for marks?
 nnoremap <leader>' :split \| terminal<CR>
 
 " nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
 nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags &")<CR>
-" nnoremap <leader>T :call jobstart("ctags &")<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 nnoremap <leader>u :UndotreeToggle<CR>
 
 " This is okay because the filetype determines the maker
-nnoremap <leader>M :Denite filetype<CR>
-nnoremap <leader>m :Neomake<CR>
+" TODO: This is confusing, m should be for like Marks or something
+nnoremap <leader>M :Neomake<CR>
+nnoremap <leader>m :Marks<CR>
 
 " I have to type this all the bloomin' time
 " Why do I have to keep clearing highlights anyway?
@@ -702,7 +689,6 @@ nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
 """""
 " FZF
 
-" Q: Worth setting up M-p and M-n instead of C-p and C-n ?
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " Mapping selecting mappings
@@ -718,6 +704,13 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " Advanced customization using autoload functions
 " inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
 
 """""""
 " Vimux
@@ -762,6 +755,10 @@ nmap [vimux]s vip[vimux]s<CR>
 """""""""""
 """ autocmd
 
+" Autosave all on CursorHold (so won't rewrite unless changed)
+autocmd CursorHold * nested :wa
+
+
 " Clojure
 " See https://github.com/benekastah/neomake/issues/15
 " Q: Can/should I get Eastwood running too?
@@ -804,7 +801,12 @@ let g:neomake_python_pylama_maker = {
 """""""""""""""
 """ colorscheme
 
+" if filereadable(expand("~/.vimrc_background"))
+"   let base16colorspace=256
+"   source ~/.vimrc_background
+" endif
+
 let g:solarized_contrast = "high"
-let g:solarized_termtrans = 1
+let g:solarized_termtrans = 0
 colorscheme solarized
 set background=light
