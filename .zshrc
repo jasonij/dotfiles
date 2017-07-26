@@ -69,11 +69,16 @@ then
   unsetopt zle
 fi
 
+
+
 alias e='emacsclient -t'
 alias ec='emacsclient -c'
-# alias e="emacs -Q -nw"
+# alias eq="emacs -Q -nw"
 alias realias="alias | sed -E \"s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;\" > ~/.emacs.d/.cache/eshell/new_alias"
-alias newrealis="alias | sed -E \"s/^(.*)='?(.*)/alias \1 \2/\" | sed -E \"s/'$//\" > ~/.emacs.d/.cache/eshell/alias"
+alias newrealias="alias | sed -E \"s/^(.*)='?(.*)/alias \1 \2/\" | sed -E \"s/'$//\" > ~/.emacs.d/.cache/eshell/alias"
+
+export GTAGSLABEL=pygments
+
 
 # Git
 alias fetch_all="ls -d */ | xargs -P12 -I{} git -C {} fetch --all --prune"
@@ -113,6 +118,9 @@ alias i="ipython"
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 source /usr/local/bin/virtualenvwrapper_lazy.sh
+
+### Ruby
+alias p="pry"
 
 ### Scala
 alias sbaa="sbt \~assembly"
@@ -177,10 +185,14 @@ _gen_fzf_default_opts() {
     --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
     --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
   "
+
+  # To get history working in the shell
+  export FZF_CTRL_T_OPTS="--history=$HOME/.local/share/fzf-history/shell-history-files"
+  export FZF_CTRL_R_OPTS="--history=$HOME/.local/share/fzf-history/shell-history-commands"
+  export FZF_ALT_C_OPTS="--history=$HOME/.local/share/fzf-history/shell-history-directories"
+  export FZF_COMPLETION_OPTS="--history=$HOME/.local/share/fzf-history/shell-history-completion"
 }
 _gen_fzf_default_opts
-
-# export PATH="/Users/jkroll/anaconda2/bin:$PATH"
 
 # Rust
 export PATH="$HOME/.cargo/bin:$PATH"
