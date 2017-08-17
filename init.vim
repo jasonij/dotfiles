@@ -78,17 +78,29 @@
 " Consider adding Jumps and possibly Changes to FZF
 " (I really want to keep leader-key bindings very close to vim, e.g., j for jumps, t for tags)
 "
-" What about https://github.com/ludovicchabant/vim-gutentags ???
-"
-" Can I get ci to work for more paired things?
-"
 " I'd like ]* and [* and possibly ]# and [# for last and first search matches
 "
-" Stop tagging logs!!! (not just tagging but aging and rging)
-"
-" Update FZF for Emacs bindings (C-n, C-p, M-n, M-p, unbind C-j and C-k) ???
+" Unbind C-j and C-k in FZF?
+" Update Denite with C-n and C-p Emacs/Readline bindings as well
 "
 " Python folding (fold methods inside of class, but open class)
+" Also stop folding comments and imports, it's not helpful
+"
+" Stop tagging logs!!! (not just tagging but aging and rging)
+" Get ignores to be consistent with Ag, Rg, ctags, possibly wildignore
+"
+" How can I get C-r C-w working in Terminal? Very useful for FZF et al
+"
+" I'd like to get the filename for grepping without the path attached (see who includes it)
+"
+" C-j and C-k in NERDTree are not great on lib/peregrine/ vs doc/
+"
+" fold create problems when doing ]q and [q through revisions
+"
+" ]e and [e don't work with visual selection
+"
+" Often I need to jump to insert just for a single letter change, is there faster way without having
+" to escape all the time? Basically, jump to insert for one op then out again, the inverse of C-o?
 
 " LEARN: (in more depth)
 " FZF (it is really fast)
@@ -106,10 +118,6 @@ call plug#begin('~/.config/nvim/bundle')
 
 " About 80 plugins, that's probably too many (right Spacemacs?)
 
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
-
 " C/C++
 Plug 'justmao945/vim-clang'
 
@@ -118,7 +126,7 @@ Plug 'clojure-vim/async-clj-omni'
 Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'guns/vim-sexp'
 Plug 'luochen1990/rainbow'
-Plug 'snoe/clj-refactor.nvim'
+Plug 'snoe/clj-refactor.nvim', { 'for': 'clojure' }
 Plug 'tpope/vim-classpath'
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-salve', { 'for': 'clojure' }
@@ -146,7 +154,10 @@ Plug 'eagletmt/neco-ghc'
 Plug 'lukerandall/haskellmode-vim'
 
 " JavaScript is not a good language
-Plug 'pangloss/vim-javascript'
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'mxw/vim-jsx', { 'for': 'javascript' }
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 
 " Julia
 Plug 'JuliaLang/julia-vim'
@@ -163,7 +174,7 @@ Plug 'xolox/vim-misc'
 " Python
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'bfredl/nvim-ipy'
-Plug 'davidhalter/jedi-vim'
+Plug 'davidhalter/jedi-vim'  " may have to disable
 Plug 'tmhedberg/SimpylFold'
 Plug 'zchee/deoplete-jedi'
 
@@ -210,6 +221,11 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
 
 "" Shougo misc
+
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+
 Plug 'Shougo/context_filetype.vim'
 Plug 'Shougo/denite.nvim'
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
@@ -296,7 +312,8 @@ set wildignore+=*.orig "Merge resolution files"
 set wildignore+=*.class "java/scala class files"
 set wildignore+=*/target/* "sbt target directory"
 
-set wildignore+=.tsv,.sql,.gz "Huge tsv and sql files are slowing down denite
+" Sketchy conveniences for given projects, so remember to purge these
+set wildignore+=.log,.json,.csv,.tsv,.sql,.gz
 
 
 """""""
@@ -307,7 +324,7 @@ let g:deoplete#sources#rust#rust_source_path="/Users/jkroll/.multirust/toolchain
 
 let g:VimuxRunnerIndex = 2
 
-" let g:airline_theme = 'cool'
+" let g:airline_theme = 'base16'
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 0
@@ -341,7 +358,7 @@ let g:deoplete#omni#input_patterns.tex =
       \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
       \ . ')'
 
-let g:deoplete#sources#jedi#show_docstring = 1
+let g:deoplete#sources#jedi#show_docstring = 0
 
 let g:jedi#completions_command = ""
 let g:jedi#completions_enabled = 0  " use deoplete jedi should be faster
@@ -361,7 +378,7 @@ let g:neoterm_repl_ruby = 'pry'
 " let g:python_host_prog = '/Users/jkroll/.pyenv/versions/neovim2/bin/python'
 " let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/neovim3/bin/python'
 let g:python_host_prog = '/Users/jkroll/.pyenv/versions/2.7.12/bin/python'
-let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.5.2/bin/python'
+let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.2/bin/python'
 
 let g:ranger_map_keys = 0
 
@@ -370,6 +387,13 @@ let g:scala_use_builtin_tagbar_defs = 0
 
 let g:SimpylFold_docstring_preview = 1
 let g:SimpylFold_fold_import = 0
+
+let g:tern_request_timeout = 1
+" let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
+
+" Use tern_for_vim.
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
 
 let g:tmuxcomplete#trigger = ''
 
@@ -380,6 +404,8 @@ let g:vimtex_fold_enabled = 1
 """"""""
 " Tagbar
 " NOTE: Keep an eye on universal-ctags; it may eventually add support for these
+
+let g:tagbar_sort = 0  " sort by order rather than name
 
 let g:tagbar_type_elixir = {
     \ 'ctagstype' : 'elixir',
@@ -463,7 +489,6 @@ endif
 
 set hidden
 set list
-set nofoldenable
 set nolazyredraw
 set previewheight=17
 set shell=zsh
@@ -475,6 +500,9 @@ set textwidth=100
 set undofile
 set undolevels=1000
 set undoreload=10000
+
+" For Deoplete, disable docstring in preview
+set completeopt-=preview
 
 
 """"""""""""
@@ -514,7 +542,6 @@ nnoremap <leader>w :w<CR>
 nnoremap <leader>X :xa<CR>
 nnoremap <leader>x :x<CR>
 
-" these don't really make a ton of sense, especially the first one
 nnoremap <leader>Z :w<CR>:Bclose<CR>
 nnoremap <leader>z :w<CR>:bd<CR>
 
@@ -529,8 +556,11 @@ nnoremap <leader><C-w> :Windows<CR>
 
 " Q: What about C-; for consistency w/ tmux?
 
-""""""""
+""""""""""""""
 " Denite / FZF
+
+" This is actually for deoplete but you know gotta put it somewhere
+call deoplete#custom#set('_', 'sorters', ['sorter_word'])
 
 " Ag for file_rec
 call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
@@ -544,27 +574,20 @@ call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
 call denite#custom#var('grep', 'separator', ['--'])
 call denite#custom#var('grep', 'final_opts', [])
 
-" file_mru takes some work
+" file_mru takes some work to make it project-specific
 call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
 call denite#custom#source('file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
 
-" Change mappings.
-call denite#custom#map('insert', '<C-j>', '<denite:move_to_next_line>', 'noremap')
-call denite#custom#map('insert', '<C-k>', '<denite:move_to_previous_line>', 'noremap')
+call denite#custom#alias('source', 'file_mru/all', 'file_mru')
+call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
+call denite#custom#source('file_mru/all', 'matchers', ['matcher_fuzzy'])
 
-call denite#custom#map('insert', '<C-d>', '<denite:scroll_window_downwards>', 'noremap')
-call denite#custom#map('insert', '<C-u>', '<denite:scroll_window_upwards>', 'noremap')
-
-call denite#custom#map('insert', '<C-b>', '<denite:scroll_page_backwards>', 'noremap')
-call denite#custom#map('insert', '<C-f>', '<denite:scroll_page_forwards>', 'noremap')
-
-" These two don't really work (invalid int() '' or something)
-call denite#custom#map('insert', '<C-e>', '<denite:scroll_down>', 'noremap')
-call denite#custom#map('insert', '<C-y>', '<denite:scroll_up>', 'noremap')
-
-" TODO: Figure out more sensible mappings here
-call denite#custom#map('insert', '<C-t>', '<denite:move_to_first_line>', 'noremap')
-call denite#custom#map('insert', '<C-g>', '<denite:move_to_last_line>', 'noremap')
+" Emacs / readline bindings
+call denite#custom#map('insert', '<C-g>', '<denite:quit>', 'noremap')
+call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>', 'noremap')
+call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>', 'noremap')
+call denite#custom#map('insert', '<M-n>', '<denite:assign_next_text>')
+call denite#custom#map('insert', '<M-p>', '<denite:assign_previous_text>')
 
 nnoremap <leader><BS> :Denite -resume<CR>
 nnoremap <leader><C-h> :Denite -resume<CR>
@@ -572,7 +595,7 @@ nnoremap <leader><C-p> :Denite -resume -select=-1 -immediately<CR>
 nnoremap <leader><C-n> :Denite -resume -select=+1 -immediately<CR>
 
 nnoremap <leader>* :Rg <C-r><C-w><CR>
-nnoremap <leader>/ :Ag<CR>
+nnoremap <leader>/ :Rg<CR>
 
 " Q: How to handle resume?
 
@@ -593,6 +616,8 @@ nnoremap <leader>k :Helptags<CR>
 nnoremap <leader>L :Lines<CR>
 nnoremap <leader>l :BLines<CR>
 
+" Not sure here
+nnoremap <leader>H :History<CR>
 nnoremap <leader>R :History<CR>
 nnoremap <leader>r :Denite file_mru<CR>
 
@@ -656,8 +681,8 @@ tnoremap <Esc> <C-\><C-n>
 " TODO: possibly ' is better for marks?
 nnoremap <leader>' :split \| terminal<CR>
 
-" nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
-nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ctagsignore -R -f tags &")<CR>
+" nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
+nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ignore -R -f tags &")<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
 nnoremap <leader>u :UndotreeToggle<CR>
@@ -792,7 +817,10 @@ autocmd filetype crontab setlocal nobackup nowritebackup
 
 " Python
 au bufenter *.ipynb set filetype=json
+
+" Maybe this should be a toggle, but VimuxLine isn't working too well these days
 autocmd FileType python nnoremap <buffer> <CR> :call VimuxLine()<CR><CR>
+autocmd FileType python setlocal nofoldenable
 let g:neomake_python_pylama_maker = {
       \ 'args': ['--force', '--format', 'pep8', '--ignore', 'E501']
       \ } " run pylama on Python scripts that don't end in .py
