@@ -59,7 +59,7 @@ alias wk="cd $HOME/workspaces"
 # [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
 ### Ctags
-alias tag="ctags --exclude=@$HOME/.ctagsignore -R -f tags"
+alias tag="ctags --exclude=@$HOME/.ignore -R -f tags"
 alias etag=tag -e
 
 ### Emacs
@@ -103,8 +103,6 @@ alias vs="nvim ~/Notes/SCRUM.md"
 alias vt="nvim ~/dotfiles/.tmux.conf"
 alias vv="nvim ~/dotfiles/init.vim"
 alias vz="nvim ~/dotfiles/.zshrc"
-
-export NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 
 export EDITOR=nvim
 
@@ -176,15 +174,24 @@ _gen_fzf_default_opts() {
   # Comment and uncomment below for the light theme.
 
   # Solarized Dark color scheme for fzf
-  # export FZF_DEFAULT_OPTS="
-  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
-  #   --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
-  # "
-  ## Solarized Light color scheme for fzf
   export FZF_DEFAULT_OPTS="
-    --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
-    --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+    --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
+    --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
+    --bind 'alt-n:next-history'
+    --bind 'alt-p:previous-history'
+    --bind 'ctrl-n:down'
+    --bind 'ctrl-p:up'
   "
+
+  # Solarized Light color scheme for fzf
+  # export FZF_DEFAULT_OPTS="
+  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+  #   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+  #   --bind 'alt-n:next-history'
+  #   --bind 'alt-p:previous-history'
+  #   --bind 'ctrl-n:down'
+  #   --bind 'ctrl-p:up'
+  # "
 
   # To get history working in the shell
   export FZF_CTRL_T_OPTS="--history=$HOME/.local/share/fzf-history/shell-history-files"
