@@ -1,17 +1,20 @@
+*.aux
 *.csv
+*.fdb_latexmk
+*.fls
 *.json
 *.log
+*.out
 *.p
+*.pickle
+*.pyc
 *.sql
 *.tsv
 
-.*
-bower_components
 coverage
-dev-server
-karma
+csv
+doc
 log
-node_modules
-public
+tags
 target
 tmp

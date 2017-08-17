@@ -1,4 +1,5 @@
 *.egg-info/
+*.p
 *.pyc
 *.swp
 
@@ -32,7 +33,7 @@ karma-test/
 damn-it-sbt-plugins/
 
 ; DANGEROUS: These are really just to make rg ignore them
-*.sql
 *.com
 *.csv
+*.sql
 *.tsv
