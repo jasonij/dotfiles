@@ -47,47 +47,19 @@
 "
 " Can I get autocomplete on spelling for vim just for note-taking? fzf?
 "
-" airline (and tmuxline) are problematic on smaller windows (e.g. split screen laptop)
-"
 " Python binding for import pdb; pdb.set_trace()
 "
 " BIG TODO: Make sure this works with Vim8 (just in case)
 "
 " Q: Can I highlight the lines that changed in the last commit (or change to file) without seeing a diff?
 "
-" cob cob loses the nice color of NeoMake's indicator
-"
-" guicursor seems to make the cursor lag on C-w hjkl
-"
 " Can I get auto-center on jumps, like zz after any jump?
-"
-" Prefix for \"execute next command in split\"
-"
-" C-S-] or C-} should split and jump to tag (this used to work years ago, what changed?)
-"
-" Regenerate tags should figure out which tags file we're using and regenerate that one
-"
-" Maybe if we can't get tmux to name panes, we can have vim call out and do it
 "
 " vip and %cpaste on like M-ret or S-ret or something like that
 "
-" Something is monkeyed up with python autocompletion (C-x C-o C-x C-o)
-"
 " Try to get :History to start populated with the current project's directory
 "
-" Consider adding Jumps and possibly Changes to FZF
-" (I really want to keep leader-key bindings very close to vim, e.g., j for jumps, t for tags)
-"
 " I'd like ]* and [* and possibly ]# and [# for last and first search matches
-"
-" Unbind C-j and C-k in FZF?
-" Update Denite with C-n and C-p Emacs/Readline bindings as well
-"
-" Python folding (fold methods inside of class, but open class)
-" Also stop folding comments and imports, it's not helpful
-"
-" Stop tagging logs!!! (not just tagging but aging and rging)
-" Get ignores to be consistent with Ag, Rg, ctags, possibly wildignore
 "
 " How can I get C-r C-w working in Terminal? Very useful for FZF et al
 "
@@ -95,18 +67,32 @@
 "
 " C-j and C-k in NERDTree are not great on lib/peregrine/ vs doc/
 "
-" fold create problems when doing ]q and [q through revisions
+" fold creates problems when doing ]q and [q through revisions
 "
 " ]e and [e don't work with visual selection
 "
-" Often I need to jump to insert just for a single letter change, is there faster way without having
-" to escape all the time? Basically, jump to insert for one op then out again, the inverse of C-o?
+" Quick way to list all files changes in recent commit, maybe into Dirvish or FZF
+"
+" C-s like Swiper
+"
+" M-< and M-> for FZF (and possibly M-, and M-.)
+"
+" I really want a list of files touched in the last n commits
+"
+" BUG: You locked up neovim somehow, was it using checktime for reload but preemptively loading it?
+"
+" Can we use FZF for spell correction instead of z=? Yes but need keybinding.
+"
+" Consider making _ a word boundary
+"
+" FZF range or visual mode command history
 
 " LEARN: (in more depth)
 " FZF (it is really fast)
 " Fugitive / git (live more in vim or stay console-oriented?)
-" Tmux itself (a few issues to dig in on, mostly panes into windows)
+" Tmux itself (a few issues to dig in on, mostly moving panes into windows and vice versa)
 " Zsh (mostly wins on autocompletion but let's see what else is there)
+" tig (it's not really vim-related but you use it not very well)
 
 
 """"""""
@@ -116,7 +102,7 @@
 "" TODO: rename to plug or whatever is the norm or look into Shougo's new project
 call plug#begin('~/.config/nvim/bundle')
 
-" About 80 plugins, that's probably too many (right Spacemacs?)
+" About 90+ plugins, that's probably too many (right Spacemacs?)
 
 " C/C++
 Plug 'justmao945/vim-clang'
@@ -192,6 +178,8 @@ Plug 'sebastianmarkow/deoplete-rust'
 " See also:
 " * https://github.com/vhakulinen/neovim-intellij-complete
 " * https://github.com/vhakulinen/neovim-intellij-complete-deoplete
+" Do not see:
+" * Ensime
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
 
@@ -221,7 +209,6 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
 
 "" Shougo misc
-
 function! DoRemote(arg)
   UpdateRemotePlugins
 endfunction
@@ -323,8 +310,6 @@ let g:deoplete#sources#rust#racer_binary="/Users/jkroll/.cargo/bin/racer"
 let g:deoplete#sources#rust#rust_source_path="/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
 
 let g:VimuxRunnerIndex = 2
-
-" let g:airline_theme = 'base16'
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 0
@@ -465,7 +450,6 @@ let g:vim_json_syntax_conceal = 0
 """ set
 
 set autoread
-" au CursorHold * checktime
 
 " mkdir -p ~/.config/nvim/backup ~/.config/nvim/swap ~/.config/nvim/undo
 set backupdir=~/.config/nvim/backup
@@ -479,7 +463,7 @@ set encoding=utf-8
 set expandtab
 
 " Disable water torture
-set guicursor+=a:blinkon0
+" set guicursor+=a:blinkon0
 
 if executable("rg")
     set grepprg=rg\ --vimgrep\ --no-heading
@@ -549,10 +533,10 @@ nnoremap <leader>z :w<CR>:bd<CR>
 nnoremap <C-Tab> <C-w>w
 nnoremap <C-S-Tab> <C-w>W
 
-map <C-S-]> <C-w>s<C-]>
-map <C-}> <C-w>s<C-]>
-
 nnoremap <leader><C-w> :Windows<CR>
+
+nnoremap <C-w>* <C-w><C-s>*
+nnoremap <C-w># <C-w><C-s>#
 
 " Q: What about C-; for consistency w/ tmux?
 
@@ -565,6 +549,7 @@ call deoplete#custom#set('_', 'sorters', ['sorter_word'])
 " Ag for file_rec
 call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 " call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
+nnoremap <C-w>* <C-w><C-s>*
 
 " Ripgrep command on grep source (awesome!)
 call denite#custom#var('grep', 'command', ['rg'])
@@ -589,13 +574,14 @@ call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>', 'nor
 call denite#custom#map('insert', '<M-n>', '<denite:assign_next_text>')
 call denite#custom#map('insert', '<M-p>', '<denite:assign_previous_text>')
 
-nnoremap <leader><BS> :Denite -resume<CR>
+" nnoremap <leader><BS> :Denite -resume<CR>
 nnoremap <leader><C-h> :Denite -resume<CR>
 nnoremap <leader><C-p> :Denite -resume -select=-1 -immediately<CR>
 nnoremap <leader><C-n> :Denite -resume -select=+1 -immediately<CR>
 
 nnoremap <leader>* :Rg <C-r><C-w><CR>
-nnoremap <leader>/ :Rg<CR>
+" Notice the caret, it makes things so much faster
+nnoremap <leader>/ :Rg ^<CR>
 
 " Q: How to handle resume?
 
@@ -604,8 +590,8 @@ nnoremap <leader><leader> :Commands<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
 nnoremap <leader>b :Buffers<CR>
 
-nnoremap <leader>F :Files<CR>
-nnoremap <leader>f :GFiles<CR>
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>gf :GFiles<CR>
 
 nnoremap <leader>j :BTags<CR>
 nnoremap <leader>J :Tags<CR>
@@ -618,6 +604,10 @@ nnoremap <leader>l :BLines<CR>
 
 " Not sure here
 nnoremap <leader>H :History<CR>
+nnoremap <leader><BS> :History:<CR>
+nnoremap <leader><C-r> :History:<CR>
+nnoremap <leader><C-s> :History/<CR>
+
 nnoremap <leader>R :History<CR>
 nnoremap <leader>r :Denite file_mru<CR>
 
@@ -717,7 +707,7 @@ nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
+nmap <leader><tab> <plug>(fzf-maps-n)^
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
@@ -781,8 +771,10 @@ nmap [vimux]s vip[vimux]s<CR>
 """ autocmd
 
 " Autosave all on CursorHold (so won't rewrite unless changed)
-autocmd CursorHold * nested :wa
+au CursorHold * nested :wa
 
+" Autoload external changes to open buffers if unchanged locally else ask
+au CursorHold * checktime
 
 " Clojure
 " See https://github.com/benekastah/neomake/issues/15
@@ -829,12 +821,7 @@ let g:neomake_python_pylama_maker = {
 """""""""""""""
 """ colorscheme
 
-" if filereadable(expand("~/.vimrc_background"))
-"   let base16colorspace=256
-"   source ~/.vimrc_background
-" endif
-
 let g:solarized_contrast = "high"
-let g:solarized_termtrans = 0
+let g:solarized_visibility = 'high'
 colorscheme solarized
-set background=light
+set background=dark
