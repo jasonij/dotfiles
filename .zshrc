@@ -20,17 +20,22 @@ brew
 bundler
 colorize
 colorized-man-pages
+history
 gem
-git
+gitfast
+git-extras
 lein
 osx
+pip
 pylint
 python
 ruby
 sbt
 scala
+tig
 tmux
 virtualenv
+wd
 )
 
 fpath=(/usr/local/share/zsh-completions $fpath)
@@ -173,25 +178,27 @@ _gen_fzf_default_opts() {
 
   # Comment and uncomment below for the light theme.
 
-  # Solarized Dark color scheme for fzf
-  export FZF_DEFAULT_OPTS="
-    --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
-    --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
-    --bind 'alt-n:next-history'
-    --bind 'alt-p:previous-history'
-    --bind 'ctrl-n:down'
-    --bind 'ctrl-p:up'
-  "
+  # TODO: Factor out the color and/or keybinding opts
 
-  # Solarized Light color scheme for fzf
+  # Solarized Dark color scheme for fzf
   # export FZF_DEFAULT_OPTS="
-  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
-  #   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
+  #   --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
   #   --bind 'alt-n:next-history'
   #   --bind 'alt-p:previous-history'
   #   --bind 'ctrl-n:down'
   #   --bind 'ctrl-p:up'
   # "
+
+  # Solarized Light color scheme for fzf
+  export FZF_DEFAULT_OPTS="
+    --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+    --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+    --bind 'alt-n:next-history'
+    --bind 'alt-p:previous-history'
+    --bind 'ctrl-n:down'
+    --bind 'ctrl-p:up'
+  "
 
   # To get history working in the shell
   export FZF_CTRL_T_OPTS="--history=$HOME/.local/share/fzf-history/shell-history-files"
@@ -204,4 +211,3 @@ _gen_fzf_default_opts
 # Rust
 export PATH="$HOME/.cargo/bin:$PATH"
 export RUST_SRC_PATH=$HOME/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src
-
