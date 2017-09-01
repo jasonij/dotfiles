@@ -9,12 +9,15 @@
 *.pickle
 *.pyc
 *.sql
+*.synctex.gz
 *.tsv
 
 coverage
 csv
-doc
+dump
 log
+logs
+sql
 tags
 target
 tmp

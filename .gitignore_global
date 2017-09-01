@@ -1,7 +1,14 @@
+*.aux
 *.egg-info/
+*.fdb_latexmk
+*.fls
+*.log
+*.md
+*.out
 *.p
 *.pyc
 *.swp
+*.synctex.gz
 
 .env
 
@@ -24,16 +31,9 @@ target/sbt-ctags-dep-srcs/
 TAGS
 tags
 
-/notes.*
+csv/
+notes.*
 
 coverage/
 karma/coverage-reports/
 karma-test/
-
-damn-it-sbt-plugins/
-
-; DANGEROUS: These are really just to make rg ignore them
-*.com
-*.csv
-*.sql
-*.tsv
