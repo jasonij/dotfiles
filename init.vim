@@ -31,8 +31,6 @@
 "
 " Can I get help to open in a vertical split instead of horizontal?
 "
-" Neomake could open :lw automatically?
-"
 " Look into g:tmuxcomplete#capture_args
 "           g:tmuxcomplete#list_args
 "
@@ -96,6 +94,8 @@
 " I need bindings for :cw and :lw because I type them sooo often
 "
 " vimrc linter
+"
+" You've got to use FZF and Denite, and have quick bindings for both
 
 " LEARN: (in more depth)
 " FZF (it is really fast)
@@ -269,6 +269,8 @@ call plug#end()
 
 " Neomake
 call neomake#configure#automake('nw', 1000)
+let g:neomake_open_list = 2
+let g:neomake_logfile = '/tmp/neomake.log'
 
 
 """"""""""""""""""
@@ -324,8 +326,8 @@ set wildignore+=.log,.json,.csv,.tsv,.sql,.gz
 """""""
 """ let
 
-let g:deoplete#sources#rust#racer_binary="/Users/jkroll/.cargo/bin/racer"
-let g:deoplete#sources#rust#rust_source_path="/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src"
+let g:deoplete#sources#rust#racer_binary='/Users/jkroll/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 
 let g:VimuxRunnerIndex = 2
 
@@ -364,16 +366,16 @@ let g:deoplete#omni#input_patterns.tex =
 
 let g:deoplete#sources#jedi#show_docstring = 0
 
-let g:jedi#completions_command = ""
+let g:jedi#completions_command = ''
 let g:jedi#completions_enabled = 0  " use deoplete jedi should be faster
-let g:jedi#documentation_command = "K"
-let g:jedi#goto_assignments_command = "<localleader>g"
-let g:jedi#goto_command = "<localleader>d"
-let g:jedi#rename_command = "<localleader>r"
-let g:jedi#usages_command = "<localleader>n"
+let g:jedi#documentation_command = 'K'
+let g:jedi#goto_assignments_command = '<localleader>g'
+let g:jedi#goto_command = '<localleader>d'
+let g:jedi#rename_command = '<localleader>r'
+let g:jedi#usages_command = '<localleader>n'
 
-let NERDTreeHijackNetrw = 0
-let NERDTreeWinSize = 45
+let g:NERDTreeHijackNetrw = 0
+let g:NERDTreeWinSize = 45
 
 let g:neoterm_repl_ruby = 'pry'
 
@@ -396,8 +398,8 @@ let g:tern_request_timeout = 1
 " let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
 
 " Use tern_for_vim.
-let g:tern#command = ["tern"]
-let g:tern#arguments = ["--persistent"]
+let g:tern#command = ['tern']
+let g:tern#arguments = ['--persistent']
 
 let g:tmuxcomplete#trigger = ''
 
@@ -484,7 +486,7 @@ set expandtab
 " Disable water torture
 " set guicursor+=a:blinkon0
 
-if executable("rg")
+if executable('rg')
     set grepprg=rg\ --vimgrep\ --no-heading
     set grepformat=%f:%l:%c:%m,%f:%l:%m
     let g:ackprg = 'rg --vimgrep --no-heading'
@@ -514,8 +516,8 @@ set completeopt-=preview
 """ HEURISTIC: <leader><key> =~ the command I use most that begins with <key> or sometimes C-w<key>
 
 " Leaders
-let mapleader=" "
-let maplocalleader=","
+let g:mapleader=' '
+let g:maplocalleader=','
 
 
 """""
@@ -685,8 +687,8 @@ nnoremap <leader>V :Vexplore<CR>
 noremap <leader>; :Commentary<CR>
 
 " Q: How to send <Esc> inside terminal?
-tnoremap <Esc> <C-\><C-n>
-" TODO: possibly ' is better for marks?
+" tnoremap <Esc> <C-\><C-n>
+" Q: possibly ' is better for marks?
 nnoremap <leader>' :split \| terminal<CR>
 
 " nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ignore -R -f tags-regenerating . && mv tags-regenerating tags")<CR>
@@ -771,12 +773,12 @@ nnoremap [vimux]z :VimuxZoomRunner<CR>
 
 function! VimuxSlime()
   call VimuxSendText(@v)
-  call VimuxSendKeys("Enter")
+  call VimuxSendKeys('Enter')
 endfunction
 
 function! VimuxLine()
   call VimuxSendText(getline('.'))
-  call VimuxSendKeys("Enter")
+  call VimuxSendKeys('Enter')
 endfunction
 
 " These have stopped working since whenever
@@ -787,6 +789,7 @@ nmap [vimux]s vip[vimux]s<CR>
 
 """""""""""
 """ autocmd
+" TODO: autocmd should execute in an augroup or execute with a group (ProhibitAutocmdWithNoGroup)
 
 " Autosave all on CursorHold (so won't rewrite unless changed)
 au CursorHold * nested :wa
@@ -819,9 +822,6 @@ au FileType gitcommit setlocal textwidth=74
 " NERDTree quit if only window left open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" Neomake
-autocmd! BufWritePost * Neomake
-
 " OS X and crontabs. moan. sigh. groan.
 autocmd filetype crontab setlocal nobackup nowritebackup
 
@@ -839,7 +839,8 @@ let g:neomake_python_pylama_maker = {
 """""""""""""""
 """ colorscheme
 
-let g:solarized_contrast = "high"
+let g:solarized_contrast = 'high'
 let g:solarized_visibility = 'high'
 
 colorscheme solarized
+set background=dark
