@@ -18,6 +18,7 @@ plugins=(
 # aws  # this is slow so only enable when you're using it, which is all the time I suppose
 brew
 bundler
+cargo
 colorize
 colorized-man-pages
 history
@@ -30,6 +31,7 @@ pip
 pylint
 python
 ruby
+rust
 sbt
 scala
 tig
@@ -199,6 +201,16 @@ _gen_fzf_default_opts() {
     --bind 'ctrl-n:down'
     --bind 'ctrl-p:up'
   "
+
+  # Seoul 256 Dusk
+  # --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
+  # --color info:108,prompt:109,spinner:108,pointer:168,marker:168
+  # export FZF_DEFAULT_OPTS="
+  #   --bind 'alt-n:next-history'
+  #   --bind 'alt-p:previous-history'
+  #   --bind 'ctrl-n:down'
+  #   --bind 'ctrl-p:up'
+  # "
 
   # To get history working in the shell
   export FZF_CTRL_T_OPTS="--history=$HOME/.local/share/fzf-history/shell-history-files"
