@@ -86,6 +86,16 @@
 " Consider making _ a word boundary
 "
 " FZF range or visual mode command history
+"
+" FZF auto-complete is case-sensitive
+"
+" Leaving vim pane should trigger async autosave!!! (at least when programming, probably most of the time)
+"
+" Maybe autosave on focuslost (or whatever it's called)?
+"
+" I need bindings for :cw and :lw because I type them sooo often
+"
+" vimrc linter
 
 " LEARN: (in more depth)
 " FZF (it is really fast)
@@ -159,7 +169,7 @@ Plug 'xolox/vim-misc'
 
 " Python
 Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'bfredl/nvim-ipy'
+" Plug 'bfredl/nvim-ipy'
 Plug 'davidhalter/jedi-vim'  " may have to disable
 Plug 'tmhedberg/SimpylFold'
 Plug 'zchee/deoplete-jedi'
@@ -236,6 +246,7 @@ Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
+Plug 'jnurmine/Zenburn'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/seoul256.vim'
@@ -251,6 +262,13 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/BufOnly.vim'
 
 call plug#end()
+
+
+"""""""""
+""" calls
+
+" Neomake
+call neomake#configure#automake('nw', 1000)
 
 
 """"""""""""""""""
@@ -311,6 +329,7 @@ let g:deoplete#sources#rust#rust_source_path="/Users/jkroll/.multirust/toolchain
 
 let g:VimuxRunnerIndex = 2
 
+" let g:airline_theme='alduin'  " aldiun and tomorrow go well with seoul256
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 0
 let g:tmuxline_powerline_separators = 0
@@ -474,7 +493,7 @@ endif
 set hidden
 set list
 set nolazyredraw
-set previewheight=17
+set previewheight=20
 set shell=zsh
 set shiftwidth=2
 set t_Co=256
@@ -511,7 +530,7 @@ nnoremap <C-w>O :BufOnly<CR>
 
 " TODO: <leader>C
 " Q: Should Bclose possibly live here? If not, what else?
-nnoremap <leader>C :Bclose<CR>
+" nnoremap <leader>C :Bclose<CR>
 nnoremap <leader>c :close<CR>
 
 nnoremap <leader>D :Bclose<CR>
@@ -592,6 +611,7 @@ nnoremap <leader>b :Buffers<CR>
 
 nnoremap <leader>f :Files<CR>
 nnoremap <leader>gf :GFiles<CR>
+nnoremap <leader>r :History<CR>
 
 nnoremap <leader>j :BTags<CR>
 nnoremap <leader>J :Tags<CR>
@@ -608,8 +628,6 @@ nnoremap <leader><BS> :History:<CR>
 nnoremap <leader><C-r> :History:<CR>
 nnoremap <leader><C-s> :History/<CR>
 
-nnoremap <leader>R :History<CR>
-nnoremap <leader>r :Denite file_mru<CR>
 
 nnoremap <leader>Y :DeniteCursorWord neoyank<CR>
 nnoremap <leader>y :Denite neoyank<CR>
@@ -823,5 +841,5 @@ let g:neomake_python_pylama_maker = {
 
 let g:solarized_contrast = "high"
 let g:solarized_visibility = 'high'
+
 colorscheme solarized
-set background=dark
