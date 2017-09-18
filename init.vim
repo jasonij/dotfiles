@@ -789,19 +789,26 @@ nmap [vimux]s vip[vimux]s<CR>
 
 """""""""""
 """ autocmd
-" TODO: autocmd should execute in an augroup or execute with a group (ProhibitAutocmdWithNoGroup)
 
-" Autosave all on CursorHold (so won't rewrite unless changed)
-au CursorHold * nested :wa
+augroup event_cursorhold
+  autocmd!
 
-" Autoload external changes to open buffers if unchanged locally else ask
-au CursorHold * checktime
+  " Autosave all on CursorHold (so won't rewrite unless changed)
+  au CursorHold * nested :wa
+
+  " Autoload external changes to open buffers if unchanged locally else ask
+  au CursorHold * checktime
+augroup END
 
 " Clojure
 " See https://github.com/benekastah/neomake/issues/15
 " Q: Can/should I get Eastwood running too?
-au FileType clojure setlocal makeprg=lein\ kibit\ %
-au FileType clojure setlocal errorformat=%IAt\ %f:%l:,%C%m,%Z,%-G%.%#
+augroup filetype_clojue
+  autocmd!
+  au FileType clojure setlocal makeprg=lein\ kibit\ %
+  au FileType clojure setlocal errorformat=%IAt\ %f:%l:,%C%m,%Z,%-G%.%#
+augroup END
+
 let g:neomake_clojure_kibit_maker = {
       \ 'buffer_output': 1,
       \ 'exe': 'lein',
@@ -817,20 +824,33 @@ augroup filetype_lua
 augroup END
 
 " as per https://gist.github.com/matthewhudson/1475276
-au FileType gitcommit setlocal textwidth=74
+augroup filetype_gitcommit
+  autocmd!
+  au FileType gitcommit setlocal textwidth=74
+augroup END
 
 " NERDTree quit if only window left open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup event_bufenter
+  autocmd!
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+augroup END
 
 " OS X and crontabs. moan. sigh. groan.
-autocmd filetype crontab setlocal nobackup nowritebackup
+augroup filetype_crontab
+  autocmd!
+  autocmd filetype crontab setlocal nobackup nowritebackup
+augroup END
 
-" Python
+" IPython
 au bufenter *.ipynb set filetype=json
 
 " Maybe this should be a toggle, but VimuxLine isn't working too well these days
-autocmd FileType python nnoremap <buffer> <CR> :call VimuxLine()<CR><CR>
-autocmd FileType python setlocal nofoldenable
+augroup filetype_python
+  autocmd!
+  autocmd FileType python nnoremap <buffer> <CR> :call VimuxLine()<CR><CR>
+  autocmd FileType python setlocal nofoldenable
+augroup END
+
 let g:neomake_python_pylama_maker = {
       \ 'args': ['--force', '--format', 'pep8', '--ignore', 'E501']
       \ } " run pylama on Python scripts that don't end in .py
