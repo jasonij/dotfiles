@@ -14,6 +14,7 @@
 " Make use of marks! ''
 "
 " Shortcut Copy current filename into system clipboard (it's already in register %)
+" A: There should be a command string \"%p will paste it, but to clipboard?
 "
 " aucommand to change wildignore based on project type
 "
@@ -31,25 +32,20 @@
 "
 " Can I get help to open in a vertical split instead of horizontal?
 "
-" Look into g:tmuxcomplete#capture_args
-"           g:tmuxcomplete#list_args
-"
-" Project: use actual commands instead of hotkeys for a while
-" Useful: some kind of command exposer like Spacemacs has (Denite commands)
+" Look into g:tmuxcomplete#capture_args and g:tmuxcomplete#list_args
 "
 " DeniteSelection
 "
 " Tagbar for YAML files?
 "
-" What can I do about tagging methods inside of bin/ scripts without extensions
-"
-" Can I get autocomplete on spelling for vim just for note-taking? fzf?
+" What can I do about tagging methods inside of bin/ scripts without extensions?
 "
 " Python binding for import pdb; pdb.set_trace()
 "
 " BIG TODO: Make sure this works with Vim8 (just in case)
 "
 " Q: Can I highlight the lines that changed in the last commit (or change to file) without seeing a diff?
+" A: let g:gitgutter_diff_base = '<commit SHA>' ???
 "
 " Can I get auto-center on jumps, like zz after any jump?
 "
@@ -71,38 +67,57 @@
 "
 " Quick way to list all files changes in recent commit, maybe into Dirvish or FZF
 "
-" C-s like Swiper
+" C-s like Swiper (haha, yeah right)
 "
 " M-< and M-> for FZF (and possibly M-, and M-.)
 "
 " I really want a list of files touched in the last n commits
 "
-" BUG: You locked up neovim somehow, was it using checktime for reload but preemptively loading it?
-"
 " Can we use FZF for spell correction instead of z=? Yes but need keybinding.
-"
-" Consider making _ a word boundary
-"
-" FZF range or visual mode command history
 "
 " FZF auto-complete is case-sensitive
 "
-" Leaving vim pane should trigger async autosave!!! (at least when programming, probably most of the time)
-"
-" Maybe autosave on focuslost (or whatever it's called)?
-"
 " I need bindings for :cw and :lw because I type them sooo often
 "
-" vimrc linter
+" You've got to use both FZF and Denite so have quick bindings for both
 "
-" You've got to use FZF and Denite, and have quick bindings for both
+" Readline C-s and C-r are incredibly useful! Can we port something analogous?
+"
+" Q: What's the command for "last-buffer-visited" ? A: b# (because # is last buffer visited)
+"
+" Seoul256 has a cursor visibility issue in light and the colors don't line up quite right with iTerm
+"
+" RainbowParens needs a toggle for when you have a light background
+"
+" You still need leaderkey bindings for lw and cw (really you want toggles that actually work)
+"
+" TODO: check to see that tmuxcomplete is still broken even under Alacritty
+"
+" Quick test file finder, take current filename, split and add 'test' or something, or even FZF test
+"
+" Can Vimux default to current pane plus one?
+"
+" fzf-vim docs have typo line 125 the spaces are non-standard so copy paste fails
+"
+" Split between FZF and Denite with lower-case for FZF and capitol for Denite
+"
+" Use Denite line as Swiper, select/highlight row by dist from current line
+"
+" Do you want to set auto update for git files rather than .py files?
+"
+" Allow C-hjkl inside insert mode or no?
+"
+" Can I gq with textwidth 80 even when default is textwidth 100?
+"
+" Possibly <leader>a/A for autosave toggling?
+"
+" What sort of \"<cr> pipes to vmux pane\" toggler do I want?
 
 " LEARN: (in more depth)
-" FZF (it is really fast)
 " Fugitive / git (live more in vim or stay console-oriented?)
 " Tmux itself (a few issues to dig in on, mostly moving panes into windows and vice versa)
 " Zsh (mostly wins on autocompletion but let's see what else is there)
-" tig (it's not really vim-related but you use it not very well)
+
 
 
 """"""""
@@ -118,12 +133,12 @@ call plug#begin('~/.config/nvim/bundle')
 Plug 'justmao945/vim-clang'
 
 " Clojure
-Plug 'clojure-vim/async-clj-omni'
+Plug 'clojure-vim/async-clj-omni', { 'for': 'clojure' }
 Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'guns/vim-sexp'
 Plug 'luochen1990/rainbow'
 Plug 'snoe/clj-refactor.nvim', { 'for': 'clojure' }
-Plug 'tpope/vim-classpath'
+Plug 'tpope/vim-classpath', { 'for': 'clojue' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-salve', { 'for': 'clojure' }
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
@@ -133,27 +148,23 @@ Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'cespare/vim-toml', { 'for': 'toml' }
 Plug 'chrisbra/csv.vim', { 'for': 'csv' }
 Plug 'elzr/vim-json', { 'for': 'json' }
-Plug 'pearofducks/ansible-vim'
+Plug 'pearofducks/ansible-vim', { 'for': 'yaml' }
+Plug 'godlygeek/tabular'  " allegedly this must come before plasticboy/markdown
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-Plug 'tmux-plugins/vim-tmux'
+Plug 'tmux-plugins/vim-tmux', { 'for': 'tmux' }
 
 " Git
 " NOTE: If you have to use something other that git, Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv'
+Plug 'jonas/tig'
 Plug 'tpope/vim-fugitive'
 
 " Haskell
-" See https://github.com/begriffs/haskell-vim-now
+" See https://github.com/begriffs/haskell-vim-now or possibly just use emacs
 Plug 'eagletmt/ghcmod-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'lukerandall/haskellmode-vim'
-
-" JavaScript is not a good language
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-Plug 'mxw/vim-jsx', { 'for': 'javascript' }
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 
 " Julia
 Plug 'JuliaLang/julia-vim'
@@ -170,7 +181,7 @@ Plug 'xolox/vim-misc'
 " Python
 Plug 'Vimjas/vim-python-pep8-indent'
 " Plug 'bfredl/nvim-ipy'
-Plug 'davidhalter/jedi-vim'  " may have to disable
+" Plug 'davidhalter/jedi-vim'  " may have to disable
 Plug 'tmhedberg/SimpylFold'
 Plug 'zchee/deoplete-jedi'
 
@@ -181,8 +192,8 @@ Plug 'jalvesaq/Nvim-R'
 Plug 'vim-ruby/vim-ruby'
 
 " Rust
-Plug 'rust-lang/rust.vim'
-Plug 'sebastianmarkow/deoplete-rust'
+Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+Plug 'sebastianmarkow/deoplete-rust', { 'for': 'rust' }
 
 " Scala
 " See also:
@@ -238,23 +249,22 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 "" et al
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Konfekt/FastFold'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+" Plug 'Xuyuanp/nerdtree-git-plugin'  " disable until Alactritty supports glyphs
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
-Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
-Plug 'jnurmine/Zenburn'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/seoul256.vim'
 Plug 'justinmk/vim-dirvish'
 Plug 'justinmk/vim-sneak'
 Plug 'kassio/neoterm'
+Plug 'lifepillar/vim-solarized8'
 Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
+Plug 'morhetz/gruvbox'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
@@ -267,9 +277,9 @@ call plug#end()
 """""""""
 """ calls
 
-" Neomake
-call neomake#configure#automake('nw', 1000)
-let g:neomake_open_list = 2
+" Neomake  (200 ms is short, don't use this on laptop battery power)
+call neomake#configure#automake('nw', 200)
+" let g:neomake_open_list = 2
 let g:neomake_logfile = '/tmp/neomake.log'
 
 
@@ -326,14 +336,9 @@ set wildignore+=.log,.json,.csv,.tsv,.sql,.gz
 """""""
 """ let
 
-let g:deoplete#sources#rust#racer_binary='/Users/jkroll/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
-
 let g:VimuxRunnerIndex = 2
 
-" let g:airline_theme='alduin'  " aldiun and tomorrow go well with seoul256
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 0
 let g:tmuxline_powerline_separators = 0
 
 " TODO: Some of these copy ignorecase and smart_case, set those instead
@@ -364,7 +369,16 @@ let g:deoplete#omni#input_patterns.tex =
       \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
       \ . ')'
 
+let g:deoplete#sources = {}
+" Q: What makes this so much faster than default {}?
+" TODO: Add tmux-complete if it ever works again
+let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet']
+let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'neosnippet', 'tag']
+
 let g:deoplete#sources#jedi#show_docstring = 0
+
+let g:deoplete#sources#rust#racer_binary='/Users/jkroll/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 
 let g:jedi#completions_command = ''
 let g:jedi#completions_enabled = 0  " use deoplete jedi should be faster
@@ -379,6 +393,9 @@ let g:NERDTreeWinSize = 45
 
 let g:neoterm_repl_ruby = 'pry'
 
+" Without this, rainbow won't even load in the first place
+let g:rainbow_active = 1
+
 " Q: Should we use /Users/jkroll/.pyenv/versions/2.7.12/bin/python instead?
 " I'm wondering because that's where we try to load the neovim lib from anyway
 " let g:python_host_prog = '/Users/jkroll/.pyenv/versions/neovim2/bin/python'
@@ -391,7 +408,6 @@ let g:ranger_map_keys = 0
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
-let g:SimpylFold_docstring_preview = 1
 let g:SimpylFold_fold_import = 0
 
 let g:tern_request_timeout = 1
@@ -471,6 +487,7 @@ let g:vim_json_syntax_conceal = 0
 """ set
 
 set autoread
+set autowrite
 
 " mkdir -p ~/.config/nvim/backup ~/.config/nvim/swap ~/.config/nvim/undo
 set backupdir=~/.config/nvim/backup
@@ -501,6 +518,7 @@ set shiftwidth=2
 set t_Co=256
 set tabstop=2
 set tags=./tags;
+set termguicolors
 set textwidth=100
 set undofile
 set undolevels=1000
@@ -530,9 +548,9 @@ nnoremap <C-w>O :BufOnly<CR>
 
 " Q: What about <leader>a/A ? What makes sense, Abolish, Ag?
 
-" TODO: <leader>C
 " Q: Should Bclose possibly live here? If not, what else?
 " nnoremap <leader>C :Bclose<CR>
+nnoremap <leader>C :Colors<CR>
 nnoremap <leader>c :close<CR>
 
 nnoremap <leader>D :Bclose<CR>
@@ -561,16 +579,24 @@ nnoremap <C-w># <C-w><C-s>#
 
 " Q: What about C-; for consistency w/ tmux?
 
-""""""""""""""
-" Denite / FZF
+
+""""""""
+" Denite
+"
+" Q: Consider using Shift for Denite and plain for FZF (or something?)
+" Q: How do have bindings for FZF and Denite?
 
 " This is actually for deoplete but you know gotta put it somewhere
+" Not sure what I did this for or why we wouldn't want sorter_rank selecta
 call deoplete#custom#set('_', 'sorters', ['sorter_word'])
 
 " Ag for file_rec
 call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 " call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
 nnoremap <C-w>* <C-w><C-s>*
+
+" Pants
+nnoremap <C-s> :Denite line<CR>
 
 " Ripgrep command on grep source (awesome!)
 call denite#custom#var('grep', 'command', ['rg'])
@@ -603,6 +629,9 @@ nnoremap <leader><C-n> :Denite -resume -select=+1 -immediately<CR>
 nnoremap <leader>* :Rg <C-r><C-w><CR>
 " Notice the caret, it makes things so much faster
 nnoremap <leader>/ :Rg ^<CR>
+" nnoremap <leader>R :Rg 
+nnoremap <leader>R :Denite file_mru<CR>
+
 
 " Q: How to handle resume?
 
@@ -611,6 +640,8 @@ nnoremap <leader><leader> :Commands<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
 nnoremap <leader>b :Buffers<CR>
 
+" Q: How can we get Git! diff --name-only HEAD~1 also to set filetype dirvish?
+nnoremap <leader>F :Filetypes<CR>
 nnoremap <leader>f :Files<CR>
 nnoremap <leader>gf :GFiles<CR>
 nnoremap <leader>r :History<CR>
@@ -629,7 +660,6 @@ nnoremap <leader>H :History<CR>
 nnoremap <leader><BS> :History:<CR>
 nnoremap <leader><C-r> :History:<CR>
 nnoremap <leader><C-s> :History/<CR>
-
 
 nnoremap <leader>Y :DeniteCursorWord neoyank<CR>
 nnoremap <leader>y :Denite neoyank<CR>
@@ -695,7 +725,8 @@ nnoremap <leader>' :split \| terminal<CR>
 nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ignore -R -f tags &")<CR>
 nnoremap <leader>t :TagbarToggle<CR>
 
-nnoremap <leader>u :UndotreeToggle<CR>
+nnoremap <leader>U :UndotreeToggle<CR>
+nnoremap <leader>u :update<CR>
 
 " This is okay because the filetype determines the maker
 " TODO: This is confusing, m should be for like Marks or something
@@ -708,17 +739,23 @@ nnoremap <leader>m :Marks<CR>
 nnoremap <leader>N :let @/ = ""<CR>
 nnoremap <leader>n :noh<CR>
 
-" These really belong in a Denite menu
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" These really belong in a Denite menu or custom FZF menu
 nnoremap <leader>sn :sp notes.md<CR>
 
+nnoremap <leader>se :sp $HOME/dotfiles/.zshenv<CR>
+nnoremap <leader>si :sp $HOME/dotfiles/init.vim<CR>
 nnoremap <leader>st :sp $HOME/dotfiles/.tmux.conf<CR>
 nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
+nnoremap <leader>sz :sp $HOME/dotfiles/.zshrc<CR>
 
 nnoremap <leader>sd :sp $HOME/Notes/TODO.md<CR>
 nnoremap <leader>sm :sp $HOME/Notes/MACHINE-LEARNING.md<CR>
 nnoremap <leader>sq :sp $HOME/Notes/QUESTIONS.md<CR>
 nnoremap <leader>sr :sp $HOME/Notes/RETRO.md<CR>
 nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 """""
@@ -727,7 +764,8 @@ nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)^
+nmap <leader><tab> <plug>(fzf-maps-n)
+imap <c-x><tab> <plug>(fzf-maps-i)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
@@ -736,9 +774,17 @@ imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
+imap <c-x><c-b> <plug>(fzf-complete-buffer-line)
 
 " Advanced customization using autoload functions
 " inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
+
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+      \   <bang>0 ? fzf#vim#with_preview('up:60%')
+      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+      \   <bang>0)
 
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
@@ -773,7 +819,7 @@ nnoremap [vimux]z :VimuxZoomRunner<CR>
 
 function! VimuxSlime()
   call VimuxSendText(@v)
-  call VimuxSendKeys('Enter')
+  " call VimuxSendKeys('Enter')
 endfunction
 
 function! VimuxLine()
@@ -794,7 +840,7 @@ augroup event_cursorhold
   autocmd!
 
   " Autosave all on CursorHold (so won't rewrite unless changed)
-  au CursorHold * nested :wa
+  " au CursorHold * nested :wa
 
   " Autoload external changes to open buffers if unchanged locally else ask
   au CursorHold * checktime
@@ -844,11 +890,14 @@ augroup END
 " IPython
 au bufenter *.ipynb set filetype=json
 
+" Python
 " Maybe this should be a toggle, but VimuxLine isn't working too well these days
 augroup filetype_python
   autocmd!
   autocmd FileType python nnoremap <buffer> <CR> :call VimuxLine()<CR><CR>
   autocmd FileType python setlocal nofoldenable
+  autocmd FocusLost *.py :update
+  " autocmd CursorHold *.py :update
 augroup END
 
 let g:neomake_python_pylama_maker = {
@@ -859,8 +908,20 @@ let g:neomake_python_pylama_maker = {
 """""""""""""""
 """ colorscheme
 
-let g:solarized_contrast = 'high'
-let g:solarized_visibility = 'high'
+let g:gruvbox_italic = 1
 
-colorscheme solarized
-set background=dark
+" Not sure what these actually do?
+" execute "set t_8f=\e[38;2;%lu;%lu;%lum"
+" execute "set t_8b=\e[48;2;%lu;%lu;%lum"
+
+" Tmuxline is bad with TrueColor
+let g:airline#extensions#tmuxline#enabled = 0
+
+" if filereadable(expand('~/.vimrc_background'))
+"   let g:base16colorspace=256
+"   source ~/.vimrc_background
+" endif
+
+colorscheme solarized8_light_high
+" colorscheme solarized8_dark_high
+" colorscheme base16-gruvbox-dark-medium
