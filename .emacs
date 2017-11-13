@@ -10,11 +10,11 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(nil nil t)
  '(package-selected-packages
    (quote
-    (better-registers better-shell better-defaults counsel color-theme color-theme-approximate color-theme-buffer-local color-theme-modern color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow color-theme-solarized solarized-theme markdown-edit-indirect markdown-mode markdown-mode+ markdown-preview-eww markdown-preview-mode markdown-toc markdownfmt evil-visualstar evil-visual-replace evil-visual-mark-mode evil-vimish-fold evil-tutor-ja evil-textobj-column evil-textobj-anyblock evil-text-object-python evil-test-helpers evil-terminal-cursor-changer evil-tabs evil-swap-keys evil-space evil-smartparens evil-search-highlight-persist evil-rsi evil-replace-with-register evil-rails evil-quickscope evil-paredit evil-org evil-opener evil-nerd-commenter evil-multiedit evil-mu4e evil-mc-extras evil-matchit evil-mark-replace evil-magit evil-lispy evil-lisp-state evil-lion evil-leader evil-indent-textobject evil-indent-plus evil-iedit-state evil-god-state evil-find-char-pinyin evil-extra-operator evil-exchange evil-escape evil-embrace evil-ediff evil-easymotion evil-dvorak evil-commentary evil-colemak-minimal evil-colemak-basics evil-cleverparens evil-avy evil-args evil-anzu))))
+    (diff-hl better-registers better-shell better-defaults counsel color-theme color-theme-approximate color-theme-buffer-local color-theme-modern color-theme-sanityinc-solarized color-theme-sanityinc-tomorrow color-theme-solarized solarized-theme markdown-edit-indirect markdown-mode markdown-mode+ markdown-preview-eww markdown-preview-mode markdown-toc markdownfmt evil-visualstar evil-visual-replace evil-visual-mark-mode evil-vimish-fold evil-tutor-ja evil-textobj-column evil-textobj-anyblock evil-text-object-python evil-test-helpers evil-terminal-cursor-changer evil-tabs evil-swap-keys evil-space evil-smartparens evil-search-highlight-persist evil-rsi evil-replace-with-register evil-rails evil-quickscope evil-paredit evil-org evil-opener evil-nerd-commenter evil-multiedit evil-mu4e evil-mc-extras evil-matchit evil-mark-replace evil-magit evil-lispy evil-lisp-state evil-lion evil-leader evil-indent-textobject evil-indent-plus evil-iedit-state evil-god-state evil-find-char-pinyin evil-extra-operator evil-exchange evil-escape evil-embrace evil-ediff evil-easymotion evil-dvorak evil-commentary evil-colemak-minimal evil-colemak-basics evil-cleverparens evil-avy evil-args evil-anzu))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -56,7 +56,7 @@
 (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 
-(require 'color-theme)
-(require 'color-theme-solarized)
-(color-theme-initialize)
-(color-theme-solarized-light)
+; (require 'color-theme)
+; (require 'color-theme-solarized)
+; (color-theme-initialize)
+; (color-theme-solarized-dark)

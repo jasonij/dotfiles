@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     ivy ;; does order matter?
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -38,18 +39,12 @@ values."
      ;; ----------------------------------------------------------------
      auto-completion
      better-defaults
-     clojure
      csv
-     elixir
      emacs-lisp
      ess
      (evil-snipe :variables
                  evil-snipe-enable-alternate-f-and-t-behaviors t)
-     haskell
      git
-     idris
-     ipython-notebook
-     ivy ;; does order matter?
      (latex :variables
             latex-enable-auto-fill t
             latex-enable-folding t)
