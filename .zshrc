@@ -2,7 +2,8 @@
 
 # oh-my-zsh
 ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="robbyrussell"
+# ZSH_THEME="robbyrussell"
+ZSH_THEME="risto"
 ZSH_TMUX_AUTOCONNECT=false
 ZSH_TMUX_AUTOQUIT=false
 ZSH_TMUX_AUTOSTART=true
@@ -61,9 +62,13 @@ alias space="cd $HOME/.emacs.d"
 alias tp="cd $HOME/third-party"
 alias wk="cd $HOME/workspaces"
 
-### Base16
+# ### Base16
 # BASE16_SHELL=$HOME/.config/base16-shell/
 # [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
+### Gruvbox
+source /Users/jkroll/.config/nvim/bundle/gruvbox/gruvbox_256palette.sh
+
 
 ### Ctags
 alias tag="ctags --exclude=@$HOME/.ignore -R -f tags"
@@ -140,6 +145,7 @@ alias sbxx="sbt \~test"
 
 ### Tmux
 alias tlp="tmux list-panes"
+alias tsd="tmux new-session -d -t"
 
 compctl -g '~/.teamocil/*(:t:r)' teamocil
 
@@ -161,6 +167,7 @@ source $ZSH/oh-my-zsh.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 _gen_fzf_default_opts() {
+  # solarized colors
   local base03="234"
   local base02="235"
   local base01="240"
@@ -178,11 +185,29 @@ _gen_fzf_default_opts() {
   local cyan="37"
   local green="64"
 
+  # base16 gruvbox colors
+  local color00='#282828'
+  local color01='#3c3836'
+  local color02='#504945'
+  local color03='#665c54'
+  local color04='#bdae93'
+  local color05='#d5c4a1'
+  local color06='#ebdbb2'
+  local color07='#fbf1c7'
+  local color08='#fb4934'
+  local color09='#fe8019'
+  local color0A='#fabd2f'
+  local color0B='#b8bb26'
+  local color0C='#8ec07c'
+  local color0D='#83a598'
+  local color0E='#d3869b'
+  local color0F='#d65d0e'
+
   # Comment and uncomment below for the light theme.
 
   # TODO: Factor out the color and/or keybinding opts
 
-  # Solarized Dark color scheme for fzf
+  # # Solarized Dark color scheme for fzf
   # export FZF_DEFAULT_OPTS="
   #   --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
   #   --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
@@ -202,15 +227,38 @@ _gen_fzf_default_opts() {
     --bind 'ctrl-p:up'
   "
 
-  # Seoul 256 Dusk
-  # --color fg:242,bg:236,hl:65,fg+:15,bg+:239,hl+:108
-  # --color info:108,prompt:109,spinner:108,pointer:168,marker:168
+  # # No colors!
   # export FZF_DEFAULT_OPTS="
   #   --bind 'alt-n:next-history'
   #   --bind 'alt-p:previous-history'
   #   --bind 'ctrl-n:down'
   #   --bind 'ctrl-p:up'
   # "
+
+  # # Gruvbox
+  # export FZF_DEFAULT_OPTS="
+  #   --bind 'alt-n:next-history'
+  #   --bind 'alt-p:previous-history'
+  #   --bind 'ctrl-n:down'
+  #   --bind 'ctrl-p:up'
+  #   --height 40% --border
+  #   --color=bg+:$color01,bg:$color00,spinner:$color0C,hl:$color0D
+  #   --color=fg:$color04,header:$color0D,info:$color0A,pointer:$color0C
+  #   --color=marker:$color0C,fg+:$color06,prompt:$color0A,hl+:$color0D
+  # "
+
+  # # Emacs-style (readline) bindings
+  # export FZF_DEFAULT_OPTS="
+  #   --bind 'alt-n:next-history'
+  #   --bind 'alt-p:previous-history'
+  #   --bind 'ctrl-n:down'
+  #   --bind 'ctrl-p:up'
+  # "
+
+  # use ripgrep
+  # export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
+  export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
   # To get history working in the shell
   export FZF_CTRL_T_OPTS="--history=$HOME/.local/share/fzf-history/shell-history-files"
