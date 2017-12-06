@@ -49,7 +49,7 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 # (set in .zshenv)
 alias src="cd $SRC_DIR"
 
-alias bun="cd $HOME/.config/nvim/bundle"
+alias plg="cd ~/.local/share/nvim/plugged"
 alias dot="cd ~/dotfiles"
 alias hn="hostname"
 alias misc="cd $HOME/Code/misc"
@@ -58,6 +58,7 @@ alias notes="cd $HOME/notes"
 alias nv="cd $HOME/third-party/neovim"
 alias prog="cd $HOME/Code/scala/progfun1"
 alias rep="cd $HOME/repos/"
+alias sp="cd $HOME/.pyenv/versions/3.6.2/lib/python3.6/site-packages/"
 alias space="cd $HOME/.emacs.d"
 alias tp="cd $HOME/third-party"
 alias wk="cd $HOME/workspaces"
@@ -67,8 +68,7 @@ alias wk="cd $HOME/workspaces"
 # [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 
 ### Gruvbox
-source /Users/jkroll/.config/nvim/bundle/gruvbox/gruvbox_256palette.sh
-
+# source ~/.local/share/nvim/plugged/gruvbox/gruvbox_256palette.sh
 
 ### Ctags
 alias tag="ctags --exclude=@$HOME/.ignore -R -f tags"
@@ -81,8 +81,6 @@ then
   unsetopt zle
 fi
 
-
-
 alias e='emacsclient -t'
 alias ec='emacsclient -c'
 # alias eq="emacs -Q -nw"
@@ -90,7 +88,6 @@ alias realias="alias | sed -E \"s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\
 alias newrealias="alias | sed -E \"s/^(.*)='?(.*)/alias \1 \2/\" | sed -E \"s/'$//\" > ~/.emacs.d/.cache/eshell/alias"
 
 export GTAGSLABEL=pygments
-
 
 # Git
 alias fetch_all="ls -d */ | xargs -P12 -I{} git -C {} fetch --all --prune"
@@ -152,13 +149,11 @@ compctl -g '~/.teamocil/*(:t:r)' teamocil
 ### z is the new j, yo
 . `brew --prefix`/etc/profile.d/z.sh
 
-
 # NOTE: Put environment-specific things in ~/.zshenv which is unique per environment
 #       and should probably not be included at all in my dotfiles
 
 # TODO: Add reference-branch to zshenv and Gdiff use that, defaulting to master if unset
 # Is there some analog to unimpaired for the console? e.g., jumping through sibling directories
-
 
 ### Oh My Zsh
 source $ZSH/oh-my-zsh.sh
@@ -209,6 +204,7 @@ _gen_fzf_default_opts() {
 
   # # Solarized Dark color scheme for fzf
   # export FZF_DEFAULT_OPTS="
+  #   --exact
   #   --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
   #   --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
   #   --bind 'alt-n:next-history'
@@ -219,6 +215,7 @@ _gen_fzf_default_opts() {
 
   # Solarized Light color scheme for fzf
   export FZF_DEFAULT_OPTS="
+    --exact
     --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
     --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
     --bind 'alt-n:next-history'
@@ -257,7 +254,8 @@ _gen_fzf_default_opts() {
 
   # use ripgrep
   # export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
-  export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
+  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
+  # export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
   # To get history working in the shell
