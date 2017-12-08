@@ -74,6 +74,7 @@
 
 "" This is non-standard, because I migrated from NeoBundle
 "" TODO: rename to plug or whatever is the norm or look into Shougo's new project
+let g:plug_shallow = 0  " No shallow clones!
 call plug#begin('~/.local/share/nvim/plugged')
 
 " Almost 90 plugins, that's probably too many (right Spacemacs?)
@@ -432,6 +433,7 @@ set noshowmode
 set previewheight=20
 set shell=zsh
 set shiftwidth=2
+set shortmess+=c
 set t_Co=256
 set tabstop=2
 set tags=./tags;
