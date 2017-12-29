@@ -17,14 +17,13 @@
 " autocommand to change wildignore based on project type
 "
 " Need some kind of `gdt` or `gdt HEAD` shortcut (ideally in fugitive)
+" A: You can use :GF? in FZF anyway
 "
 " I would like ]C and [C to go along with ]c and [c (add to git-gutter?)
 "
 " Can I get help to open in a vertical split instead of horizontal?
 "
 " Look into g:tmuxcomplete#capture_args and g:tmuxcomplete#list_args
-"
-" Tagbar for YAML files? (Works for fzf and denite but not tagbar, why?)
 "
 " What can I do about tagging methods inside of bin/ scripts without extensions?
 "
@@ -67,19 +66,25 @@
 " Can I gq with textwidth 80 even when default is textwidth 100?
 "
 " Set up a visual selection vimux sender with %cpaste out front for ipython
+"
+" What about Meta-[ and Meta-] to avoid the [[ [[ [[ ]] ]] ]] key patterns?
+"
+" Why does neovim :CheckHealth recommend npm update [-g] neovim?
+"
+" This is not, is there, a repeat last motion command?
+"
+" fzf speller is not useful because plurals etc are missing
 
 
 """"""""
 """ Plug
 
-"" This is non-standard, because I migrated from NeoBundle
-"" TODO: rename to plug or whatever is the norm or look into Shougo's new project
-let g:plug_shallow = 0  " No shallow clones!
+let g:plug_shallow = 0  " No shallow clones! I need full repos, I need a computer.
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Almost 90 plugins, that's probably too many (right Spacemacs?)
+" About 80 plugins, that's probably too many (right Spacemacs?)
 
-" C
+" C (C++ is just horrid, but sometimes you have to read it)
 Plug 'justmao945/vim-clang'
 
 " Clojure
@@ -164,14 +169,10 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
 
 "" Shougo misc
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
-
-Plug 'Shougo/context_filetype.vim'
-Plug 'Shougo/denite.nvim'
-
 if has('nvim')
+  function! DoRemote(arg)
+    UpdateRemotePlugins
+  endfunction
   Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 else
   Plug 'Shougo/deoplete.nvim'
@@ -179,6 +180,8 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
+Plug 'Shougo/context_filetype.vim'
+Plug 'Shougo/denite.nvim'
 Plug 'Shougo/echodoc.vim'
 Plug 'Shougo/neoinclude.vim'
 Plug 'Shougo/neomru.vim'
@@ -191,7 +194,8 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 "" et al
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Konfekt/FastFold'
-" Plug 'Xuyuanp/nerdtree-git-plugin'  " disable until Alactritty supports glyphs
+Plug 'SirVer/ultisnips'
+Plug 'Xuyuanp/nerdtree-git-plugin'  " disable until Alactritty supports glyphs
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
@@ -208,20 +212,20 @@ Plug 'lifepillar/vim-solarized8'
 Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
 Plug 'morhetz/gruvbox'
-Plug 'raimondi/delimitmate'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'vim-scripts/BufOnly.vim'
+Plug 'vim-scripts/VisIncr'
 
 call plug#end()
 
 
 """""""""
-""" calls
+""" Calls
 
 " Neomake  (100 ms is short, don't use this on laptop battery power)
 call neomake#configure#automake('nw', 100)
-" let g:neomake_open_list = 2
 let g:neomake_logfile = '/tmp/neomake.log'
 
 
@@ -271,13 +275,17 @@ set wildignore+=*.orig "Merge resolution files"
 set wildignore+=*.class "java/scala class files"
 set wildignore+=*/target/* "sbt target directory"
 
-" Sketchy conveniences for given projects, so remember to purge these
+" Sketchy conveniences for current projects, so remember to purge these
 set wildignore+=.log,.json,.csv,.tsv,.sql,.gz
 
+" .mypy_cache/ is getting in the way
+set wildignore+=.mypy_cache/
 
 """""""
 """ let
 
+let g:NERDTreeWinSize = 60
+let g:SimpylFold_fold_import = 0
 let g:VimuxRunnerIndex = 2
 
 " TODO: Some of these copy ignorecase and smart_case, set those instead
@@ -289,13 +297,6 @@ let g:deoplete#keyword_patterns = {}
 let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
 
 let g:deoplete#omni#input_patterns = {}
-
-" TODO: re-evaluate approach to supporting Scala in Neovim
-" see https://github.com/ensime/ensime-vim/pull/259
-" let g:deoplete#omni#input_patterns.java = '[^. *\t]\.\w*'
-" let g:deoplete#omni#input_patterns.scala = '[^. *\t]\.\w*'
-" let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '[a-zA-Z_]\w*::']
-
 let g:deoplete#omni#input_patterns.tex =
       \ '\v\\%('
       \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
@@ -311,15 +312,15 @@ let g:deoplete#omni#input_patterns.tex =
 let g:deoplete#sources = {}
 " Q: What makes this so much faster than default {}?
 " TODO: Add tmux-complete if it ever works again
-let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet']
-let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'neosnippet', 'tag']
+let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet', 'ultisnips']
+let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'tag', 'ultisnips']
 
 let g:deoplete#sources#jedi#show_docstring = 0
 
 let g:deoplete#sources#rust#racer_binary='/Users/jkroll/.cargo/bin/racer'
 let g:deoplete#sources#rust#rust_source_path='/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 
-let g:NERDTreeWinSize = 60
+let g:echodoc_enable_at_startup = 1
 
 let g:neoterm_repl_ruby = 'pry'
 
@@ -331,12 +332,11 @@ let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.2/bin/python'
 
 let g:ranger_map_keys = 0
 
-let g:SimpylFold_fold_import = 0
-
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
 let g:solarized_term_italics = 1
+let g:solarized_termtrans = 1  " Much faster, flicker-free rendering
 
 let g:tmuxline_powerline_separators = 0
 let g:tmuxline_preset = 'full'
@@ -345,9 +345,8 @@ let g:vimtex_fold_enabled = 1
 
 """"""""
 " Tagbar
-" NOTE: Keep an eye on universal-ctags; it may eventually add support for these
 
-let g:tagbar_sort = 0  " sort by order rather than name
+" let g:tagbar_sort = 0  " sort by order rather than name
 
 let g:tagbar_type_elixir = {
     \ 'ctagstype' : 'elixir',
@@ -375,12 +374,45 @@ let g:tagbar_type_markdown = {
     \ ]
 \ }
 
+let g:tagbar_type_r = {
+    \ 'ctagstype' : 'r',
+    \ 'kinds'     : [
+        \ 'f:Functions',
+        \ 'g:GlobalVariables',
+        \ 'v:FunctionVariables',
+    \ ]
+\ }
+
+let g:tagbar_type_rust = {
+    \ 'ctagstype' : 'rust',
+    \ 'kinds' : [
+        \'T:types,type definitions',
+        \'f:functions,function definitions',
+        \'g:enum,enumeration names',
+        \'s:structure names',
+        \'m:modules,module names',
+        \'c:consts,static constants',
+        \'t:traits',
+        \'i:impls,trait implementations',
+    \]
+\}
+
+" not sure 'name' ever happens, what about & labels?
+let g:tagbar_type_yaml = {
+    \ 'ctagstype' : 'yaml',
+    \ 'kinds' : [
+        \ 'd:definition',
+        \ 'n:name',
+    \ ]
+\ }
+
 let g:undotree_SplitWidth = 40
 
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_folding_style_pythonic = 1
 
-""" Sneak
+"""""""
+" Sneak
 
 let g:sneak#label = 1
 
@@ -437,7 +469,6 @@ set shortmess+=c
 set t_Co=256
 set tabstop=2
 set tags=./tags;
-set termguicolors
 set textwidth=100
 set undofile
 set undolevels=1000
@@ -462,10 +493,8 @@ nnoremap <leader>o :only<CR>
 nnoremap <leader>O :BufOnly<CR>
 nnoremap <C-w>O :BufOnly<CR>
 
-" Q: What about <leader>a/A ? What makes sense, Abolish, Ag?
+" Q: What about <leader>a/A ? What makes sense, Abolish, Ag, Autosave(Toggle?)
 
-" Q: Should Bclose possibly live here? If not, what else?
-" nnoremap <leader>C :Bclose<CR>
 nnoremap <leader>C :Colors<CR>
 nnoremap <leader>c :close<CR>
 
@@ -484,7 +513,7 @@ nnoremap <leader>x :x<CR>
 nnoremap <leader>Z :w<CR>:Bclose<CR>
 nnoremap <leader>z :w<CR>:bd<CR>
 
-" Why are these broken? Because iTerm2
+" These are often broken in terminals
 nnoremap <C-Tab> <C-w>w
 nnoremap <C-S-Tab> <C-w>W
 
@@ -493,17 +522,11 @@ nnoremap <leader><C-w> :Windows<CR>
 nnoremap <C-w>* <C-w><C-s>*
 nnoremap <C-w># <C-w><C-s>#
 
-" Q: What about C-; for consistency w/ tmux?
-
 
 """"""""
 " Denite
 
-" This is actually for deoplete but you know gotta put it somewhere
-" Not sure what I did this for or why we wouldn't want sorter_rank selecta
-call deoplete#custom#set('_', 'sorters', ['sorter_word'])
-
-" Ag for file_rec
+" Ag for file_rec is slightly faster than rg but I should try with leading ^ possibly like for fzf?
 call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 " call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
 
@@ -575,13 +598,12 @@ nnoremap [fugitive]x :Gbrowse<CR>
 """"""
 " Misc
 
-nnoremap <leader>$ :Ranger<CR>
-nnoremap _ :Ranger<CR>
+nnoremap <leader>$ :Ranger<CR>  " C64 mnemonic
+nnoremap _ :Ranger<CR>  # Like vinegar
 
 nnoremap <leader>E :NERDTreeFind<CR>
 nnoremap <leader>e :NERDTreeToggle<CR>
 
-" Is this a problem with tmux?
 noremap <leader>; :Commentary<CR>
 
 " Q: How to send <Esc> inside terminal?
@@ -641,14 +663,7 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 imap <c-x><c-b> <plug>(fzf-complete-buffer-line)
 
 " Advanced customization using autoload functions
-" inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
-
-command! -bang -nargs=* Rg
-      \ call fzf#vim#grep(
-      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-      \   <bang>0 ? fzf#vim#with_preview('up:60%')
-      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-      \   <bang>0)
+inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '20%'})
 
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
@@ -752,6 +767,7 @@ augroup filetype_lua
   autocmd FileType lua setlocal iskeyword+=:
 augroup END
 
+" Git
 " as per https://gist.github.com/matthewhudson/1475276
 augroup filetype_gitcommit
   autocmd!
@@ -800,21 +816,26 @@ let g:neomake_clojure_enabled_makers = ['kibit']
 """""""""""""""
 """ colorscheme
 
-" Not sure what these actually do?
-" execute "set t_8f=\e[38;2;%lu;%lu;%lum"
-" execute "set t_8b=\e[48;2;%lu;%lu;%lum"
+" true colors evidently
+if has('termguicolors')
+  execute "set t_8f=\e[38;2;%lu;%lu;%lum"
+  execute "set t_8b=\e[48;2;%lu;%lu;%lum"
+  set termguicolors
+end
 
 let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
-      \ 'colorscheme': 'solarized',
+      \ 'colorscheme': 'gruvbox',
       \ 'component_function': {
       \   'gitbranch': 'fugitive#head'
       \ },
       \ }
 
-colorscheme solarized8_light_high
+" colorscheme solarized8_light_high
 " colorscheme solarized8_dark_high
-" colorscheme wombat
+
+colorscheme base16-gruvbox-dark-medium
+hi Normal guibg=NONE ctermbg=NONE  " transparent background means faster scrolling and less flashing
