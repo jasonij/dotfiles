@@ -1,5 +1,6 @@
 *.aux
 *.csv
+*.egg-info/
 *.fdb_latexmk
 *.fls
 *.json
