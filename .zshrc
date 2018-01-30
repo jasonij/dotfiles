@@ -180,7 +180,7 @@ _gen_fzf_default_opts() {
   local cyan="37"
   local green="64"
 
-  # base16 gruvbox colors
+  # https://github.com/nicodebo/base16-fzf/blob/master/bash/base16-gruvbox-dark-medium.config
   local color00='#282828'
   local color01='#3c3836'
   local color02='#504945'
@@ -198,15 +198,30 @@ _gen_fzf_default_opts() {
   local color0E='#d3869b'
   local color0F='#d65d0e'
 
-  # Comment and uncomment below for the light theme.
+  # # From https://github.com/nicodebo/base16-fzf/blob/master/bash/base16-gruvbox-light-medium.config
+  # local color00='#fbf1c7'
+  # local color01='#ebdbb2'
+  # local color02='#d5c4a1'
+  # local color03='#bdae93'
+  # local color04='#665c54'
+  # local color05='#504945'
+  # local color06='#3c3836'
+  # local color07='#282828'
+  # local color08='#9d0006'
+  # local color09='#af3a03'
+  # local color0A='#b57614'
+  # local color0B='#79740e'
+  # local color0C='#427b58'
+  # local color0D='#076678'
+  # local color0E='#8f3f71'
+  # local color0F='#d65d0e'
 
   # TODO: Factor out the color and/or keybinding opts
 
   # # Solarized Dark color scheme for fzf
   # export FZF_DEFAULT_OPTS="
-  #   --exact
-  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base2,bg+:$base02,hl+:$blue
-  #   --color info:$yellow,prompt:$yellow,pointer:$base3,marker:$base3,spinner:$yellow
+  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+  #   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
   #   --bind 'alt-n:next-history'
   #   --bind 'alt-p:previous-history'
   #   --bind 'ctrl-n:down'
@@ -215,7 +230,6 @@ _gen_fzf_default_opts() {
 
   # Solarized Light color scheme for fzf
   export FZF_DEFAULT_OPTS="
-    --exact
     --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
     --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
     --bind 'alt-n:next-history'
@@ -224,27 +238,18 @@ _gen_fzf_default_opts() {
     --bind 'ctrl-p:up'
   "
 
-  # # No colors!
-  # export FZF_DEFAULT_OPTS="
-  #   --bind 'alt-n:next-history'
-  #   --bind 'alt-p:previous-history'
-  #   --bind 'ctrl-n:down'
-  #   --bind 'ctrl-p:up'
-  # "
-
   # # Gruvbox
   # export FZF_DEFAULT_OPTS="
-  #   --bind 'alt-n:next-history'
-  #   --bind 'alt-p:previous-history'
-  #   --bind 'ctrl-n:down'
-  #   --bind 'ctrl-p:up'
-  #   --height 40% --border
   #   --color=bg+:$color01,bg:$color00,spinner:$color0C,hl:$color0D
   #   --color=fg:$color04,header:$color0D,info:$color0A,pointer:$color0C
   #   --color=marker:$color0C,fg+:$color06,prompt:$color0A,hl+:$color0D
+  #   --bind 'alt-n:next-history'
+  #   --bind 'alt-p:previous-history'
+  #   --bind 'ctrl-n:down'
+  #   --bind 'ctrl-p:up'
   # "
 
-  # # Emacs-style (readline) bindings
+  # # No colors!
   # export FZF_DEFAULT_OPTS="
   #   --bind 'alt-n:next-history'
   #   --bind 'alt-p:previous-history'
@@ -255,7 +260,6 @@ _gen_fzf_default_opts() {
   # use ripgrep
   # export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
   export FZF_DEFAULT_COMMAND='rg --files --no-ignore --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
-  # export FZF_DEFAULT_COMMAND='rg --files --hidden --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
   # To get history working in the shell
