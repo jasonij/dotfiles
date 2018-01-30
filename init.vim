@@ -5,8 +5,6 @@
 " Get NeoMake listing next and previous to work (they aren't relative to cursor position)
 " Can I get the quickfix window to follow my cursor position (so next is relative to cursor?)
 "
-" gggqG (is there something shorter?)
-"
 " Subvert more often! e.g., :'<,'>Subvert/categor{y,ies}/tag{,s}/g
 "
 " Make use of marks! ''
@@ -14,20 +12,15 @@
 " Shortcut Copy current filename into system clipboard (it's already in register %)
 " A: There should be a command string \"%p will paste it, but to clipboard?
 "
-" autocommand to change wildignore based on project type
-"
-" Need some kind of `gdt` or `gdt HEAD` shortcut (ideally in fugitive)
-" A: You can use :GF? in FZF anyway
+" Change wildignore based on project type
 "
 " I would like ]C and [C to go along with ]c and [c (add to git-gutter?)
-"
-" Can I get help to open in a vertical split instead of horizontal?
 "
 " Look into g:tmuxcomplete#capture_args and g:tmuxcomplete#list_args
 "
 " What can I do about tagging methods inside of bin/ scripts without extensions?
 "
-" TODO: Make sure we make this Neovim and Vim8 compatible
+" Make sure we make this Neovim and Vim8 compatible
 "
 " Q: Can I highlight the lines that changed in the last commit (or change to file) without seeing a diff?
 " A: let g:gitgutter_diff_base = '<commit SHA>' ???
@@ -71,9 +64,19 @@
 "
 " Why does neovim :CheckHealth recommend npm update [-g] neovim?
 "
-" This is not, is there, a repeat last motion command?
+" There is not (is there?) a repeat last motion command?
 "
 " fzf speller is not useful because plurals etc are missing
+"
+" Run mypy separately as it's a slow type checker not a linter
+"
+" I need a way to grab by previous c-r c-w when I'm in terminal
+"
+" Toggle for transparent background?
+"
+" Glob ~/.ignore into wildignore?
+"
+" Actually could I get Tagbar to open splitting my current window instead of far right?
 
 
 """"""""
@@ -194,12 +197,11 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 "" et al
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Konfekt/FastFold'
-Plug 'SirVer/ultisnips'
-Plug 'Xuyuanp/nerdtree-git-plugin'  " disable until Alactritty supports glyphs
+" Plug 'Xuyuanp/nerdtree-git-plugin'  " looks funny until Alactritty supports glyphs
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
-Plug 'chriskempson/base16-vim'
-Plug 'flazz/vim-colorschemes'
+" Plug 'chriskempson/base16-vim'
+" Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
@@ -281,11 +283,14 @@ set wildignore+=.log,.json,.csv,.tsv,.sql,.gz
 " .mypy_cache/ is getting in the way
 set wildignore+=.mypy_cache/
 
+" always something
+set wildignore+=*.egg-info/
+
 """""""
 """ let
 
 let g:NERDTreeWinSize = 60
-let g:SimpylFold_fold_import = 0
+let g:SimpylFold_fold_import = 1
 let g:VimuxRunnerIndex = 2
 
 " TODO: Some of these copy ignorecase and smart_case, set those instead
@@ -296,24 +301,16 @@ let g:deoplete#enable_smart_case = 1
 let g:deoplete#keyword_patterns = {}
 let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
 
-let g:deoplete#omni#input_patterns = {}
-let g:deoplete#omni#input_patterns.tex =
-      \ '\v\\%('
-      \ . '\a*cite\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-      \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
-      \ . '|hyperref\s*\[[^]]*'
-      \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-      \ . '|%(include%(only)?|input)\s*\{[^}]*'
-      \ . '|\a*(gls|Gls|GLS)(pl)?\a*%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
-      \ . '|includepdf%(\s*\[[^]]*\])?\s*\{[^}]*'
-      \ . '|includestandalone%(\s*\[[^]]*\])?\s*\{[^}]*'
-      \ . ')'
+if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+endif
+let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
 
 let g:deoplete#sources = {}
 " Q: What makes this so much faster than default {}?
 " TODO: Add tmux-complete if it ever works again
-let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet', 'ultisnips']
-let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'tag', 'ultisnips']
+let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet']
+let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'tag', 'neosnippet']
 
 let g:deoplete#sources#jedi#show_docstring = 0
 
@@ -322,11 +319,17 @@ let g:deoplete#sources#rust#rust_source_path='/Users/jkroll/.multirust/toolchain
 
 let g:echodoc_enable_at_startup = 1
 
+let g:gruvbox_italic = 1
+let g:gruvbox_contrast_dark = 'medium'
+let g:gruvbox_contrast_light = 'medium'
+
 let g:neoterm_repl_ruby = 'pry'
 
 " Without this, rainbow won't even load in the first place
 let g:rainbow_active = 1
 
+" TODO: Check if on Linux or Mac and adjust accordingly
+" NOTE: Really it would be nice if we could use $HOME or $PYENV_ROOT here
 let g:python_host_prog = '/Users/jkroll/.pyenv/versions/2.7.12/bin/python'
 let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.2/bin/python'
 
@@ -336,10 +339,13 @@ let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
 let g:solarized_term_italics = 1
-let g:solarized_termtrans = 1  " Much faster, flicker-free rendering
+let g:solarized_termtrans = 1  " Faster, flicker-free rendering
+
+let g:tmuxcomplete#trigger = ''
 
 let g:tmuxline_powerline_separators = 0
 let g:tmuxline_preset = 'full'
+let g:tmuxline_theme = 'vim_statusline_3'
 
 let g:vimtex_fold_enabled = 1
 
@@ -469,7 +475,7 @@ set shortmess+=c
 set t_Co=256
 set tabstop=2
 set tags=./tags;
-set textwidth=100
+set textwidth=99
 set undofile
 set undolevels=1000
 set undoreload=10000
@@ -527,11 +533,8 @@ nnoremap <C-w># <C-w><C-s>#
 " Denite
 
 " Ag for file_rec is slightly faster than rg but I should try with leading ^ possibly like for fzf?
-call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-" call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
-
-" Pants
-nnoremap <C-s> :Denite line<CR>
+" call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
 
 " Ripgrep command on grep source (awesome!)
 call denite#custom#var('grep', 'command', ['rg'])
@@ -543,19 +546,14 @@ call denite#custom#var('grep', 'final_opts', [])
 
 " file_mru takes some work to make it project-specific
 call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
-call denite#custom#source('file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
+call denite#custom#source('file_mru', 'matchers', ['matcher_substring', 'matcher_project_files'])
 
+" file_mru/all for matching all recent files
 call denite#custom#alias('source', 'file_mru/all', 'file_mru')
 call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
-call denite#custom#source('file_mru/all', 'matchers', ['matcher_fuzzy'])
+call denite#custom#source('file_mru/all', 'matchers', ['matcher_substring'])
 
-" Emacs / readline bindings
-call denite#custom#map('insert', '<C-g>', '<denite:quit>', 'noremap')
-call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>', 'noremap')
-call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>', 'noremap')
-call denite#custom#map('insert', '<M-n>', '<denite:assign_next_text>')
-call denite#custom#map('insert', '<M-p>', '<denite:assign_previous_text>')
-
+nnoremap <leader>? :Denite grep<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
 nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>R :Denite file_mru<CR>
@@ -672,16 +670,23 @@ command! -bang -nargs=* Rg
       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
       \   <bang>0)
 
+" Habit from swiper
+nnoremap <C-s> :BLines<CR>
+
+" Q: What should <leader>? do
+nnoremap <leader># :BLines <C-r><C-w><CR>
 nnoremap <leader>* :Rg <C-r><C-w><CR>
 nnoremap <leader>/ :Rg ^<CR>
 nnoremap <leader><BS> :History:<CR>
 nnoremap <leader><C-r> :History:<CR>
 nnoremap <leader><C-s> :History/<CR>
 nnoremap <leader><leader> :Commands<CR>
+nnoremap <leader>A :Ag <C-r><C-w><CR>
 nnoremap <leader>F :Filetypes<CR>
 nnoremap <leader>H :History<CR>
 nnoremap <leader>J :Tags<CR>
 nnoremap <leader>L :Lines<CR>
+nnoremap <leader>a :Ag<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>f :Files<CR>
 nnoremap <leader>gf :GFiles<CR>
@@ -690,12 +695,13 @@ nnoremap <leader>k :Helptags<CR>
 nnoremap <leader>l :BLines<CR>
 nnoremap <leader>r :History<CR>
 
+" TODO: BCommits and Commits
+
 
 """""""
 " Vimux
 "
 " TODO: send region, selection, line to pane n
-" TODO: bind <leader>s to send
 
 nnoremap [vimux] <Nop>
 nmap <leader>v [vimux]
@@ -717,7 +723,7 @@ nnoremap [vimux]z :VimuxZoomRunner<CR>
 
 function! VimuxSlime()
   call VimuxSendText(@v)
-  " call VimuxSendKeys('Enter')
+  call VimuxSendKeys('Enter')  " IPython doesn't seem to like this
 endfunction
 
 function! VimuxLine()
@@ -725,8 +731,6 @@ function! VimuxLine()
   call VimuxSendKeys('Enter')
 endfunction
 
-" These have stopped working since whenever
-" Basically, a <CR> in @v will end VimuxSendText
 vmap [vimux]s "vy :call VimuxSlime()<CR>
 nmap [vimux]s vip[vimux]s<CR>
 
@@ -737,8 +741,8 @@ nmap [vimux]s vip[vimux]s<CR>
 augroup event_cursorhold
   autocmd!
 
-  " Autosave all on CursorHold (so won't rewrite unless changed)
-  " au CursorHold * nested :wa
+  " Autoupdate all on CursorHold (so won't rewrite unless changed)
+  " au CursorHold * nested :update
 
   " Autoload external changes to open buffers if unchanged locally else ask
   au CursorHold * checktime
@@ -800,7 +804,7 @@ augroup filetype_python
 augroup END
 
 " Adding mypy so we get some type checking
-let g:neomake_python_enabled_makers = ['python', 'frosted', 'pylama', 'mypy']
+" let g:neomake_python_enabled_makers = ['python', 'frosted', 'pylama', 'mypy']
 let g:neomake_python_pylama_maker = {
       \ 'args': ['--force', '--format', 'pep8', '--ignore', 'E501']
       \ } " run pylama on Python scripts that don't end in .py
@@ -828,14 +832,11 @@ let g:lightline = {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
       \ },
-      \ 'colorscheme': 'gruvbox',
+      \ 'colorscheme': 'solarized',
       \ 'component_function': {
       \   'gitbranch': 'fugitive#head'
       \ },
       \ }
 
-" colorscheme solarized8_light_high
+colorscheme solarized8_light_high
 " colorscheme solarized8_dark_high
-
-colorscheme base16-gruvbox-dark-medium
-hi Normal guibg=NONE ctermbg=NONE  " transparent background means faster scrolling and less flashing
