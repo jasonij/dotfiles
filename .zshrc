@@ -1,5 +1,8 @@
 ## Welcome to my zshrc
 
+# TODO:
+# Consider pairing down your oh-my-zsh aliases, like do you really need them?
+
 # oh-my-zsh
 ZSH=$HOME/.oh-my-zsh
 # ZSH_THEME="robbyrussell"
@@ -18,7 +21,7 @@ HELPDIR=/usr/local/share/zsh/help
 plugins=(
 # aws  # this is slow so only enable when you're using it, which is all the time I suppose
 brew
-bundler
+# bundler
 cargo
 colorize
 colorized-man-pages
@@ -81,18 +84,24 @@ then
   unsetopt zle
 fi
 
-alias e='emacsclient -t'
-alias ec='emacsclient -c'
-# alias eq="emacs -Q -nw"
 alias realias="alias | sed -E \"s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;\" > ~/.emacs.d/.cache/eshell/new_alias"
 alias newrealias="alias | sed -E \"s/^(.*)='?(.*)/alias \1 \2/\" | sed -E \"s/'$//\" > ~/.emacs.d/.cache/eshell/alias"
 
 export GTAGSLABEL=pygments
 
+### Exa
+# TODO: Consider just replacing l or something with exa -whatever
+
+alias l='exa -alH'
+alias e='exa -alH --git'
+# alias ea='exa -al'
+# alias el='exa -l'
+
 # Git
 alias fetch_all="ls -d */ | xargs -P12 -I{} git -C {} fetch --all --prune"
 alias gall='ls -d */ | xargs -P12 -I{} git -C {} '
 alias pull_all="ls -d */ | xargs -P12 -I{} git -C {} pull"
+alias s='git status'
 
 ### Java
 export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
@@ -101,6 +110,7 @@ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 
 ### Neovim
 alias v="nvim"
+alias va="nvim ~/.config/alacritty/alacritty.yml"
 alias vd="nvim ~/Notes/TODO.md"
 alias ve="nvim ~/.zshenv"
 alias vm="nvim ~/Notes/MACHINE-LEARNING.md"

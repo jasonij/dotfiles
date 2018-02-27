@@ -3,7 +3,7 @@
 *.egg-info/
 *.fdb_latexmk
 *.fls
-*.json
+*.ipynb
 *.log
 *.out
 *.p
@@ -13,6 +13,7 @@
 *.synctex.gz
 *.tsv
 
+.mypy_cache
 coverage
 csv
 dump

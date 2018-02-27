@@ -26,6 +26,7 @@
 " A: let g:gitgutter_diff_base = '<commit SHA>' ???
 "
 " Can I get auto-center on jumps, like zz after any jump?
+" Consider C-l to toggle zz zt zb
 "
 " vip and %cpaste on like M-ret or S-ret or C-ret or something like that
 "
@@ -56,13 +57,7 @@
 " Do you want to set auto update for git files rather than .py files? Or just have a toggle?
 " Possibly <leader>a/A for autosave toggling?
 "
-" Can I gq with textwidth 80 even when default is textwidth 100?
-"
-" Set up a visual selection vimux sender with %cpaste out front for ipython
-"
-" What about Meta-[ and Meta-] to avoid the [[ [[ [[ ]] ]] ]] key patterns?
-"
-" Why does neovim :CheckHealth recommend npm update [-g] neovim?
+" Can I gq with textwidth 79 even when default is textwidth 99?
 "
 " There is not (is there?) a repeat last motion command?
 "
@@ -77,6 +72,20 @@
 " Glob ~/.ignore into wildignore?
 "
 " Actually could I get Tagbar to open splitting my current window instead of far right?
+"
+" Consider a [file] prefix because you do a lot of different file commands
+"
+" <leader>" maybe for Registers?
+"
+" Autosave if you've got a file that isn't new
+"
+" Can I get delete-to to accept vim-sneak two-char bindings?
+"
+" Look into double-mapping CTRL to ESC when pressed alone
+"
+" Maybe <leader>$ for finding a file with the given cursorword or something?
+"
+" Autoclose lw and cw
 
 
 """"""""
@@ -200,12 +209,12 @@ Plug 'Konfekt/FastFold'
 " Plug 'Xuyuanp/nerdtree-git-plugin'  " looks funny until Alactritty supports glyphs
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
-" Plug 'chriskempson/base16-vim'
+Plug 'chriskempson/base16-vim'
 " Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
-Plug 'itchyny/lightline.vim'
+" Plug 'itchyny/lightline.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-sneak'
@@ -216,7 +225,9 @@ Plug 'mbbill/undotree'
 Plug 'morhetz/gruvbox'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'scrooloose/nerdtree'
-Plug 'shinchu/lightline-gruvbox.vim'
+" Plug 'shinchu/lightline-gruvbox.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'vim-scripts/VisIncr'
 
@@ -278,7 +289,7 @@ set wildignore+=*.class "java/scala class files"
 set wildignore+=*/target/* "sbt target directory"
 
 " Sketchy conveniences for current projects, so remember to purge these
-set wildignore+=.log,.json,.csv,.tsv,.sql,.gz
+set wildignore+=.log,.csv,.tsv,.sql,.gz
 
 " .mypy_cache/ is getting in the way
 set wildignore+=.mypy_cache/
@@ -312,11 +323,12 @@ let g:deoplete#sources = {}
 let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet']
 let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'tag', 'neosnippet']
 
-let g:deoplete#sources#jedi#show_docstring = 0
+" let g:deoplete#sources#jedi#show_docstring = 0
 
 let g:deoplete#sources#rust#racer_binary='/Users/jkroll/.cargo/bin/racer'
 let g:deoplete#sources#rust#rust_source_path='/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
 
+" What does this do again?
 let g:echodoc_enable_at_startup = 1
 
 let g:gruvbox_italic = 1
@@ -328,12 +340,18 @@ let g:neoterm_repl_ruby = 'pry'
 " Without this, rainbow won't even load in the first place
 let g:rainbow_active = 1
 
+
+" Disable Python 2 already
+let g:loaded_python_provider = 1
+
 " TODO: Check if on Linux or Mac and adjust accordingly
 " NOTE: Really it would be nice if we could use $HOME or $PYENV_ROOT here
-let g:python_host_prog = '/Users/jkroll/.pyenv/versions/2.7.12/bin/python'
-let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.2/bin/python'
+" let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.2/bin/python'
 
 let g:ranger_map_keys = 0
+
+" How come Ruby can use ~ but not python? deoplete
+" let g:ruby_host_prog = '~/.rbenv/versions/2.5o.0/bin/neovim-ruby-host'
 
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
@@ -490,6 +508,9 @@ set undoreload=10000
 let g:mapleader=' '
 let g:maplocalleader=','
 
+" Escape a la Spacemacs
+inoremap fd <Esc>
+
 
 """""
 " Vim
@@ -528,6 +549,8 @@ nnoremap <leader><C-w> :Windows<CR>
 nnoremap <C-w>* <C-w><C-s>*
 nnoremap <C-w># <C-w><C-s>#
 
+inoremap <C-l> <C-o>zz
+
 
 """"""""
 " Denite
@@ -553,6 +576,10 @@ call denite#custom#alias('source', 'file_mru/all', 'file_mru')
 call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
 call denite#custom#source('file_mru/all', 'matchers', ['matcher_substring'])
 
+" TODO: At least give Denite some readline-style keybindings similar to FZF
+
+nnoremap <leader>: :Denite command<CR>
+nnoremap <leader>" :Denite register<CR>
 nnoremap <leader>? :Denite grep<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
 nnoremap <leader>K :DeniteCursorWord help<CR>
@@ -800,7 +827,7 @@ augroup filetype_python
   autocmd FileType python nnoremap <buffer> <CR> :call VimuxLine()<CR><CR>
   autocmd FileType python setlocal nofoldenable
   autocmd FocusLost *.py :update
-  " autocmd CursorHold *.py :update
+  autocmd CursorHold *.py :update
 augroup END
 
 " Adding mypy so we get some type checking
@@ -827,16 +854,9 @@ if has('termguicolors')
   set termguicolors
 end
 
-let g:lightline = {
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'colorscheme': 'solarized',
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
-      \ },
-      \ }
-
-colorscheme solarized8_light_high
+" colorscheme solarized8_light_high
 " colorscheme solarized8_dark_high
+
+colorscheme base16-ashes
+
+" TODO put back code for transparent background maybe?
