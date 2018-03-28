@@ -1,5 +1,6 @@
 *.aux
 *.csv
+*.dat
 *.egg-info/
 *.fdb_latexmk
 *.fls
@@ -9,6 +10,7 @@
 *.p
 *.pickle
 *.pyc
+*.raw
 *.sql
 *.synctex.gz
 *.tsv

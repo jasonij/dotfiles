@@ -10,7 +10,7 @@
 " Make use of marks! ''
 "
 " Shortcut Copy current filename into system clipboard (it's already in register %)
-" A: There should be a command string \"%p will paste it, but to clipboard?
+" A: There should be a command string \"%p will paste it, but copy register to clipboard?
 "
 " Change wildignore based on project type
 "
@@ -26,7 +26,7 @@
 " A: let g:gitgutter_diff_base = '<commit SHA>' ???
 "
 " Can I get auto-center on jumps, like zz after any jump?
-" Consider C-l to toggle zz zt zb
+" Consider insert-mode C-l to toggle zz zt zb
 "
 " vip and %cpaste on like M-ret or S-ret or C-ret or something like that
 "
@@ -85,8 +85,21 @@
 "
 " Maybe <leader>$ for finding a file with the given cursorword or something?
 "
-" Autoclose lw and cw
-
+" Auto open/close lw and cw
+"
+" Consider parting from leader s_ and v_ bindings because of all the split commands
+"
+" Visual selection for <leader>* et al
+"
+" Autoupdate on exit from insert mode? Maybe turn on if under vc?
+"
+" Tmux status indicators could be orthogonal option
+"
+" Because of so many huge data files in my directories, I need Rg for git-only
+"
+" C-S-hjkl for window rezising like M-S-hjkl in XMonad / Tmux
+"
+" Probably <leader>C-t for regenerating tags, right?
 
 """"""""
 """ Plug
@@ -99,7 +112,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 " C (C++ is just horrid, but sometimes you have to read it)
 Plug 'justmao945/vim-clang'
 
-" Clojure
+" Clojure / LISPs
 Plug 'clojure-vim/async-clj-omni', { 'for': 'clojure' }
 Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
 Plug 'guns/vim-sexp'
@@ -115,20 +128,12 @@ Plug 'cespare/vim-toml'
 Plug 'chrisbra/csv.vim'
 Plug 'elzr/vim-json'
 Plug 'plasticboy/vim-markdown'
-Plug 'tmux-plugins/vim-tmux'
 
 " Git
 " If you must use something other that git, Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv'
-Plug 'jonas/tig'
 Plug 'tpope/vim-fugitive'
-
-" Haskell
-" See https://github.com/begriffs/haskell-vim-now or possibly just use emacs
-Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
-Plug 'lukerandall/haskellmode-vim', { 'for': 'haskell' }
 
 " Julia
 Plug 'JuliaLang/julia-vim'  " this is borked if you try { 'for': 'julia' }
@@ -139,7 +144,6 @@ Plug 'lervag/vimtex'  " put `$pdflatex = 'xelatex --shell-escape %O %S';` in ~/.
 " Python
 Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
-Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 
 " R
 Plug 'jalvesaq/Nvim-R', { 'for': 'r'}
@@ -149,7 +153,6 @@ Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 
 " Rust
 Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-Plug 'sebastianmarkow/deoplete-rust', { 'for': 'rust' }
 
 " Scala
 Plug 'derekwyatt/vim-sbt', { 'for': 'scala' }
@@ -159,10 +162,12 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
+Plug 'tmux-plugins/vim-tmux'
 
 " BUG: Tmux-complete overwrites the tmux copy paste buffer with a full-pane text grab
 " REPRO: Copy something reasonable into tmux buffer, paste it in vim, then trigger tmux-complete,
 " and now try pasting from the tmux buffer.
+" Q: Am I the only person on this planet with this problem?
 " Plug 'wellle/tmux-complete.vim'
 
 " Vim
@@ -170,6 +175,7 @@ Plug 'edkolev/tmuxline.vim'
 "" tpope misc
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dadbod'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
@@ -179,18 +185,6 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
-
-"" Shougo misc
-if has('nvim')
-  function! DoRemote(arg)
-    UpdateRemotePlugins
-  endfunction
-  Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
 
 Plug 'Shougo/context_filetype.vim'
 Plug 'Shougo/denite.nvim'
@@ -203,18 +197,21 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
+Plug 'roxma/nvim-completion-manager'
+
 "" et al
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Konfekt/FastFold'
-" Plug 'Xuyuanp/nerdtree-git-plugin'  " looks funny until Alactritty supports glyphs
+Plug 'Xuyuanp/nerdtree-git-plugin'  " looks funny until Alactritty supports glyphs
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
-" Plug 'flazz/vim-colorschemes'
+Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
-" Plug 'itchyny/lightline.vim'
+Plug 'itchyny/lightline.vim'
+Plug 'jnurmine/Zenburn'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-sneak'
@@ -225,9 +222,6 @@ Plug 'mbbill/undotree'
 Plug 'morhetz/gruvbox'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'scrooloose/nerdtree'
-" Plug 'shinchu/lightline-gruvbox.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'vim-scripts/VisIncr'
 
@@ -304,30 +298,6 @@ let g:NERDTreeWinSize = 60
 let g:SimpylFold_fold_import = 1
 let g:VimuxRunnerIndex = 2
 
-" TODO: Some of these copy ignorecase and smart_case, set those instead
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case = 1
-
-" See https://github.com/clojure-vim/async-clj-omni
-let g:deoplete#keyword_patterns = {}
-let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
-
-if !exists('g:deoplete#omni#input_patterns')
-    let g:deoplete#omni#input_patterns = {}
-endif
-let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
-
-let g:deoplete#sources = {}
-" Q: What makes this so much faster than default {}?
-" TODO: Add tmux-complete if it ever works again
-let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet']
-let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'tag', 'neosnippet']
-
-" let g:deoplete#sources#jedi#show_docstring = 0
-
-let g:deoplete#sources#rust#racer_binary='/Users/jkroll/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/Users/jkroll/.multirust/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src'
-
 " What does this do again?
 let g:echodoc_enable_at_startup = 1
 
@@ -340,54 +310,30 @@ let g:neoterm_repl_ruby = 'pry'
 " Without this, rainbow won't even load in the first place
 let g:rainbow_active = 1
 
-
-" Disable Python 2 already
-let g:loaded_python_provider = 1
-
 " TODO: Check if on Linux or Mac and adjust accordingly
 " NOTE: Really it would be nice if we could use $HOME or $PYENV_ROOT here
-" let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.2/bin/python'
+let g:python_host_prog = '/Users/jkroll/.pyenv/versions/2.7.12/bin/python'
+let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.4/bin/python'
 
 let g:ranger_map_keys = 0
 
-" How come Ruby can use ~ but not python? deoplete
+" How come Ruby can use ~ but not python?
 " let g:ruby_host_prog = '~/.rbenv/versions/2.5o.0/bin/neovim-ruby-host'
 
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
 let g:solarized_term_italics = 1
-let g:solarized_termtrans = 1  " Faster, flicker-free rendering
 
 let g:tmuxcomplete#trigger = ''
 
 let g:tmuxline_powerline_separators = 0
 let g:tmuxline_preset = 'full'
-let g:tmuxline_theme = 'vim_statusline_3'
 
 let g:vimtex_fold_enabled = 1
 
 """"""""
 " Tagbar
-
-" let g:tagbar_sort = 0  " sort by order rather than name
-
-let g:tagbar_type_elixir = {
-    \ 'ctagstype' : 'elixir',
-    \ 'kinds' : [
-        \ 'f:functions',
-        \ 'functions:functions',
-        \ 'c:callbacks',
-        \ 'd:delegates',
-        \ 'e:exceptions',
-        \ 'i:implementations',
-        \ 'a:macros',
-        \ 'o:operators',
-        \ 'm:modules',
-        \ 'p:protocols',
-        \ 'r:records'
-    \ ]
-\ }
 
 let g:tagbar_type_markdown = {
     \ 'ctagstype' : 'markdown',
@@ -463,7 +409,7 @@ let g:vim_json_syntax_conceal = 0
 """ set
 
 set autoread
-set autowriteall
+set autowrite
 
 " mkdir -p ~/.config/nvim/backup ~/.config/nvim/swap ~/.config/nvim/undo
 set backupdir=~/.config/nvim/backup
@@ -483,7 +429,6 @@ set encoding=utf-8
 set expandtab
 set hidden
 set list
-set nolazyredraw
 set noshowcmd
 set noshowmode
 set previewheight=20
@@ -501,8 +446,7 @@ set undoreload=10000
 
 """"""""""""
 """ MAPPINGS
-""" Inspired by Spacemacs, but semantically vimmish
-""" HEURISTIC: <leader><key> =~ the command I use most that begins with <key> or sometimes C-w<key>
+""" Inspired by Spacemacs
 
 " Leaders
 let g:mapleader=' '
@@ -515,9 +459,9 @@ inoremap fd <Esc>
 """""
 " Vim
 
-nnoremap <leader>= <C-w>=
-nnoremap <leader>o :only<CR>
-nnoremap <leader>O :BufOnly<CR>
+" nnoremap <leader>= <C-w>=
+" nnoremap <leader>o :only<CR>
+" nnoremap <leader>O :BufOnly<CR>
 nnoremap <C-w>O :BufOnly<CR>
 
 " Q: What about <leader>a/A ? What makes sense, Abolish, Ag, Autosave(Toggle?)
@@ -540,10 +484,6 @@ nnoremap <leader>x :x<CR>
 nnoremap <leader>Z :w<CR>:Bclose<CR>
 nnoremap <leader>z :w<CR>:bd<CR>
 
-" These are often broken in terminals
-nnoremap <C-Tab> <C-w>w
-nnoremap <C-S-Tab> <C-w>W
-
 nnoremap <leader><C-w> :Windows<CR>
 
 nnoremap <C-w>* <C-w><C-s>*
@@ -555,32 +495,31 @@ inoremap <C-l> <C-o>zz
 """"""""
 " Denite
 
-" Ag for file_rec is slightly faster than rg but I should try with leading ^ possibly like for fzf?
-" call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
+" " Ag for file_rec is slightly faster than rg but I should try with leading ^ possibly like for fzf?
+" " call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+" call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
 
-" Ripgrep command on grep source (awesome!)
-call denite#custom#var('grep', 'command', ['rg'])
-call denite#custom#var('grep', 'default_opts', ['--vimgrep', '--no-heading'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
+" " Ripgrep command on grep source (awesome!)
+" call denite#custom#var('grep', 'command', ['rg'])
+" call denite#custom#var('grep', 'default_opts', ['--vimgrep', '--no-heading'])
+" call denite#custom#var('grep', 'recursive_opts', [])
+" call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
+" call denite#custom#var('grep', 'separator', ['--'])
+" call denite#custom#var('grep', 'final_opts', [])
 
-" file_mru takes some work to make it project-specific
-call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
-call denite#custom#source('file_mru', 'matchers', ['matcher_substring', 'matcher_project_files'])
+" " file_mru takes some work to make it project-specific
+" call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
+" call denite#custom#source('file_mru', 'matchers', ['matcher_substring', 'matcher_project_files'])
 
-" file_mru/all for matching all recent files
-call denite#custom#alias('source', 'file_mru/all', 'file_mru')
-call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
-call denite#custom#source('file_mru/all', 'matchers', ['matcher_substring'])
+" " file_mru/all for matching all recent files
+" call denite#custom#alias('source', 'file_mru/all', 'file_mru')
+" call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
+" call denite#custom#source('file_mru/all', 'matchers', ['matcher_substring'])
 
 " TODO: At least give Denite some readline-style keybindings similar to FZF
 
 nnoremap <leader>: :Denite command<CR>
 nnoremap <leader>" :Denite register<CR>
-nnoremap <leader>? :Denite grep<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
 nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>R :Denite file_mru<CR>
@@ -589,7 +528,7 @@ nnoremap <leader>y :Denite neoyank<CR>
 
 
 """"""""""
-" Fugitive
+" Fugitive (etc)
 "
 " Remember gitgutter's <leader>h bindings
 " nmap <Leader>hs <Plug>GitGutterStageHunk
@@ -600,9 +539,12 @@ nnoremap <leader>ht <Plug>GitGutterLineHighlightsToggle
 nnoremap [fugitive] <Nop>
 nmap <leader>g [fugitive]
 
+" TODO: Consider bringing these mappings more in alignment with oh-my-zsh aliases
+nnoremap [fugitive] :Maps<CR>^[fugitive]
+nnoremap [fugitive]? :GFiles?<CR>
+nnoremap [fugitive]B :Git branch<Space>
 nnoremap [fugitive]a :Gcommit --amend<CR>
 nnoremap [fugitive]b :Gblame<CR>
-nnoremap [fugitive]B :Git branch<Space>
 nnoremap [fugitive]c :Gcommit -v -q<CR>
 nnoremap [fugitive]d :Gdiff<CR>
 nnoremap [fugitive]e :Gedit<CR>
@@ -616,15 +558,14 @@ nnoremap [fugitive]ps :Dispatch! git push<CR>
 nnoremap [fugitive]r :Gread<CR>
 nnoremap [fugitive]s :Gstatus<CR>
 nnoremap [fugitive]t :Gcommit -v -q %<CR>
+nnoremap [fugitive]v :Gitv<CR>
 nnoremap [fugitive]w :Gwrite<CR><CR>
 nnoremap [fugitive]x :Gbrowse<CR>
-
 
 """"""
 " Misc
 
-nnoremap <leader>$ :Ranger<CR>  " C64 mnemonic
-nnoremap _ :Ranger<CR>  # Like vinegar
+nnoremap _ :Ranger<CR>  # Like - for vinegar
 
 nnoremap <leader>E :NERDTreeFind<CR>
 nnoremap <leader>e :NERDTreeToggle<CR>
@@ -632,7 +573,7 @@ nnoremap <leader>e :NERDTreeToggle<CR>
 noremap <leader>; :Commentary<CR>
 
 " Q: How to send <Esc> inside terminal?
-" tnoremap <Esc> <C-\><C-n>
+" A: tnoremap <Esc> <C-\><C-n>
 " Q: possibly ' is better for marks?
 nnoremap <leader>' :split \| terminal<CR>
 
@@ -648,26 +589,31 @@ nnoremap <leader>m :Marks<CR>
 nnoremap <leader>N :let @/ = ""<CR>
 nnoremap <leader>n :noh<CR>
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " These really belong in a Denite menu or custom FZF menu
-nnoremap <leader>sn :sp notes.md<CR>
 
-nnoremap <leader>se :sp $HOME/.zshenv<CR>
+nnoremap [split] <Nop>
+nmap <leader>s [split]
 
-nnoremap <leader>si :sp $HOME/dotfiles/init.vim<CR>
-nnoremap <leader>st :sp $HOME/dotfiles/.tmux.conf<CR>
-nnoremap <leader>sv :sp $HOME/dotfiles/init.vim<CR>
-nnoremap <leader>sz :sp $HOME/dotfiles/.zshrc<CR>
+nnoremap [split] :Maps<CR>^[split]
 
-nnoremap <leader>sd :sp $HOME/Notes/TODO.md<CR>
-nnoremap <leader>sm :sp $HOME/Notes/MACHINE-LEARNING.md<CR>
-nnoremap <leader>so :sp $HOME/Notes/ONCALL.md<CR>
-nnoremap <leader>sq :sp $HOME/Notes/QUESTIONS.md<CR>
-nnoremap <leader>sr :sp $HOME/Notes/RETRO.md<CR>
-nnoremap <leader>ss :sp $HOME/Notes/SCRUM.md<CR>
+nnoremap [split]n :sp notes.md<CR>
+
+nnoremap [split]e :sp $HOME/.zshenv<CR>
+
+nnoremap [split]a :sp $HOME/dotfiles/alacritty.yml<CR>
+nnoremap [split]i :sp $HOME/dotfiles/init.vim<CR>
+nnoremap [split]t :sp $HOME/dotfiles/.tmux.conf<CR>
+nnoremap [split]v :sp $HOME/dotfiles/init.vim<CR>
+nnoremap [split]z :sp $HOME/dotfiles/.zshrc<CR>
+
+nnoremap [split]d :sp $HOME/Notes/TODO.md<CR>
+nnoremap [split]m :sp $HOME/Notes/MACHINE-LEARNING.md<CR>
+nnoremap [split]o :sp $HOME/Notes/ONCALL.md<CR>
+nnoremap [split]q :sp $HOME/Notes/QUESTIONS.md<CR>
+nnoremap [split]r :sp $HOME/Notes/RETRO.md<CR>
+nnoremap [split]s :sp $HOME/Notes/SCRUM.md<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 
 """""
 " FZF
@@ -690,6 +636,7 @@ imap <c-x><c-b> <plug>(fzf-complete-buffer-line)
 " Advanced customization using autoload functions
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '20%'})
 
+" Ripgrep
 command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
       \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
@@ -697,9 +644,7 @@ command! -bang -nargs=* Rg
       \           : fzf#vim#with_preview('right:50%:hidden', '?'),
       \   <bang>0)
 
-" Habit from swiper
-nnoremap <C-s> :BLines<CR>
-
+" TODO: BCommits and Commits
 " Q: What should <leader>? do
 nnoremap <leader># :BLines <C-r><C-w><CR>
 nnoremap <leader>* :Rg <C-r><C-w><CR>
@@ -708,6 +653,7 @@ nnoremap <leader><BS> :History:<CR>
 nnoremap <leader><C-r> :History:<CR>
 nnoremap <leader><C-s> :History/<CR>
 nnoremap <leader><leader> :Commands<CR>
+nnoremap <leader>? :GFiles?<CR>
 nnoremap <leader>A :Ag <C-r><C-w><CR>
 nnoremap <leader>F :Filetypes<CR>
 nnoremap <leader>H :History<CR>
@@ -722,13 +668,11 @@ nnoremap <leader>k :Helptags<CR>
 nnoremap <leader>l :BLines<CR>
 nnoremap <leader>r :History<CR>
 
-" TODO: BCommits and Commits
-
-
 """""""
 " Vimux
 "
 " TODO: send region, selection, line to pane n
+" Q: Vimux has been problematic w/ IPython lately
 
 nnoremap [vimux] <Nop>
 nmap <leader>v [vimux]
@@ -737,6 +681,7 @@ vmap <leader>v [vimux]
 nnoremap [vimux]<leader> :let g:VimuxRunnerIndex=
 
 " Can I get the LastCommand pre-populated from last session?
+nnoremap [vimux] :Maps<CR>^[vimux]
 nnoremap [vimux]c :VimuxCloseRunner<CR>
 nnoremap [vimux]d :VimuxScrollDownInspect<CR>
 nnoremap [vimux]i :VimuxInspectRunner<CR>
@@ -830,11 +775,6 @@ augroup filetype_python
   autocmd CursorHold *.py :update
 augroup END
 
-" Adding mypy so we get some type checking
-" let g:neomake_python_enabled_makers = ['python', 'frosted', 'pylama', 'mypy']
-let g:neomake_python_pylama_maker = {
-      \ 'args': ['--force', '--format', 'pep8', '--ignore', 'E501']
-      \ } " run pylama on Python scripts that don't end in .py
 let g:neomake_clojure_enabled_makers = ['kibit']
 
 " Useful:
@@ -854,9 +794,20 @@ if has('termguicolors')
   set termguicolors
 end
 
-" colorscheme solarized8_light_high
+let g:lightline = {
+      \ 'colorscheme': 'solarized',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
+
 " colorscheme solarized8_dark_high
-
-colorscheme base16-ashes
-
-" TODO put back code for transparent background maybe?
+" colorscheme solarized8_light_high
+" colorscheme base16-ashes
+" colorscheme base16-atelier-dune-light
+colorscheme zenburn
+" colorscheme base16-mocha

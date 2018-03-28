@@ -2,14 +2,18 @@
 
 # TODO:
 # Consider pairing down your oh-my-zsh aliases, like do you really need them?
+#
+# aliases for s, d, e, z (well, we have z anyway but could we pipe z into fzf or something?)
+#
+# z -l args | fzf --tac # for example for example, maybe turn off fzf sorting though
 
 # oh-my-zsh
 ZSH=$HOME/.oh-my-zsh
 # ZSH_THEME="robbyrussell"
 ZSH_THEME="risto"
-ZSH_TMUX_AUTOCONNECT=false
+ZSH_TMUX_AUTOCONNECT=true
 ZSH_TMUX_AUTOQUIT=false
-ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOSTART=false
 
 # Don't rename tmux windows automatically
 DISABLE_AUTO_TITLE="true"
@@ -29,7 +33,7 @@ history
 gem
 gitfast
 git-extras
-lein
+# lein
 osx
 pip
 pylint
@@ -61,21 +65,22 @@ alias notes="cd $HOME/notes"
 alias nv="cd $HOME/third-party/neovim"
 alias prog="cd $HOME/Code/scala/progfun1"
 alias rep="cd $HOME/repos/"
-alias sp="cd $HOME/.pyenv/versions/3.6.2/lib/python3.6/site-packages/"
+alias sp="cd $HOME/.pyenv/versions/3.6.4/lib/python3.6/site-packages/"
 alias space="cd $HOME/.emacs.d"
 alias tp="cd $HOME/third-party"
 alias wk="cd $HOME/workspaces"
 
 # ### Base16
-# BASE16_SHELL=$HOME/.config/base16-shell/
+export BASE16_SHELL=$HOME/.config/base16-shell/
 # [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+export PATH="$BASE16_SHELL/scripts:$PATH"
 
 ### Gruvbox
 # source ~/.local/share/nvim/plugged/gruvbox/gruvbox_256palette.sh
 
 ### Ctags
 alias tag="ctags --exclude=@$HOME/.ignore -R -f tags"
-alias etag=tag -e
+alias etag="tag -e"
 
 ### Emacs
 if [ -n "$INSIDE_EMACS" ]
@@ -87,15 +92,12 @@ fi
 alias realias="alias | sed -E \"s/^alias ([^=]+)='(.*)'$/alias \1 \2 \$*/g; s/'\\\''/'/g;\" > ~/.emacs.d/.cache/eshell/new_alias"
 alias newrealias="alias | sed -E \"s/^(.*)='?(.*)/alias \1 \2/\" | sed -E \"s/'$//\" > ~/.emacs.d/.cache/eshell/alias"
 
+alias e="emacs -nw -Q"
+
 export GTAGSLABEL=pygments
 
 ### Exa
-# TODO: Consider just replacing l or something with exa -whatever
-
-alias l='exa -alH'
-alias e='exa -alH --git'
-# alias ea='exa -al'
-# alias el='exa -l'
+# alias e='exa -alH --git'
 
 # Git
 alias fetch_all="ls -d */ | xargs -P12 -I{} git -C {} fetch --all --prune"
@@ -143,7 +145,6 @@ alias p="pry"
 alias sbaa="sbt \~assembly"
 alias sbca="sbt clean assembly"
 alias sbcc="sbt \~compile"
-alias sbec="jenv exec sbt ensimeConfig"
 alias sbq="sbt test-quick"
 alias sbqq="sbt \~test-quick"
 alias sbs="sbt scalastyle"
@@ -158,6 +159,9 @@ compctl -g '~/.teamocil/*(:t:r)' teamocil
 
 ### z is the new j, yo
 . `brew --prefix`/etc/profile.d/z.sh
+
+# Come up with something to make this work
+# alias zf="z | fzf --tac"
 
 # NOTE: Put environment-specific things in ~/.zshenv which is unique per environment
 #       and should probably not be included at all in my dotfiles
@@ -228,17 +232,7 @@ _gen_fzf_default_opts() {
 
   # TODO: Factor out the color and/or keybinding opts
 
-  # # Solarized Dark color scheme for fzf
-  # export FZF_DEFAULT_OPTS="
-  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
-  #   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
-  #   --bind 'alt-n:next-history'
-  #   --bind 'alt-p:previous-history'
-  #   --bind 'ctrl-n:down'
-  #   --bind 'ctrl-p:up'
-  # "
-
-  # Solarized Light color scheme for fzf
+  # Solarized Dark color scheme for fzf
   export FZF_DEFAULT_OPTS="
     --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
     --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
@@ -247,6 +241,16 @@ _gen_fzf_default_opts() {
     --bind 'ctrl-n:down'
     --bind 'ctrl-p:up'
   "
+
+  # # Solarized Light color scheme for fzf
+  # export FZF_DEFAULT_OPTS="
+  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+  #   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+  #   --bind 'alt-n:next-history'
+  #   --bind 'alt-p:previous-history'
+  #   --bind 'ctrl-n:down'
+  #   --bind 'ctrl-p:up'
+  # "
 
   # # Gruvbox
   # export FZF_DEFAULT_OPTS="
