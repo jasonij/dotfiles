@@ -100,6 +100,14 @@
 " C-S-hjkl for window rezising like M-S-hjkl in XMonad / Tmux
 "
 " Probably <leader>C-t for regenerating tags, right?
+"
+" How to abbreviate paths in quickfix and location list?
+"
+" Quick binding to \"%run current file in ipython\"
+"
+" Learn :Gitv better
+"
+" Any file that is under version control should have autosave turned on
 
 """"""""
 """ Plug
@@ -202,11 +210,10 @@ Plug 'roxma/nvim-completion-manager'
 "" et al
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Konfekt/FastFold'
-Plug 'Xuyuanp/nerdtree-git-plugin'  " looks funny until Alactritty supports glyphs
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
-Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
@@ -777,11 +784,14 @@ augroup END
 
 let g:neomake_clojure_enabled_makers = ['kibit']
 
+
 " Useful:
 " import pip
 " from subprocess import call
 " for dist in pip.get_installed_distributions():
 "     call("pip install --upgrade " + dist.project_name, shell=True)
+"
+" Nowadays just use 'pip list --outdated' and roll manually
 
 
 """""""""""""""
@@ -805,9 +815,10 @@ let g:lightline = {
       \ },
       \ }
 
-" colorscheme solarized8_dark_high
-" colorscheme solarized8_light_high
 " colorscheme base16-ashes
 " colorscheme base16-atelier-dune-light
-colorscheme zenburn
 " colorscheme base16-mocha
+" colorscheme base16-tomorrow-night
+" colorscheme solarized8_dark_high
+colorscheme solarized8_light_high
+" colorscheme zenburn
