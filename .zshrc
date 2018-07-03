@@ -232,17 +232,15 @@ _gen_fzf_default_opts() {
 
   # TODO: Factor out the color and/or keybinding opts
 
-  # Solarized Dark color scheme for fzf
-  export FZF_DEFAULT_OPTS="
-    --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
-    --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
-    --bind 'alt-n:next-history'
-    --bind 'alt-p:previous-history'
-    --bind 'ctrl-n:down'
-    --bind 'ctrl-p:up'
-  "
+  # # No colors!
+  # export FZF_DEFAULT_OPTS="
+  #   --bind 'alt-n:next-history'
+  #   --bind 'alt-p:previous-history'
+  #   --bind 'ctrl-n:down'
+  #   --bind 'ctrl-p:up'
+  # "
 
-  # # Solarized Light color scheme for fzf
+  # # Solarized Dark color scheme for fzf
   # export FZF_DEFAULT_OPTS="
   #   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
   #   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
@@ -252,19 +250,21 @@ _gen_fzf_default_opts() {
   #   --bind 'ctrl-p:up'
   # "
 
+  # Solarized Light color scheme for fzf
+  export FZF_DEFAULT_OPTS="
+    --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+    --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
+    --bind 'alt-n:next-history'
+    --bind 'alt-p:previous-history'
+    --bind 'ctrl-n:down'
+    --bind 'ctrl-p:up'
+  "
+
   # # Gruvbox
   # export FZF_DEFAULT_OPTS="
   #   --color=bg+:$color01,bg:$color00,spinner:$color0C,hl:$color0D
   #   --color=fg:$color04,header:$color0D,info:$color0A,pointer:$color0C
   #   --color=marker:$color0C,fg+:$color06,prompt:$color0A,hl+:$color0D
-  #   --bind 'alt-n:next-history'
-  #   --bind 'alt-p:previous-history'
-  #   --bind 'ctrl-n:down'
-  #   --bind 'ctrl-p:up'
-  # "
-
-  # # No colors!
-  # export FZF_DEFAULT_OPTS="
   #   --bind 'alt-n:next-history'
   #   --bind 'alt-p:previous-history'
   #   --bind 'ctrl-n:down'
