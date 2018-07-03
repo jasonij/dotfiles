@@ -17,6 +17,7 @@
 .dir-local.el/
 .ensime
 .ensime_cache/
+.ipynb_checkpoints/
 .mypy_cache/
 .project
 .projectile
