@@ -13,7 +13,7 @@ env:
   # You can verify this by checking for the presence of `smso` and `sitm` in
   # `infocmp xterm-256color`.
   # TERM: screen-256color
-  TERM: xterm-256color
+  TERM: xterm-256color-italic
 
 # Window dimensions in character columns and lines
 # (changes require restart)
@@ -262,6 +262,40 @@ colors:
 #     cyan:    '0x8ec07c'
 #     white:   '0xebdbb2'
 
+
+# # Colors (Oceanic Next)
+# colors:
+#   # Default colors
+#   primary:
+#     background: '0x1b2b34'
+#     foreground: '0xD8DEE9'
+
+#   # Colors the cursor will use if `custom_cursor_colors` is true
+#   cursor:
+#     text: '0xec5f67'
+#     cursor: '0xec5f67'
+
+#   # Normal colors
+#   normal:
+#     black:   '0x343d46'
+#     red:     '0xEC5f67'
+#     green:   '0x99C794'
+#     yellow:  '0xFAC863'
+#     blue:    '0x6699cc'
+#     magenta: '0xc594c5'
+#     cyan:    '0x5fb3b3'
+#     white:   '0xd8dee9'
+
+#   # Bright colors
+#   bright:
+#     black:   '0x343d46'
+#     red:     '0xEC5f67'
+#     green:   '0x99C794'
+#     yellow:  '0xFAC863'
+#     blue:    '0x6699cc'
+#     magenta: '0xc594c5'
+#     cyan:    '0x5fb3b3'
+#     white:   '0xd8dee9'
 
 
 # Visual Bell
