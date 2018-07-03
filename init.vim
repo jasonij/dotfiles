@@ -16,7 +16,7 @@
 "
 " I would like ]C and [C to go along with ]c and [c (add to git-gutter?)
 "
-" Look into g:tmuxcomplete#capture_args and g:tmuxcomplete#list_args
+" Look into g:tmuxcomplete#capture_args and g:tmuxcomplete#list_args (do you remember why?)
 "
 " What can I do about tagging methods inside of bin/ scripts without extensions?
 "
@@ -75,10 +75,6 @@
 "
 " Consider a [file] prefix because you do a lot of different file commands
 "
-" <leader>" maybe for Registers?
-"
-" Autosave if you've got a file that isn't new
-"
 " Can I get delete-to to accept vim-sneak two-char bindings?
 "
 " Look into double-mapping CTRL to ESC when pressed alone
@@ -88,8 +84,6 @@
 " Auto open/close lw and cw
 "
 " Consider parting from leader s_ and v_ bindings because of all the split commands
-"
-" Visual selection for <leader>* et al
 "
 " Autoupdate on exit from insert mode? Maybe turn on if under vc?
 "
@@ -108,6 +102,11 @@
 " Learn :Gitv better
 "
 " Any file that is under version control should have autosave turned on
+"
+" Python mode update on exit from insert mode
+" Python consider turning off W391 blank line EOF
+"
+" Still thinking I'd like a zz hook after lots of window operations
 
 """"""""
 """ Plug
@@ -194,6 +193,16 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-vinegar'
 
+" deoplete
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+
+"" Shougo misc
 Plug 'Shougo/context_filetype.vim'
 Plug 'Shougo/denite.nvim'
 Plug 'Shougo/echodoc.vim'
@@ -205,8 +214,6 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
-Plug 'roxma/nvim-completion-manager'
-
 "" et al
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Konfekt/FastFold'
@@ -214,6 +221,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'altercation/vim-colors-solarized'
 Plug 'benekastah/neomake'
 Plug 'chriskempson/base16-vim'
+Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
@@ -226,11 +234,12 @@ Plug 'kassio/neoterm'
 Plug 'lifepillar/vim-solarized8'
 Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
+Plug 'moll/vim-bbye'
 Plug 'morhetz/gruvbox'
-Plug 'rbgrouleff/bclose.vim'
+Plug 'schickling/vim-bufonly'
 Plug 'scrooloose/nerdtree'
-Plug 'vim-scripts/BufOnly.vim'
 Plug 'vim-scripts/VisIncr'
+Plug 'zchee/deoplete-jedi'
 
 call plug#end()
 
@@ -276,7 +285,7 @@ endif
 set wildmenu
 set wildmode=list:longest
 set wildignore+=.hg/,.git/,.svn/ " Version Controls [ed: had to append /]"
-set wildignore+=*.aux,*.out,*.toc "Latex Indermediate files"
+set wildignore+=*.aux,*.out,*.toc "Latex Intermediate files"
 set wildignore+=*.jpg,*.bmp,*.gif,*.png,*.jpeg "Binary Imgs"
 set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest "Compiled Object files"
 set wildignore+=*.spl "Compiled speolling world list"
@@ -305,6 +314,15 @@ let g:NERDTreeWinSize = 60
 let g:SimpylFold_fold_import = 1
 let g:VimuxRunnerIndex = 2
 
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#jedi#server_timeout = 60
+call deoplete#custom#option({
+      \ 'auto_complete_delay': 200,
+      \ 'min_pattern_length': 2,
+      \ })
+call deoplete#custom#source('jedi', 'min_pattern_length', 3)
+call deoplete#custom#source('tag', 'min_pattern_length', 3)
+
 " What does this do again?
 let g:echodoc_enable_at_startup = 1
 
@@ -331,12 +349,15 @@ let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
 let g:solarized_term_italics = 1
+" let g:solarized_termtrans = 1
 
 let g:tmuxcomplete#trigger = ''
 
 let g:tmuxline_powerline_separators = 0
-let g:tmuxline_preset = 'full'
+let g:tmuxline_preset = 'tmux'
+let g:tmuxline_theme = 'lightline'
 
+let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_fold_enabled = 1
 
 """"""""
@@ -430,6 +451,7 @@ if executable('rg')
 endif
 
 " Some of these are likely defaults in Neovim, so let's see what we can remove
+set clipboard+=unnamedplus
 set completeopt-=preview
 set cursorline
 set encoding=utf-8
@@ -466,18 +488,18 @@ inoremap fd <Esc>
 """""
 " Vim
 
-" nnoremap <leader>= <C-w>=
-" nnoremap <leader>o :only<CR>
-" nnoremap <leader>O :BufOnly<CR>
-nnoremap <C-w>O :BufOnly<CR>
-
 " Q: What about <leader>a/A ? What makes sense, Abolish, Ag, Autosave(Toggle?)
+
+nnoremap <leader>= <C-w>=zz
+nnoremap <leader>o :only<CR>zz
+nnoremap <leader>O :BufOnly<CR>zz
+nnoremap <C-w>O :BufOnly<CR>zz
 
 nnoremap <leader>C :Colors<CR>
 nnoremap <leader>c :close<CR>
 
-nnoremap <leader>D :Bclose<CR>
-nnoremap <leader>d :bd<CR>
+nnoremap <leader>D :Bdelete<CR>
+nnoremap <leader>d :bdelete<CR>
 
 nnoremap <leader>Q :qa<CR>
 nnoremap <leader>q :q<CR>
@@ -488,15 +510,16 @@ nnoremap <leader>w :w<CR>
 nnoremap <leader>X :xa<CR>
 nnoremap <leader>x :x<CR>
 
-nnoremap <leader>Z :w<CR>:Bclose<CR>
-nnoremap <leader>z :w<CR>:bd<CR>
+nnoremap <leader>Z :update<CR>:Bdelete<CR>
+nnoremap <leader>z :update<CR>:bdelete<CR>
 
 nnoremap <leader><C-w> :Windows<CR>
 
 nnoremap <C-w>* <C-w><C-s>*
 nnoremap <C-w># <C-w><C-s>#
 
-inoremap <C-l> <C-o>zz
+" inoremap <C-l> <C-o>zz
+inoremap <C-l> <C-c>zzgi
 
 
 """"""""
@@ -514,14 +537,14 @@ inoremap <C-l> <C-o>zz
 " call denite#custom#var('grep', 'separator', ['--'])
 " call denite#custom#var('grep', 'final_opts', [])
 
-" " file_mru takes some work to make it project-specific
-" call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
-" call denite#custom#source('file_mru', 'matchers', ['matcher_substring', 'matcher_project_files'])
+" file_mru takes some work to make it project-specific
+call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
+call denite#custom#source('file_mru', 'matchers', ['matcher_substring', 'matcher_project_files'])
 
-" " file_mru/all for matching all recent files
-" call denite#custom#alias('source', 'file_mru/all', 'file_mru')
-" call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
-" call denite#custom#source('file_mru/all', 'matchers', ['matcher_substring'])
+" file_mru/all for matching all recent files
+call denite#custom#alias('source', 'file_mru/all', 'file_mru')
+call denite#custom#source('file_mru/all', 'converters', ['converter_relative_word'])
+call denite#custom#source('file_mru/all', 'matchers', ['matcher_substring'])
 
 " TODO: At least give Denite some readline-style keybindings similar to FZF
 
@@ -572,7 +595,8 @@ nnoremap [fugitive]x :Gbrowse<CR>
 """"""
 " Misc
 
-nnoremap _ :Ranger<CR>  # Like - for vinegar
+" Like - for vinegar
+nnoremap _ :Ranger<CR>
 
 nnoremap <leader>E :NERDTreeFind<CR>
 nnoremap <leader>e :NERDTreeToggle<CR>
@@ -653,6 +677,11 @@ command! -bang -nargs=* Rg
 
 " TODO: BCommits and Commits
 " Q: What should <leader>? do
+
+nnoremap <C-s> :BLines<CR>
+" nnoremap <C-s> :Denite line:forward<CR>
+" nnoremap <C-S-s> :Denite line:backward<CR>
+
 nnoremap <leader># :BLines <C-r><C-w><CR>
 nnoremap <leader>* :Rg <C-r><C-w><CR>
 nnoremap <leader>/ :Rg ^<CR>
@@ -710,8 +739,8 @@ function! VimuxLine()
   call VimuxSendKeys('Enter')
 endfunction
 
-vmap [vimux]s "vy :call VimuxSlime()<CR>
-nmap [vimux]s vip[vimux]s<CR>
+" vmap [vimux]s "vy :call VimuxSlime()<CR>
+" nmap [vimux]s vip[vimux]s<CR>
 
 
 """""""""""
@@ -784,15 +813,7 @@ augroup END
 
 let g:neomake_clojure_enabled_makers = ['kibit']
 
-
-" Useful:
-" import pip
-" from subprocess import call
-" for dist in pip.get_installed_distributions():
-"     call("pip install --upgrade " + dist.project_name, shell=True)
-"
-" Nowadays just use 'pip list --outdated' and roll manually
-
+" Useful: 'pip list --outdated'
 
 """""""""""""""
 """ colorscheme
@@ -815,10 +836,8 @@ let g:lightline = {
       \ },
       \ }
 
-" colorscheme base16-ashes
-" colorscheme base16-atelier-dune-light
-" colorscheme base16-mocha
-" colorscheme base16-tomorrow-night
+" colorscheme base16-oceanicnext
+" colorscheme Tomorrow-Night-Bright
 " colorscheme solarized8_dark_high
 colorscheme solarized8_light_high
 " colorscheme zenburn
