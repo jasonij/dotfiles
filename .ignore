@@ -5,6 +5,7 @@
 *.fdb_latexmk
 *.fls
 *.ipynb
+*.json
 *.log
 *.out
 *.p
@@ -15,8 +16,12 @@
 *.synctex.gz
 *.tsv
 
+*.gz
+
+.git
 .ipynb_checkpoints
 .mypy_cache
+build/
 coverage
 csv
 dump
