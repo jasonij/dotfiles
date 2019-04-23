@@ -2,60 +2,38 @@
 "
 " TODO:
 "
-" Get NeoMake listing next and previous to work (they aren't relative to cursor position)
 " Can I get the quickfix window to follow my cursor position (so next is relative to cursor?)
 "
-" Subvert more often! e.g., :'<,'>Subvert/categor{y,ies}/tag{,s}/g
+" Subvert more often! e.g., :'<,'>S/categor{y,ies}/tag{,s}/g
 "
 " Make use of marks! ''
 "
-" Shortcut Copy current filename into system clipboard (it's already in register %)
-" A: There should be a command string \"%p will paste it, but copy register to clipboard?
-"
-" Change wildignore based on project type
-"
-" I would like ]C and [C to go along with ]c and [c (add to git-gutter?)
-"
-" Look into g:tmuxcomplete#capture_args and g:tmuxcomplete#list_args (do you remember why?)
+" ]C and [C to go along with ]c and [c (add to git-gutter?)
 "
 " What can I do about tagging methods inside of bin/ scripts without extensions?
 "
-" Make sure we make this Neovim and Vim8 compatible
+" Make this Neovim and Vim8 compatible
 "
-" Q: Can I highlight the lines that changed in the last commit (or change to file) without seeing a diff?
-" A: let g:gitgutter_diff_base = '<commit SHA>' ???
-"
-" Can I get auto-center on jumps, like zz after any jump?
-" Consider insert-mode C-l to toggle zz zt zb
+" Possibly add non-plugin alternatives like <leader>b => :ls<cr>:
 "
 " vip and %cpaste on like M-ret or S-ret or C-ret or something like that
 "
 " Try to get :History to start populated with the current project's directory
 "
-" I'd like ]* and [* and possibly ]# and [# for last and first search matches
+" ]* and [* and possibly ]# and [# for last and first search matches
 "
-" How can I get C-r C-w working in Terminal? Very useful for FZF et al
+" Get C-r C-w working in Terminal? Very useful for FZF et al
 "
-" I'd like to get the filename for grepping without the path attached (see who includes it)
+" Get the filename for grepping without the path attached (see who includes it)
 "
-" ]e and [e don't work with visual selection or repeats
-"
-" C-s like Swiper (haha, yeah right)
 " Readline C-s and C-r are incredibly useful! Can we port something analogous?
 " I'd really like FZF line to include cursor position (like Swiper)
-" M-< and M-> for FZF (and possibly M-, and M-.)
 "
-" I really want a list of files touched in the last n commits
+" List of files touched in the last n commits
 "
-" I need bindings for :cw and :lw because I type them sooo often
-"
-" Q: What's the command for 'last-buffer-visited' ?
-" A: b# (because # is last buffer visited)
+" Bindings for :cw and :lw because I type them sooo often
 "
 " fzf-vim docs have typo line 125 the spaces are non-standard so copy paste fails
-"
-" Do you want to set auto update for git files rather than .py files? Or just have a toggle?
-" Possibly <leader>a/A for autosave toggling?
 "
 " Can I gq with textwidth 79 even when default is textwidth 99?
 "
@@ -67,11 +45,7 @@
 "
 " I need a way to grab by previous c-r c-w when I'm in terminal
 "
-" Toggle for transparent background?
-"
 " Glob ~/.ignore into wildignore?
-"
-" Actually could I get Tagbar to open splitting my current window instead of far right?
 "
 " Consider a [file] prefix because you do a lot of different file commands
 "
@@ -81,32 +55,74 @@
 "
 " Maybe <leader>$ for finding a file with the given cursorword or something?
 "
-" Auto open/close lw and cw
-"
 " Consider parting from leader s_ and v_ bindings because of all the split commands
-"
-" Autoupdate on exit from insert mode? Maybe turn on if under vc?
-"
-" Tmux status indicators could be orthogonal option
 "
 " Because of so many huge data files in my directories, I need Rg for git-only
 "
 " C-S-hjkl for window rezising like M-S-hjkl in XMonad / Tmux
 "
-" Probably <leader>C-t for regenerating tags, right?
-"
-" How to abbreviate paths in quickfix and location list?
+" Abbreviate paths in quickfix and location list?
 "
 " Quick binding to \"%run current file in ipython\"
 "
 " Learn :Gitv better
 "
-" Any file that is under version control should have autosave turned on
-"
-" Python mode update on exit from insert mode
 " Python consider turning off W391 blank line EOF
 "
-" Still thinking I'd like a zz hook after lots of window operations
+" Yes, we really need a toggle-able autosave because holy cow it's tedious to save manually
+" - just add the status to the lightline or whatever and you'll remember
+"
+" assert np.abs(-2**63) == 2 ** 63
+"
+" Seriously after C-] I want to center things with zz
+"
+" Consider only using jedi completion when given . (as is typical with other completions)
+"
+" Maybe have <leader>w 2-key bindings and use <leader>u for update
+"
+" VimuxPrompt %run C-r % <CR> key binding in Python (maybe ,s or ,f or something)
+"
+" In text mode, maybe do the funny line thing with hjkl
+"
+" Try not to have to lean on <leader>n so often, maybe automate and repurpose
+"
+" Get FZF to accept C-g as C-c because you know it's a habit
+"
+" Consider <leader>] and/or <leader>} or something for tags
+"
+" alias s to open nvim with :Gstatus but that seems to be complicated
+"
+" You don't use fasd but something similar from within vim
+" call fzf#run(fzf#wrap({'source': 'fasd -d -R', 'sink': { line -> execute('cd '.split(line)[-1]) }}))
+"
+" More autosave! Stop hitting <leader>u incessantly
+" Try :update on exit from insert mode when in git repo or something similar
+"
+" tagbar sort by location at least for .md files?
+"
+" C-k in insert mode ought to work
+"
+" Autopairs seems good, also look into UltiSnips
+"
+" Open modified files into quickfix or location window
+"
+" <leader>i for 'inside', basically TagBar or something analogous
+"
+" Drop a for Ag (just use Rg) and let it toggle two strengths of autosave
+"
+" Add autosave to status line or is it awfully evident?
+"
+" Can I get paste detection to restepce my authoritmux?
+"
+" execute '%!python -m json.tool' | w
+"
+" Shortcuts for files to certain directories
+"
+" Denite the changelist?
+"
+" Resolve the dbext leader issues (why did it takeover my leader keybindings?)
+"
+" Try something like extension-specific grepping or something
 
 """"""""
 """ Plug
@@ -116,19 +132,19 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " About 80 plugins, that's probably too many (right Spacemacs?)
 
-" C (C++ is just horrid, but sometimes you have to read it)
+" C (C++, like JavaScript, has some good parts, but you have to restrict yourself)
 Plug 'justmao945/vim-clang'
 
-" Clojure / LISPs
-Plug 'clojure-vim/async-clj-omni', { 'for': 'clojure' }
-Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
-Plug 'guns/vim-sexp'
+" Clojure / LISPs -- sorry not doing too much right now
+" Plug 'clojure-vim/async-clj-omni', { 'for': 'clojure' }
+" Plug 'guns/vim-clojure-highlight', { 'for': 'clojure' }
+" Plug 'guns/vim-sexp'
 Plug 'luochen1990/rainbow'
-Plug 'snoe/clj-refactor.nvim', { 'for': 'clojure' }
-Plug 'tpope/vim-classpath', { 'for': 'clojue' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-Plug 'tpope/vim-salve', { 'for': 'clojure' }
-Plug 'tpope/vim-sexp-mappings-for-regular-people'
+" Plug 'snoe/clj-refactor.nvim', { 'for': 'clojure' }
+" Plug 'tpope/vim-classpath', { 'for': 'clojue' }
+" Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+" Plug 'tpope/vim-salve', { 'for': 'clojure' }
+" Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Data Formats
 Plug 'cespare/vim-toml'
@@ -142,6 +158,9 @@ Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv'
 Plug 'tpope/vim-fugitive'
 
+" Java (NOOOOO!)
+Plug 'artur-shaik/vim-javacomplete2'
+
 " Julia
 Plug 'JuliaLang/julia-vim'  " this is borked if you try { 'for': 'julia' }
 
@@ -150,7 +169,9 @@ Plug 'lervag/vimtex'  " put `$pdflatex = 'xelatex --shell-escape %O %S';` in ~/.
 
 " Python
 Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
+Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
+Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 
 " R
 Plug 'jalvesaq/Nvim-R', { 'for': 'r'}
@@ -182,7 +203,6 @@ Plug 'tmux-plugins/vim-tmux'
 "" tpope misc
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-dadbod'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
@@ -202,13 +222,16 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
-"" Shougo misc
+" recommended for deoplete
 Plug 'Shougo/context_filetype.vim'
-Plug 'Shougo/denite.nvim'
+Plug 'Shougo/neopairs.vim'
 Plug 'Shougo/echodoc.vim'
 Plug 'Shougo/neoinclude.vim'
+Plug 'Konfekt/FastFold'
+
+"" Shougo misc
+Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neomru.vim'
-Plug 'Shougo/neopairs.vim'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoyank.vim'
@@ -216,12 +239,11 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 "" et al
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'Konfekt/FastFold'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'altercation/vim-colors-solarized'
-Plug 'benekastah/neomake'
+Plug 'arcticicestudio/nord-vim'
 Plug 'chriskempson/base16-vim'
-Plug 'flazz/vim-colorschemes'
+" Plug 'flazz/vim-colorschemes'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
@@ -229,6 +251,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'jnurmine/Zenburn'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-peekaboo'
 Plug 'justinmk/vim-sneak'
 Plug 'kassio/neoterm'
 Plug 'lifepillar/vim-solarized8'
@@ -236,10 +259,13 @@ Plug 'majutsushi/tagbar'
 Plug 'mbbill/undotree'
 Plug 'moll/vim-bbye'
 Plug 'morhetz/gruvbox'
+Plug 'neomake/neomake'
 Plug 'schickling/vim-bufonly'
 Plug 'scrooloose/nerdtree'
+Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'vim-scripts/VisIncr'
-Plug 'zchee/deoplete-jedi'
+Plug 'vim-scripts/Wombat'
+Plug 'vim-scripts/dbext.vim'
 
 call plug#end()
 
@@ -247,9 +273,10 @@ call plug#end()
 """""""""
 """ Calls
 
-" Neomake  (100 ms is short, don't use this on laptop battery power)
-call neomake#configure#automake('nw', 100)
+" Neomake  (200 ms is short, don't use this on laptop battery power)
+call neomake#configure#automake('nw', 200)
 let g:neomake_logfile = '/tmp/neomake.log'
+let g:neomake_virtualtext_current_error = 0  " inline is awful
 
 
 """"""""""""""""""
@@ -262,9 +289,9 @@ let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#snippets_directory='~/.config/nvim/bundle/vim-snippets/snippets'
 
 " Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
@@ -307,30 +334,73 @@ set wildignore+=.mypy_cache/
 " always something
 set wildignore+=*.egg-info/
 
+" builds
+" set wildignore+=*/build/*
+
 """""""
 """ let
 
+" For some reason, NERDTreeRespectWildIgnore is not exactly working
+let g:NERDTreeIgnore=['build$']
+let g:NERDTreeRespectWildIgnore = 1
 let g:NERDTreeWinSize = 60
+
 let g:SimpylFold_fold_import = 1
+
 let g:VimuxRunnerIndex = 2
 
+" Use deoplete.
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#jedi#server_timeout = 60
+
+" set equal to num_sources
 call deoplete#custom#option({
-      \ 'auto_complete_delay': 200,
-      \ 'min_pattern_length': 2,
+      \ 'min_pattern_length': 3,
+      \ 'num_processes': -1,
+      \ 'smart_case': v:true
       \ })
-call deoplete#custom#source('jedi', 'min_pattern_length', 3)
-call deoplete#custom#source('tag', 'min_pattern_length', 3)
+
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
+
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function() abort
+  return deoplete#close_popup() . "\<CR>"
+endfunction
+
+" Q: What makes this so much faster than default {}?
+let g:deoplete#sources = {}
+let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet']
+let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'neosnippet', 'tag']
+
+let g:deoplete#sources#jedi#enable_typeinfo = 1
+let g:deoplete#sources#jedi#server_timeout = 60
 
 " What does this do again?
 let g:echodoc_enable_at_startup = 1
 
+" Gruvbox
 let g:gruvbox_italic = 1
-let g:gruvbox_contrast_dark = 'medium'
-let g:gruvbox_contrast_light = 'medium'
+
+let g:jedi#auto_close_doc = 1
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#completions_enabled = 0
+let g:jedi#goto_command = '<localleader>d'
+let g:jedi#goto_assignments_command = '<localleader>g'
+let g:jedi#documentation_command = 'K'
+let g:jedi#usages_command = '<localleader>n'
+let g:jedi#completions_command = '<C-Space>'
+let g:jedi#rename_command = '<localleader>r'
+
+" Open lw automatically
+" let g:neomake_open_list = 2
 
 let g:neoterm_repl_ruby = 'pry'
+
+let g:nord_italic = 1
+let g:nord_underline = 1
+let g:nord_italic_comments = 1
 
 " Without this, rainbow won't even load in the first place
 let g:rainbow_active = 1
@@ -340,16 +410,13 @@ let g:rainbow_active = 1
 let g:python_host_prog = '/Users/jkroll/.pyenv/versions/2.7.12/bin/python'
 let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.4/bin/python'
 
-let g:ranger_map_keys = 0
+let g:pymode_rope = 0
 
-" How come Ruby can use ~ but not python?
-" let g:ruby_host_prog = '~/.rbenv/versions/2.5o.0/bin/neovim-ruby-host'
+let g:ranger_map_keys = 0
 
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
-let g:solarized_term_italics = 1
-" let g:solarized_termtrans = 1
 
 let g:tmuxcomplete#trigger = ''
 
@@ -364,13 +431,25 @@ let g:vimtex_fold_enabled = 1
 " Tagbar
 
 let g:tagbar_type_markdown = {
-    \ 'ctagstype' : 'markdown',
-    \ 'kinds' : [
-        \ 'h:Heading_L1',
-        \ 'i:Heading_L2',
-        \ 'k:Heading_L3'
-    \ ]
+      \ 'ctagstype' : 'markdown',
+      \ 'kinds' : [
+          \ 'h:headings',
+          \ 'l:links',
+          \ 'i:images'
+      \ ],
+      \ 'sort' : 0
 \ }
+
+" let g:tagbar_type_markdown = {
+"     \ 'ctagstype' : 'markdown',
+"     \ 'kinds' : [
+"         \ 'h:Heading_L1',
+"         \ 'i:Heading_L2',
+"         \ 'k:Heading_L3'
+"     \ ]
+" \ }
+
+
 
 let g:tagbar_type_r = {
     \ 'ctagstype' : 'r',
@@ -380,20 +459,6 @@ let g:tagbar_type_r = {
         \ 'v:FunctionVariables',
     \ ]
 \ }
-
-let g:tagbar_type_rust = {
-    \ 'ctagstype' : 'rust',
-    \ 'kinds' : [
-        \'T:types,type definitions',
-        \'f:functions,function definitions',
-        \'g:enum,enumeration names',
-        \'s:structure names',
-        \'m:modules,module names',
-        \'c:consts,static constants',
-        \'t:traits',
-        \'i:impls,trait implementations',
-    \]
-\}
 
 " not sure 'name' ever happens, what about & labels?
 let g:tagbar_type_yaml = {
@@ -406,7 +471,9 @@ let g:tagbar_type_yaml = {
 
 let g:undotree_SplitWidth = 40
 
+" Fix vim-markdown
 let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0  " conceal code is so awful
 let g:vim_markdown_folding_style_pythonic = 1
 
 """""""
@@ -436,7 +503,6 @@ let g:vim_json_syntax_conceal = 0
 """""""
 """ set
 
-set autoread
 set autowrite
 
 " mkdir -p ~/.config/nvim/backup ~/.config/nvim/swap ~/.config/nvim/undo
@@ -460,7 +526,9 @@ set hidden
 set list
 set noshowcmd
 set noshowmode
+set number
 set previewheight=20
+set relativenumber
 set shell=zsh
 set shiftwidth=2
 set shortmess+=c
@@ -481,19 +549,17 @@ set undoreload=10000
 let g:mapleader=' '
 let g:maplocalleader=','
 
-" Escape a la Spacemacs
+" Escape a la Spacemacs, hope you aren't working on file descriptors
 inoremap fd <Esc>
-
 
 """""
 " Vim
 
-" Q: What about <leader>a/A ? What makes sense, Abolish, Ag, Autosave(Toggle?)
-
 nnoremap <leader>= <C-w>=zz
-nnoremap <leader>o :only<CR>zz
-nnoremap <leader>O :BufOnly<CR>zz
+
 nnoremap <C-w>O :BufOnly<CR>zz
+nnoremap <leader>O :BufOnly<CR>zz
+nnoremap <leader>o :only<CR>zz
 
 nnoremap <leader>C :Colors<CR>
 nnoremap <leader>c :close<CR>
@@ -518,24 +584,19 @@ nnoremap <leader><C-w> :Windows<CR>
 nnoremap <C-w>* <C-w><C-s>*
 nnoremap <C-w># <C-w><C-s>#
 
-" inoremap <C-l> <C-o>zz
+" Allow C-l like in Emacs while in insert mode
+" TODO: add the other useful bindings that aren't in rsi.vim
 inoremap <C-l> <C-c>zzgi
+
+
+""""""""""
+" AutoSave
+
+nnoremap <leader>a :AutoSaveToggle<CR>
 
 
 """"""""
 " Denite
-
-" " Ag for file_rec is slightly faster than rg but I should try with leading ^ possibly like for fzf?
-" " call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-" call denite#custom#var('file_rec', 'command', ['rg', '--files', '--glob', '!.git'])
-
-" " Ripgrep command on grep source (awesome!)
-" call denite#custom#var('grep', 'command', ['rg'])
-" call denite#custom#var('grep', 'default_opts', ['--vimgrep', '--no-heading'])
-" call denite#custom#var('grep', 'recursive_opts', [])
-" call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-" call denite#custom#var('grep', 'separator', ['--'])
-" call denite#custom#var('grep', 'final_opts', [])
 
 " file_mru takes some work to make it project-specific
 call denite#custom#source('file_mru', 'converters', ['converter_relative_word'])
@@ -548,13 +609,12 @@ call denite#custom#source('file_mru/all', 'matchers', ['matcher_substring'])
 
 " TODO: At least give Denite some readline-style keybindings similar to FZF
 
+" Denite is slower but can do things FZF can't
 nnoremap <leader>: :Denite command<CR>
 nnoremap <leader>" :Denite register<CR>
 nnoremap <leader>B :Denite buffer:!<CR>
 nnoremap <leader>K :DeniteCursorWord help<CR>
 nnoremap <leader>R :Denite file_mru<CR>
-nnoremap <leader>Y :DeniteCursorWord neoyank<CR>
-nnoremap <leader>y :Denite neoyank<CR>
 
 
 """"""""""
@@ -564,6 +624,8 @@ nnoremap <leader>y :Denite neoyank<CR>
 " nmap <Leader>hs <Plug>GitGutterStageHunk
 " nmap <Leader>hu <Plug>GitGutterUndoHunk
 " nmap <Leader>hp <Plug>GitGutterPreviewHunk
+
+" This sometimes helps to refresh if stuch but hasn't worked in recently
 nnoremap <leader>ht <Plug>GitGutterLineHighlightsToggle
 
 nnoremap [fugitive] <Nop>
@@ -573,11 +635,17 @@ nmap <leader>g [fugitive]
 nnoremap [fugitive] :Maps<CR>^[fugitive]
 nnoremap [fugitive]? :GFiles?<CR>
 nnoremap [fugitive]B :Git branch<Space>
-nnoremap [fugitive]a :Gcommit --amend<CR>
+nnoremap [fugitive]a :Gcommit --amend -v<CR>
 nnoremap [fugitive]b :Gblame<CR>
-nnoremap [fugitive]c :Gcommit -v -q<CR>
+
+" You can commit from Gstatus, best to check there first
+" nnoremap [fugitive]c :Gcommit -v<CR>
+nnoremap [fugitive]c :BCommits<CR>
+nnoremap [fugitive]C :Commits<CR>
+
 nnoremap [fugitive]d :Gdiff<CR>
 nnoremap [fugitive]e :Gedit<CR>
+nnoremap [fugitive]f :GFiles<CR>
 nnoremap [fugitive]g :copen<CR>:Ggrep 
 nnoremap [fugitive]l :silent! Glog<CR>
 nnoremap [fugitive]m :Gmove<Space>
@@ -587,7 +655,7 @@ nnoremap [fugitive]pl :Dispatch! git pull<CR>
 nnoremap [fugitive]ps :Dispatch! git push<CR>
 nnoremap [fugitive]r :Gread<CR>
 nnoremap [fugitive]s :Gstatus<CR>
-nnoremap [fugitive]t :Gcommit -v -q %<CR>
+nnoremap [fugitive]t :Gcommit -v %<CR>
 nnoremap [fugitive]v :Gitv<CR>
 nnoremap [fugitive]w :Gwrite<CR><CR>
 nnoremap [fugitive]x :Gbrowse<CR>
@@ -595,21 +663,20 @@ nnoremap [fugitive]x :Gbrowse<CR>
 """"""
 " Misc
 
-" Like - for vinegar
+" - is for vinegar
 nnoremap _ :Ranger<CR>
-
-nnoremap <leader>E :NERDTreeFind<CR>
+nnoremap <leader>- :NERDTreeToggle<CR>
+nnoremap <leader>_ :NERDTreeFind<CR>
 nnoremap <leader>e :NERDTreeToggle<CR>
+nnoremap <leader>E :NERDTreeFind<CR>
 
 noremap <leader>; :Commentary<CR>
 
 " Q: How to send <Esc> inside terminal?
 " A: tnoremap <Esc> <C-\><C-n>
-" Q: possibly ' is better for marks?
-nnoremap <leader>' :split \| terminal<CR>
 
-nnoremap <leader>T :call jobstart("ctags --exclude=@$HOME/.ignore -R -f tags &")<CR>
-nnoremap <leader>t :TagbarToggle<CR>
+" ' is better for marks in vim
+nnoremap <leader>' :Marks<CR>
 
 nnoremap <leader>U :UndotreeToggle<CR>
 nnoremap <leader>u :update<CR>
@@ -626,7 +693,7 @@ nnoremap <leader>n :noh<CR>
 nnoremap [split] <Nop>
 nmap <leader>s [split]
 
-nnoremap [split] :Maps<CR>^[split]
+nnoremap [split] :Maps<CR>^[split] 
 
 nnoremap [split]n :sp notes.md<CR>
 
@@ -667,39 +734,66 @@ imap <c-x><c-b> <plug>(fzf-complete-buffer-line)
 " Advanced customization using autoload functions
 inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '20%'})
 
-" Ripgrep
-command! -bang -nargs=* Rg
-      \ call fzf#vim#grep(
-      \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
-      \   <bang>0 ? fzf#vim#with_preview('up:60%')
-      \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-      \   <bang>0)
+" " FZF Yanks, requires svermeulen/vim-easyclip
+" function! s:yank_list()
+"   redir => l:ys
+"   silent Yanks
+"   redir END
+"   return split(l:ys, '\n')[1:]
+" endfunction
+
+" function! s:yank_handler(reg)
+"   if empty(a:reg)
+"     echo 'aborted register paste'
+"   else
+"     let l:token = split(a:reg, ' ')
+"     execute 'Paste' . l:token[0]
+"   endif
+" endfunction
+
+" command! FZFYank call fzf#run({
+"       \ 'source': <sid>yank_list(),
+"       \ 'sink': function('<sid>yank_handler'),
+"       \ 'options': '-m',
+"       \ 'down': 12
+"       \ })
+
+nnoremap <leader>y :Denite neoyank<CR>
+nnoremap <leader>Y :DeniteCursorWord neoyank<CR>
 
 " TODO: BCommits and Commits
 " Q: What should <leader>? do
 
 nnoremap <C-s> :BLines<CR>
-" nnoremap <C-s> :Denite line:forward<CR>
-" nnoremap <C-S-s> :Denite line:backward<CR>
 
 nnoremap <leader># :BLines <C-r><C-w><CR>
 nnoremap <leader>* :Rg <C-r><C-w><CR>
-nnoremap <leader>/ :Rg ^<CR>
+" nnoremap <leader>/ :Rg ^<CR>
+nnoremap <leader>/ :execute 'Rg ' . input('Rg/')<CR>
+
+" I'm not too sure about these
 nnoremap <leader><BS> :History:<CR>
 nnoremap <leader><C-r> :History:<CR>
 nnoremap <leader><C-s> :History/<CR>
+
 nnoremap <leader><leader> :Commands<CR>
+
 nnoremap <leader>? :GFiles?<CR>
-nnoremap <leader>A :Ag <C-r><C-w><CR>
+
 nnoremap <leader>F :Filetypes<CR>
 nnoremap <leader>H :History<CR>
-nnoremap <leader>J :Tags<CR>
 nnoremap <leader>L :Lines<CR>
-nnoremap <leader>a :Ag<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>f :Files<CR>
-nnoremap <leader>gf :GFiles<CR>
+
+" Tags
+nnoremap <leader><C-t> :call jobstart("ctags -R -f tags &")<CR>
+nnoremap <leader>J :Tags<CR>
 nnoremap <leader>j :BTags<CR>
+nnoremap <leader>T :Tags<CR>
+nnoremap <leader>t :TagbarToggle<CR>
+nnoremap <leader>] :Tags <C-r><C-w><CR>
+
 nnoremap <leader>k :Helptags<CR>
 nnoremap <leader>l :BLines<CR>
 nnoremap <leader>r :History<CR>
@@ -717,7 +811,7 @@ vmap <leader>v [vimux]
 nnoremap [vimux]<leader> :let g:VimuxRunnerIndex=
 
 " Can I get the LastCommand pre-populated from last session?
-nnoremap [vimux] :Maps<CR>^[vimux]
+nnoremap [vimux] :Maps<CR>^[vimux] 
 nnoremap [vimux]c :VimuxCloseRunner<CR>
 nnoremap [vimux]d :VimuxScrollDownInspect<CR>
 nnoremap [vimux]i :VimuxInspectRunner<CR>
@@ -745,6 +839,9 @@ endfunction
 
 """""""""""
 """ autocmd
+
+" .md is more often markdown than modula-2
+au BufNewFile,BufReadPost *.md set filetype=markdown
 
 augroup event_cursorhold
   autocmd!
@@ -807,8 +904,10 @@ augroup filetype_python
   autocmd!
   autocmd FileType python nnoremap <buffer> <CR> :call VimuxLine()<CR><CR>
   autocmd FileType python setlocal nofoldenable
-  autocmd FocusLost *.py :update
+  autocmd CmdlineEnter *.py update
+  autocmd CmdlineLeave *.py update
   autocmd CursorHold *.py :update
+  autocmd FocusLost *.py :update
 augroup END
 
 let g:neomake_clojure_enabled_makers = ['kibit']
@@ -818,7 +917,7 @@ let g:neomake_clojure_enabled_makers = ['kibit']
 """""""""""""""
 """ colorscheme
 
-" true colors evidently
+" true colors inside tmux evidently
 if has('termguicolors')
   execute "set t_8f=\e[38;2;%lu;%lu;%lum"
   execute "set t_8b=\e[48;2;%lu;%lu;%lum"
@@ -836,8 +935,18 @@ let g:lightline = {
       \ },
       \ }
 
-" colorscheme base16-oceanicnext
-" colorscheme Tomorrow-Night-Bright
-" colorscheme solarized8_dark_high
-colorscheme solarized8_light_high
+" solarized8
+let g:solarized_term_italics = 1
+" let g:solarized_termtrans = 1  " faster scrolling
+" let g:solarized_diffmode = 'high'
+" high visibility is broken for solarized light
+" let g:solarized_visibility = 'high'
+
+set background=light
+" colorscheme nord
+" colorscheme gruvbox
+colorscheme solarized8
 " colorscheme zenburn
+
+" Transparent background for faster scrolling
+" hi! Normal guibg=NONE
