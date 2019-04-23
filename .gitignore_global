@@ -1,8 +1,10 @@
+*.DS_Store
 *.aux
 *.egg-info/
 *.fdb_latexmk
 *.fls
 *.log
+*.iml
 *.md
 *.out
 *.p
@@ -17,6 +19,7 @@
 .dir-local.el/
 .ensime
 .ensime_cache/
+.idea/
 .ipynb_checkpoints/
 .mypy_cache/
 .project
@@ -26,6 +29,8 @@
 
 __pycache__/
 
+build
+null/
 target/
 target/sbt-ctags-dep-srcs/
 
@@ -39,3 +44,5 @@ notes.*
 coverage/
 karma/coverage-reports/
 karma-test/
+
+*BigBirdGACBuildVersion.java
