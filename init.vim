@@ -123,6 +123,8 @@
 " Resolve the dbext leader issues (why did it takeover my leader keybindings?)
 "
 " Try something like extension-specific grepping or something
+"
+" I want something like <leader>g/ like <leader>gg for ripgrep on VC files
 
 """"""""
 """ Plug
@@ -195,6 +197,7 @@ Plug 'tmux-plugins/vim-tmux'
 " BUG: Tmux-complete overwrites the tmux copy paste buffer with a full-pane text grab
 " REPRO: Copy something reasonable into tmux buffer, paste it in vim, then trigger tmux-complete,
 " and now try pasting from the tmux buffer.
+
 " Q: Am I the only person on this planet with this problem?
 " Plug 'wellle/tmux-complete.vim'
 
@@ -239,8 +242,8 @@ Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 "" et al
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'ChrisKempson/Tomorrow-Theme'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'altercation/vim-colors-solarized'
 Plug 'arcticicestudio/nord-vim'
 Plug 'chriskempson/base16-vim'
 " Plug 'flazz/vim-colorschemes'
@@ -524,6 +527,7 @@ set encoding=utf-8
 set expandtab
 set hidden
 set list
+set nomodeline  " gaping security hole
 set noshowcmd
 set noshowmode
 set number
@@ -925,7 +929,7 @@ if has('termguicolors')
 end
 
 let g:lightline = {
-      \ 'colorscheme': 'solarized',
+      \ 'colorscheme': 'Tomorrow_Night',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
@@ -942,10 +946,13 @@ let g:solarized_term_italics = 1
 " high visibility is broken for solarized light
 " let g:solarized_visibility = 'high'
 
-set background=light
+set background=dark
+colorscheme base16-bright
+" colorscheme base16-tomorrow-night
+" colorscheme base16-atelier-dune-light
 " colorscheme nord
 " colorscheme gruvbox
-colorscheme solarized8
+" colorscheme solarized8
 " colorscheme zenburn
 
 " Transparent background for faster scrolling

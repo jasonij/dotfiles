@@ -198,23 +198,23 @@ _gen_fzf_default_opts() {
   #   --bind 'ctrl-p:up'
   # "
 
-  # Solarized Dark color scheme for fzf
-  export FZF_DEFAULT_OPTS="
-    --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
-    --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
-    --bind 'alt-n:next-history'
-    --bind 'alt-p:previous-history'
-    --bind 'ctrl-n:down'
-    --bind 'ctrl-p:up'
-  "
-
-  # No colors!
+  # # Solarized Dark color scheme for fzf
   # export FZF_DEFAULT_OPTS="
+  #   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+  #   --color info:$yellow,prompt:$yellow,pointer:$base03,marker:$base03,spinner:$yellow
   #   --bind 'alt-n:next-history'
   #   --bind 'alt-p:previous-history'
   #   --bind 'ctrl-n:down'
   #   --bind 'ctrl-p:up'
   # "
+
+  # No colors!
+  export FZF_DEFAULT_OPTS="
+    --bind 'alt-n:next-history'
+    --bind 'alt-p:previous-history'
+    --bind 'ctrl-n:down'
+    --bind 'ctrl-p:up'
+  "
 
   # use ripgrep
   # export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,build,node_modules}/*" 2> /dev/null'
