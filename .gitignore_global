@@ -4,6 +4,7 @@
 *.fdb_latexmk
 *.fls
 *.log
+*.idea/
 *.iml
 *.md
 *.out
@@ -46,3 +47,6 @@ karma/coverage-reports/
 karma-test/
 
 *BigBirdGACBuildVersion.java
+
+eclipse-bin/
+out/

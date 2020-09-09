@@ -2,6 +2,8 @@
 "
 " TODO:
 "
+" Fugitive commit should have -v verbose flag passed right?
+"
 " Can I get the quickfix window to follow my cursor position (so next is relative to cursor?)
 "
 " Subvert more often! e.g., :'<,'>S/categor{y,ies}/tag{,s}/g
@@ -134,7 +136,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 " About 80 plugins, that's probably too many (right Spacemacs?)
 
-" C (C++, like JavaScript, has some good parts, but you have to restrict yourself)
+" C/C++
 Plug 'justmao945/vim-clang'
 
 " Clojure / LISPs -- sorry not doing too much right now
@@ -160,14 +162,12 @@ Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv'
 Plug 'tpope/vim-fugitive'
 
-" Java (NOOOOO!)
-Plug 'artur-shaik/vim-javacomplete2'
-
 " Julia
 Plug 'JuliaLang/julia-vim'  " this is borked if you try { 'for': 'julia' }
 
 " LaTeX
 Plug 'lervag/vimtex'  " put `$pdflatex = 'xelatex --shell-escape %O %S';` in ~/.latexmkrc
+let g:tex_flavor = 'latex'
 
 " Python
 Plug 'Vimjas/vim-python-pep8-indent', { 'for': 'python' }
@@ -254,7 +254,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'jnurmine/Zenburn'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-peekaboo'
+" Plug 'junegunn/vim-peekaboo'  " this changes --param to +-param on vip"+y
 Plug 'justinmk/vim-sneak'
 Plug 'kassio/neoterm'
 Plug 'lifepillar/vim-solarized8'
@@ -355,13 +355,6 @@ let g:VimuxRunnerIndex = 2
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 
-" set equal to num_sources
-call deoplete#custom#option({
-      \ 'min_pattern_length': 3,
-      \ 'num_processes': -1,
-      \ 'smart_case': v:true
-      \ })
-
 " <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> deoplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS>  deoplete#smart_close_popup()."\<C-h>"
@@ -372,19 +365,11 @@ function! s:my_cr_function() abort
   return deoplete#close_popup() . "\<CR>"
 endfunction
 
-" Q: What makes this so much faster than default {}?
-let g:deoplete#sources = {}
-let g:deoplete#sources._ = ['around', 'buffer', 'dictionary', 'file', 'member', 'tag', 'neosnippet']
-let g:deoplete#sources.python = ['buffer', 'file', 'member', 'jedi', 'neosnippet', 'tag']
-
 let g:deoplete#sources#jedi#enable_typeinfo = 1
 let g:deoplete#sources#jedi#server_timeout = 60
 
 " What does this do again?
 let g:echodoc_enable_at_startup = 1
-
-" Gruvbox
-let g:gruvbox_italic = 1
 
 let g:jedi#auto_close_doc = 1
 let g:jedi#auto_vim_configuration = 0
@@ -396,22 +381,14 @@ let g:jedi#usages_command = '<localleader>n'
 let g:jedi#completions_command = '<C-Space>'
 let g:jedi#rename_command = '<localleader>r'
 
-" Open lw automatically
-" let g:neomake_open_list = 2
-
 let g:neoterm_repl_ruby = 'pry'
-
-let g:nord_italic = 1
-let g:nord_underline = 1
-let g:nord_italic_comments = 1
 
 " Without this, rainbow won't even load in the first place
 let g:rainbow_active = 1
 
 " TODO: Check if on Linux or Mac and adjust accordingly
 " NOTE: Really it would be nice if we could use $HOME or $PYENV_ROOT here
-let g:python_host_prog = '/Users/jkroll/.pyenv/versions/2.7.12/bin/python'
-let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.6.4/bin/python'
+let g:python3_host_prog = '/Users/jkroll/.pyenv/versions/3.7.4/bin/python'
 
 let g:pymode_rope = 0
 
@@ -914,8 +891,6 @@ augroup filetype_python
   autocmd FocusLost *.py :update
 augroup END
 
-let g:neomake_clojure_enabled_makers = ['kibit']
-
 " Useful: 'pip list --outdated'
 
 """""""""""""""
@@ -942,18 +917,12 @@ let g:lightline = {
 " solarized8
 let g:solarized_term_italics = 1
 " let g:solarized_termtrans = 1  " faster scrolling
-" let g:solarized_diffmode = 'high'
-" high visibility is broken for solarized light
-" let g:solarized_visibility = 'high'
 
 set background=dark
-colorscheme base16-bright
+" colorscheme base16-bright
 " colorscheme base16-tomorrow-night
-" colorscheme base16-atelier-dune-light
-" colorscheme nord
-" colorscheme gruvbox
-" colorscheme solarized8
-" colorscheme zenburn
+colorscheme base16-tomorrow-night-eighties
 
-" Transparent background for faster scrolling
-" hi! Normal guibg=NONE
+" Transparent background for faster rendering
+" Re-loading the colorscheme will overwrite this variable
+hi! Normal guibg=NONE
