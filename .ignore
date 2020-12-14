@@ -4,19 +4,21 @@
 *.egg-info/
 *.fdb_latexmk
 *.fls
+*.gz
 *.ipynb
 *.json
+*.jsonl
 *.log
 *.out
 *.p
+*.parquet
 *.pickle
 *.pyc
 *.raw
 *.sql
 *.synctex.gz
 *.tsv
-
-*.gz
+*.txt
 
 .git
 .ipynb_checkpoints

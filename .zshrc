@@ -22,6 +22,7 @@ plugins=(
   gem
   git
   gitfast
+  pyenv
   python
   rbenv
   ruby
@@ -70,7 +71,7 @@ alias vz="nvim ~/dotfiles/.zshrc"
 
 ### Python
 alias i="ipython"
-if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+# if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 # if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 ### Ruby
@@ -116,7 +117,6 @@ export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
 export PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig"
 
 export MODIN_ENGINE=ray  # Modin will use Ray
-# export MODIN_ENGINE=dask  # Modin will use Dask  -- do not use!!
 
 # Homebrew wants this
 export PATH="/usr/local/sbin:$PATH"

@@ -162,6 +162,9 @@ Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv'
 Plug 'tpope/vim-fugitive'
 
+" Go -- I can't believe it's come to this
+Plug 'fatih/vim-go'
+
 " Julia
 Plug 'JuliaLang/julia-vim'  " this is borked if you try { 'for': 'julia' }
 
@@ -397,7 +400,6 @@ let g:ranger_map_keys = 0
 let g:scala_sort_across_groups=1
 let g:scala_use_builtin_tagbar_defs = 0
 
-
 let g:tmuxcomplete#trigger = ''
 
 let g:tmuxline_powerline_separators = 0
@@ -428,8 +430,6 @@ let g:tagbar_type_markdown = {
 "         \ 'k:Heading_L3'
 "     \ ]
 " \ }
-
-
 
 let g:tagbar_type_r = {
     \ 'ctagstype' : 'r',
@@ -568,12 +568,6 @@ nnoremap <C-w># <C-w><C-s>#
 " Allow C-l like in Emacs while in insert mode
 " TODO: add the other useful bindings that aren't in rsi.vim
 inoremap <C-l> <C-c>zzgi
-
-
-""""""""""
-" AutoSave
-
-nnoremap <leader>a :AutoSaveToggle<CR>
 
 
 """"""""
